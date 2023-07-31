@@ -1,0 +1,22 @@
+Actors:
+-------
+	-------------------------------------------------------------
+Leader:
+
+
+viceLeader:
+
+
+
+HeadofTraining:
+
+
+
+Trainee:
+(numberofsolvedproblemsinsheets,numberofsolvedproblemsincontest,)
+
+Mentor:
+
+
+
+
