@@ -5,26 +5,26 @@ null: facebooklink
 
 Trainees(id,Totalsolvedproblems,campid,userid,mentorid) //all submition in last two days
 uniqe:
-notnull:
+notnull:campid
 
 Mentor(id,userid)
-uniqe:
-notnull:
+uniqe:userid
+notnull:userid
 
 Camps(id,name,year,term,duration)
 uniqe:name
 notnull:name,year,term,duration
 
-Sessions(id,Topic,instructorname,date,campid)
+Sessions(id,Topic,instructorname,date,locationLink,campid)
 uniqu:topic
-notnull: instructorname,date
+notnull: instructorname,date,campid
 
 SessionsFeedback(sessionid,traineeid,feedback)
 unique:
 notnull:feedback
 
 MentorsOfCamp(mentorid,campid)
-uniqu:mentorid,campid
+uniqu:(mentorid,campid)
 notnull:mentorid,campid
 
 TraineesAttendence(traineeid,sessionid)
@@ -32,7 +32,7 @@ unique:(traineeid,sessionid)
 notnull:traineeid,sessionid
 
 MentorsAttendence(mentorid,sessionid)
-unique:mentorid,sessionid
+unique:(mentorid,sessionid)
 notnull:mentorid,sessionid
 
 Sheets(id,name,numberofproblems,accessed)
@@ -40,14 +40,14 @@ unique:name,accessed
 notnull:numberofproblems,accessed
 
 TraineesSheetsAccess(traineeid,sheetid)
-unique:mentorid,sessionid
+unique:(mentorid,sessionid)
 notnull:mentorid,sessionid
 
 Materials(id,name,link,sheetid)
 unique:name,link,sheetid
-notnull:
+notnull:name,link,sheetid
 
-TrineeArchive(id,firstname,middlename,lastname,NationalID,birthdate,grade,college,Gender,
+TraineesArchive(id,firstname,middlename,lastname,NationalID,birthdate,grade,college,Gender,
 codeforceHandle,facebooklink,vjudgeHandle,email,CampName,phonenumber)
 unique:NationalID,vjudge,codeforceHandle,facebooklink,email
 null: facebooklink,vjudge,phonenumber
