@@ -1,0 +1,6 @@
+should store points of trainees or calculated it directly
+system should caculate solved problem for every sheet the trainee solved and it has access to it 
+
+
+ 
+

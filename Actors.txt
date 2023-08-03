@@ -1,11 +1,8 @@
 Actors:
 -------
 	-------------------------------------------------------------
+(Authantication for all)
 Leader:
-
-
-viceLeader:
-
 
 
 HeadofTraining:
@@ -13,7 +10,7 @@ HeadofTraining:
 
 
 Trainee:
-(numberofsolvedproblemsinsheets,numberofsolvedproblemsincontest,)
+-can access sheets that their sessions date older than the current date && it should pass
 
 Mentor:
 

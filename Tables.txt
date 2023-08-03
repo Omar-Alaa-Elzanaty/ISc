@@ -5,7 +5,7 @@ null: facebooklink
 
 Trainees(id,Totalsolvedproblems,campid,userid,mentorid) //all submition in last two days
 uniqe:
-notnull:campid
+notnull:campid,mentorid
 
 Mentor(id,userid)
 uniqe:userid
@@ -15,13 +15,13 @@ Camps(id,name,year,term,duration)
 uniqe:name
 notnull:name,year,term,duration
 
-Sessions(id,Topic,instructorname,date,locationLink,campid)
+Sessions(id,Topic,instructorname,date,locationname,locationLink,campid)
 uniqu:topic
-notnull: instructorname,date,campid
+notnull: Topic,instructorname,date,campid
 
-SessionsFeedback(sessionid,traineeid,feedback)
+SessionsFeedback(sessionid,traineeid,feedback,datetime)
 unique:
-notnull:feedback
+notnull:feedback,datetime
 
 MentorsOfCamp(mentorid,campid)
 uniqu:(mentorid,campid)
@@ -35,13 +35,14 @@ MentorsAttendence(mentorid,sessionid)
 unique:(mentorid,sessionid)
 notnull:mentorid,sessionid
 
-Sheets(id,name,numberofproblems,accessed)
-unique:name,accessed
-notnull:numberofproblems,accessed
+Sheets(id,name,numberofproblems)
+unique:name
+notnull:name,numberofproblems
 
-TraineesSheetsAccess(traineeid,sheetid)
-unique:(mentorid,sessionid)
-notnull:mentorid,sessionid
+TraineesSheetsAccess(traineeid,sheetid,numberofproblems)
+unique:(trineeid,sessionid)
+notnull:trineeid,sessionid
+numberofproblems->default(0)
 
 Materials(id,name,link,sheetid)
 unique:name,link,sheetid
@@ -61,3 +62,19 @@ NewRegister(firstname,middlename,lastname,NationalID,birthdate,grade,college,Gen
 codeforceHandle,facebooklink,email)
 unique:NationalID,codeforcesHandle
 null:phonenumber
+
+
+
+OnDelete:
+Trainee - camps Cascade -->should delect the account
+Trainee - Mentor Restrict -->should assign trainee to another mentor
+Trainee - sheets Cascade 
+Trainee - Session Cascade
+Camps - Mentor Cascade
+Camps - Sessions Cascade
+Session - Mentor Cascade
+Sheets - Materials Cascade
+
+
+
+
