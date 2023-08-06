@@ -1,0 +1,17 @@
+D:\ISC\ISC.EF\obj\Debug\net7.0\ISC.EF.csproj.AssemblyReference.cache
+D:\ISC\ISC.EF\obj\Debug\net7.0\ISC.EF.GeneratedMSBuildEditorConfig.editorconfig
+D:\ISC\ISC.EF\obj\Debug\net7.0\ISC.EF.AssemblyInfoInputs.cache
+D:\ISC\ISC.EF\obj\Debug\net7.0\ISC.EF.AssemblyInfo.cs
+D:\ISC\ISC.EF\obj\Debug\net7.0\ISC.EF.csproj.CoreCompileInputs.cache
+D:\ISC\ISC.EF\bin\Debug\net7.0\ISC.EF.deps.json
+D:\ISC\ISC.EF\bin\Debug\net7.0\ISC.EF.runtimeconfig.json
+D:\ISC\ISC.EF\bin\Debug\net7.0\ISC.EF.dll
+D:\ISC\ISC.EF\bin\Debug\net7.0\ISC.EF.pdb
+D:\ISC\ISC.EF\bin\Debug\net7.0\ISC.Core.dll
+D:\ISC\ISC.EF\bin\Debug\net7.0\ISC.Core.pdb
+D:\ISC\ISC.EF\obj\Debug\net7.0\ISC.EF.csproj.CopyComplete
+D:\ISC\ISC.EF\obj\Debug\net7.0\ISC.EF.dll
+D:\ISC\ISC.EF\obj\Debug\net7.0\refint\ISC.EF.dll
+D:\ISC\ISC.EF\obj\Debug\net7.0\ISC.EF.pdb
+D:\ISC\ISC.EF\obj\Debug\net7.0\ISC.EF.genruntimeconfig.cache
+D:\ISC\ISC.EF\obj\Debug\net7.0\ref\ISC.EF.dll

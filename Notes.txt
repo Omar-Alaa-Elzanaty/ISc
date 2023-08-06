@@ -4,3 +4,10 @@ system should caculate solved problem for every sheet the trainee solved and it 
 
  
 
+Name Convention:
+
+MyClass
+myMethod
+MyVariable
+MY_CONSTANT
+_PrivateVariable
