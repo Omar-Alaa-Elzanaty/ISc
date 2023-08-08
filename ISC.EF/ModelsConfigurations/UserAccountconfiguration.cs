@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ISC.Core.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,13 @@ namespace ISC.EF.ModelsConfigurations
 			builder.HasIndex(acc => acc.FacebookLink);
 			builder.HasIndex(acc => acc.Email);
 			builder.HasIndex(acc => acc.PhoneNumber);
+			builder.Property(i => i.UserName).HasMaxLength(20);
+			builder.Property(i => i.FirstName).HasMaxLength(20);
+			builder.Property(i => i.LastName).HasMaxLength(20);
+			builder.Property(i => i.College).HasMaxLength(20);
+			builder.Property(i => i.Gender).HasMaxLength(7);
+			builder.HasOne(c => c.Trainee).WithOne().HasForeignKey<Trainee>(t=>t.UserId);
+			builder.HasOne(c => c.Mentor).WithOne().HasForeignKey<Mentor>(m=>m.UserId);
 		}
 	}
 }

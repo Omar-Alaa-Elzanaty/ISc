@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ISC.EF.Migrations
 {
     [DbContext(typeof(DataBase))]
-    [Migration("20230806235119_IdentityCreation")]
-    partial class IdentityCreation
+    [Migration("20230807215511_addIdentity")]
+    partial class addIdentity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,8 +66,8 @@ namespace ISC.EF.Migrations
 
                     b.Property<string>("Gender")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
 
                     b.Property<int>("Grade")
                         .HasColumnType("int");
@@ -91,8 +91,7 @@ namespace ISC.EF.Migrations
 
                     b.Property<string>("MiddleName")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NationalId")
                         .HasColumnType("int");
@@ -124,8 +123,8 @@ namespace ISC.EF.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("VjudgeHandle")
                         .HasColumnType("nvarchar(450)");

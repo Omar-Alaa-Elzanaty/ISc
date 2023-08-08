@@ -4,7 +4,6 @@ Account(firstname,middlename,lastname,NationalID,birthdate,grade,college,JoinDat
 lastseen,profilephoto,codeforceHandle,facebooklink,vjudgeHandle)
 uniqe:NationalID,vjudge,codeforceHandle,facebooklink,email
 null: facebooklink,VjudgeHandle
-PK:Id
 
 Trainees(id,Totalsolvedproblems,campid,userid,mentorid) //all submition in last two days
 uniqe:

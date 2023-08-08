@@ -11,3 +11,5 @@ myMethod
 MyVariable
 MY_CONSTANT
 _PrivateVariable
+
+need Arabic string test for feedbacks

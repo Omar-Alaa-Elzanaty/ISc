@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ISC.EF.Migrations
 {
     /// <inheritdoc />
-    public partial class IdentityCreation : Migration
+    public partial class addIdentity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,20 +17,20 @@ namespace ISC.EF.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    MiddleName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     NationalId = table.Column<int>(type: "int", nullable: false),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Grade = table.Column<int>(type: "int", nullable: false),
                     College = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     JoinDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(7)", maxLength: 7, nullable: false),
                     LastLoginDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ProfilePicture = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     CodeForceHandle = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FacebookLink = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     VjudgeHandle = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),

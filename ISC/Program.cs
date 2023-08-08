@@ -1,5 +1,6 @@
 
 using ISC.EF;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace ISC
@@ -15,6 +16,9 @@ namespace ISC
 				option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
 									b=>b.MigrationsAssembly(typeof(DataBase).Assembly.FullName))
 									);
+			builder.Services.AddIdentity<UserAccount, IdentityRole>()
+				.AddEntityFrameworkStores<DataBase>()
+				.AddDefaultTokenProviders();
 
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

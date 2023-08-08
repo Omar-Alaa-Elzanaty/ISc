@@ -63,8 +63,8 @@ namespace ISC.EF.Migrations
 
                     b.Property<string>("Gender")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
 
                     b.Property<int>("Grade")
                         .HasColumnType("int");
@@ -88,8 +88,7 @@ namespace ISC.EF.Migrations
 
                     b.Property<string>("MiddleName")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NationalId")
                         .HasColumnType("int");
@@ -121,8 +120,8 @@ namespace ISC.EF.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("VjudgeHandle")
                         .HasColumnType("nvarchar(450)");
