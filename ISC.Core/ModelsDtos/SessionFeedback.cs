@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISC.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +13,7 @@ namespace ISC.Core.ModelsDtos
         public int TraineeId { get; set; }
         public string Feedback { get; set; }
         public DateTime DateTime { get; set; }= DateTime.Now;
+        public virtual Session Session { get; set; }
+        public virtual Trainee Trainee { get; set; }
     }
 }

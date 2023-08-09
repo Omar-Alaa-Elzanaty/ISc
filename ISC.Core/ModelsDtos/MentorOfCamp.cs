@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISC.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +11,7 @@ namespace ISC.Core.ModelsDtos
     {
         public int MentorId { get; set; }
         public int CampId { get; set; }
+        public Mentor Mentor { get; set; }
+        public Camp Camp { get; set; }
     }
 }

@@ -9,13 +9,11 @@ using System.Threading.Tasks;
 
 namespace ISC.EF.ModelsConfigurations
 {
-	public class TraineeConfigurations : IEntityTypeConfiguration<Trainee>
+	internal class StuffArchiveConfigurations : IEntityTypeConfiguration<StuffArchive>
 	{
-		public void Configure(EntityTypeBuilder<Trainee> builder)
+		public void Configure(EntityTypeBuilder<StuffArchive> builder)
 		{
-			builder.HasOne(trainee => trainee.Mentor)
-				   .WithMany(i => i.Trainees);
-				   //.HasForeignKey(trainee => trainee.MentorId);
+			builder.HasKey(stuff => stuff.NationalID);
 		}
 	}
 }

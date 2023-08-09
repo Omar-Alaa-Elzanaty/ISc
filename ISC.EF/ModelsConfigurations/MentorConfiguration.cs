@@ -15,8 +15,8 @@ namespace ISC.EF.ModelsConfigurations
 		{
 			builder.HasMany(m => m.Trainees)
 				.WithOne()
-				.HasForeignKey(m => m.MentorId)
-				.OnDelete(DeleteBehavior.Restrict);
+				.HasForeignKey(m => m.MentorId);
+				//.OnDelete(DeleteBehavior.Restrict);
 		}
 	}
 }

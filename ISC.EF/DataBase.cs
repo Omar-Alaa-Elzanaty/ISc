@@ -14,6 +14,7 @@ namespace ISC.EF
 {
 	public class DataBase :IdentityDbContext<UserAccount>
 	{
+		public DataBase() { }
 		public DataBase(DbContextOptions<DataBase> options):base(options)
 		{
 
@@ -29,15 +30,32 @@ namespace ISC.EF
 			builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
 			builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
 			new UserAccountconfiguration().Configure(builder.Entity<UserAccount>());
-			new MentorConfiguration().Configure(builder.Entity<Mentor>());
-			//builder.Entity<SessionFeedback>().Property(i => i.DateTime).HasDefaultValueSql("Select GETDATE()");
-			//builder.Entity<SessionFeedback>().HasKey(i => new { i.SessionId, i.TraineeId });
-			//builder.Entity<TraineeArchive>().HasKey(i=>i.);
-			//builder.Entity<StuffArchive>().HasKey(i => i.id);
-			//builder.Entity<StuffArchive>().Property(e => e.id).ValueGeneratedNever();
+			//new MentorConfiguration().Configure(builder.Entity<Mentor>());
+			//new CampConfiguration().Configure(builder.Entity<Camp>());
+			new MentorAttendenceConfigurations().Configure(builder.Entity<MentorAttendence>());
+			new MentorOfCampConfigurations().Configure(builder.Entity<MentorOfCamp>());
+			new NewRegisterationConfigurations().Configure(builder.Entity<NewRegitseration>());
+			new SessionFeedbackConfigurations().Configure(builder.Entity<SessionFeedback>());
+			//new SheetConfigurations().Configure(builder.Entity<Sheet>());
+			new StuffArchiveConfigurations().Configure(builder.Entity<StuffArchive>());
+			new TraineeArchiveConfigurations().Configure(builder.Entity<TraineeArchive>());
+			new TraineeAttendenceConfigurations().Configure(builder.Entity<TraineeAttendence>());
+			//new TraineeConfigurations().Configure(builder.Entity<Trainee>());
+			new TraineeSheetAccessConfigurations().Configure(builder.Entity<TraineeSheetAccess>());
 		}
-		//DbSet<SessionFeedback> sessions { get; set; }
-		//DbSet<TraineeArchive> traineesArchives { get; set; }
-		//DbSet<StuffArchive> stuffArchives { get; set; }
+		DbSet<Trainee> Trainees { get; set; }
+		DbSet<Session> Sessions { get; set; }
+		DbSet<TraineeAttendence> TraineesAttednces { get; set; }
+		DbSet<Sheet> Sheets { get; set; }
+		DbSet<TraineeSheetAccess> TraineesSheetsAccess { get; set; }
+		DbSet<Mentor> Mentors { get; set; }
+		DbSet<Camp> Camps { get; set; }
+		DbSet<SessionFeedback> SessionsFeedbacks { get; set; }
+		DbSet<MentorOfCamp> MentorsOfCamps { get; set; }
+		DbSet<MentorAttendence> MentorsAttendences { get; set; }
+		DbSet<Material> Materials { get; set; }
+		DbSet<TraineeArchive> TraineesArchives { get; set; }
+		DbSet<StuffArchive> StuffArchives { get; set; }
+		DbSet<NewRegitseration> NewRegitserations { get; set; }
 	}
 }

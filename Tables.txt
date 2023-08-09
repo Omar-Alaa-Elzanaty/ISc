@@ -5,7 +5,7 @@ lastseen,profilephoto,codeforceHandle,facebooklink,vjudgeHandle)
 uniqe:NationalID,vjudge,codeforceHandle,facebooklink,email
 null: facebooklink,VjudgeHandle
 
-Trainees(id,Totalsolvedproblems,campid,userid,mentorid) //all submition in last two days
+Trainees(id,Totalsolvedproblems,lastSubmission,campid,userid,mentorid) //all submition in last two days
 uniqe:
 notnull:campid,mentorid
 PK:id
@@ -63,7 +63,7 @@ notnull:name,link,sheetid
 PK:id
 
 TraineesArchive(firstname,middlename,lastname,NationalID,birthdate,grade,college,Gender,
-codeforceHandle,facebooklink,vjudgeHandle,email,CampName,phonenumber,completed)
+codeforceHandle,facebooklink,vjudgeHandle,email,CampName,phonenumber,iscompleted)
 unique:NationalID,vjudge,codeforceHandle,facebooklink,email
 null: facebooklink,vjudge,phonenumber
 PK:NationalID
@@ -71,28 +71,38 @@ PK:NationalID
 StuffArchive(firstname,middlename,lastname,NationalID,birthdate,grade,college,Gender,
 codeforceHandle,facebooklink,vjudgeHandle,email,phonenumber)
 unique:NationalID,vjudge,codeforceHandle,facebooklink
-null:facebooklink,phonenumber
+null:facebooklink,phonenumber,vjudgeHandle,campname
 PK:NationalID
 
 NewRegister(firstname,middlename,lastname,NationalID,birthdate,grade,college,Gender,phonenumber
-codeforceHandle,facebooklink,email)
+codeforceHandle,facebooklink,email,profilepicture,status)
 unique:NationalID,codeforcesHandle
-null:phonenumber
+null:phonenumber,status
 PK:NationalID
 
 
 
 OnDelete:
 Trainee - camps Cascade -->should delect the account
-Trainee - Mentor Restrict -->should assign trainee to another mentor
-Trainee - sheets Cascade 
-Trainee - Session Cascade
-Camps - Mentor Cascade
+Trainee - Mentor Restrict -->should assign trainee to another mentor/edit on migration file not fluentapi
+Trainee - sheets Cascade/Restrict sheetid (TraineeSheetAccess) 
+Trainee - Session /Restrict sessionid (sessionfeedback)/same in (traineeAttendnces) (SessionFeedback) (TraineeAttendence)
+Camps - Mentor /Restrict  campid(Mentorofcamp)
 Camps - Sessions Cascade
-Session - Mentor Cascade
+Session - Mentor /Restrict sessionid mentorAttendence/ 
 Sheets - Materials Cascade
 
 trainee.include(i=>i.mentorid).include(j=>j.account).where(t=>t.id=id);
 [resutl.mentor.account.firstname+result.mentor.account.lastname]
 
+[main tables]
+Mentor
+camp
+trainee
+sheet
+material
+session
+stuffArchive
+traineeArchive
+NewRegisteration
 

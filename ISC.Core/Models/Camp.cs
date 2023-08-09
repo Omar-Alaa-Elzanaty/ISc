@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISC.Core.ModelsDtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,9 @@ namespace ISC.Core.Models
 		public int Year { get; set; }
 		public int Term { get; set; }
 		public int DurationInWeeks { get; set; }
-		public HashSet<Mentor> Mentors { get; set; }
+		public List<Trainee> Trainees { get; set; }
+		public HashSet<MentorOfCamp> MentorsOfCamp { get; set; }
+		public List<Session> Sessions { get; set; }
 
 	}
 }

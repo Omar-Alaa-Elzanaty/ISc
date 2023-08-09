@@ -9,13 +9,12 @@ using System.Threading.Tasks;
 
 namespace ISC.EF.ModelsConfigurations
 {
-	public class TraineeConfigurations : IEntityTypeConfiguration<Trainee>
+	internal class NewRegisterationConfigurations : IEntityTypeConfiguration<NewRegitseration>
 	{
-		public void Configure(EntityTypeBuilder<Trainee> builder)
+		public void Configure(EntityTypeBuilder<NewRegitseration> builder)
 		{
-			builder.HasOne(trainee => trainee.Mentor)
-				   .WithMany(i => i.Trainees);
-				   //.HasForeignKey(trainee => trainee.MentorId);
+			builder.HasKey(reg => reg.NationalID);
+			builder.HasIndex(reg => reg.CodeForceHandle).IsUnique();
 		}
 	}
 }

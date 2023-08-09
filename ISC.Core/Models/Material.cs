@@ -12,5 +12,6 @@ namespace ISC.Core.Models
 		public string Name { get; set; }
 		public string Link { get; set; }
 		public int SheetId { get; set; }
+		public virtual Sheet Sheet { get; set; }
 	}
 }

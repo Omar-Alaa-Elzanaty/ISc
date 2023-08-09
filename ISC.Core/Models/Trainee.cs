@@ -1,4 +1,5 @@
 ﻿using ISC.Core.Interfaces;
+using ISC.Core.ModelsDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,11 @@ namespace ISC.Core.Models
 		public string UserId { get; set; }
 		public int MentorId { get; set; }
 		public virtual Mentor Mentor { get; set;}
+		public int CampId { get; set; }
+		public virtual Camp Camp { get; set; }
+		public virtual HashSet<SessionFeedback> SessionsFeedbacks { get; set; }
+		public virtual HashSet<TraineeSheetAccess> SheetsAccessing { get; set; }
+		public virtual HashSet<TraineeAttendence> TraineesAttendences { get; set; }
 
 	}
 }

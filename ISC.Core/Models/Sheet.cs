@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISC.Core.ModelsDtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,7 @@ namespace ISC.Core.Models
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public int NumberOfProblems { get; set; } = 0;
+		public virtual List<Material> Materials { get; set; }
+		public virtual HashSet<TraineeSheetAccess> TraineesAccessing { get; set; }
 	}
 }

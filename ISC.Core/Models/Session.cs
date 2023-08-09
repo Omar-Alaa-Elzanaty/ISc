@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ISC.Core.ModelsDtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +16,9 @@ namespace ISC.Core.Models
 		public string? LocationName { get; set; }
 		public string? LocationLink { get; set; }
 		public int CampId { get; set; }
+		public virtual Camp Camp { get; set; }
+		public virtual HashSet<MentorAttendence> MentorsAttendences { get; set; }
+		public virtual HashSet<TraineeAttendence> TraineesAttendences { get;set; }
+		public virtual List<SessionFeedback> Feedbacks { get; set; }
 	}
 }

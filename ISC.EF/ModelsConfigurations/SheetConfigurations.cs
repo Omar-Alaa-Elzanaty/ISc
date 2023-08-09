@@ -9,13 +9,14 @@ using System.Threading.Tasks;
 
 namespace ISC.EF.ModelsConfigurations
 {
-	public class TraineeConfigurations : IEntityTypeConfiguration<Trainee>
+	internal class SheetConfigurations : IEntityTypeConfiguration<Sheet>
 	{
-		public void Configure(EntityTypeBuilder<Trainee> builder)
+		public void Configure(EntityTypeBuilder<Sheet> builder)
 		{
-			builder.HasOne(trainee => trainee.Mentor)
-				   .WithMany(i => i.Trainees);
-				   //.HasForeignKey(trainee => trainee.MentorId);
+			builder.HasMany(sheet => sheet.Materials)
+				.WithOne()
+				.HasForeignKey(material => material.SheetId)
+				.OnDelete(DeleteBehavior.Cascade);
 		}
 	}
 }
