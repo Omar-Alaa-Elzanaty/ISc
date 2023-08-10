@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ISC.EF.Migrations
 {
     [DbContext(typeof(DataBase))]
-    [Migration("20230809013511_IntialConfigurationDataTables")]
+    [Migration("20230809231610_IntialConfigurationDataTables")]
     partial class IntialConfigurationDataTables
     {
         /// <inheritdoc />
@@ -99,11 +99,9 @@ namespace ISC.EF.Migrations
 
             modelBuilder.Entity("ISC.Core.Models.NewRegitseration", b =>
                 {
-                    b.Property<int>("NationalID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NationalID"));
+                    b.Property<string>("NationalID")
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
@@ -209,8 +207,9 @@ namespace ISC.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NumberOfProblems")
-                        .HasColumnType("int");
+                    b.Property<string>("SheetLink")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -219,11 +218,9 @@ namespace ISC.EF.Migrations
 
             modelBuilder.Entity("ISC.Core.Models.StuffArchive", b =>
                 {
-                    b.Property<int>("NationalID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NationalID"));
+                    b.Property<string>("NationalID")
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
@@ -307,11 +304,9 @@ namespace ISC.EF.Migrations
 
             modelBuilder.Entity("ISC.Core.Models.TraineeArchive", b =>
                 {
-                    b.Property<int>("NationalID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NationalID"));
+                    b.Property<string>("NationalID")
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
@@ -344,7 +339,7 @@ namespace ISC.EF.Migrations
                     b.Property<int>("Grade")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsCompleted")
+                    b.Property<bool?>("IsCompleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
@@ -411,7 +406,8 @@ namespace ISC.EF.Migrations
 
                     b.Property<string>("Feedback")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("TraineeId", "SessionId");
 
@@ -444,7 +440,9 @@ namespace ISC.EF.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("NumberOfProblems")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.HasKey("TraineeId", "SheetId");
 
@@ -478,6 +476,7 @@ namespace ISC.EF.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -502,7 +501,9 @@ namespace ISC.EF.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("JoinDate")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("LastLoginDate")
                         .HasColumnType("datetime2");
@@ -522,8 +523,10 @@ namespace ISC.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NationalId")
-                        .HasColumnType("int");
+                    b.Property<string>("NationalId")
+                        .IsRequired()
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -564,8 +567,7 @@ namespace ISC.EF.Migrations
                         .IsUnique();
 
                     b.HasIndex("Email")
-                        .IsUnique()
-                        .HasFilter("[Email] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("NationalId")
                         .IsUnique();
@@ -579,14 +581,15 @@ namespace ISC.EF.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.HasIndex("PhoneNumber")
-                        .IsUnique()
-                        .HasFilter("[PhoneNumber] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("VjudgeHandle")
-                        .IsUnique()
-                        .HasFilter("[VjudgeHandle] IS NOT NULL");
+                        .IsUnique();
 
-                    b.ToTable("Accounts", (string)null);
+                    b.ToTable("Accounts", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Gender", "Gender in ('Male','Female')");
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

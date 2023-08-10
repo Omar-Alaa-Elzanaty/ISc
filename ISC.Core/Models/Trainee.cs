@@ -12,6 +12,8 @@ namespace ISC.Core.Models
 	{
 		public int Id { get; set; }
 		public int TotalSolvedProblems { get; set; } = 0;
+		//public DateTime LastSubmession { get; set; }		Not Supported
+		//public int points { get; set; }		Not Supported
 		public string UserId { get; set; }
 		public int MentorId { get; set; }
 		public virtual Mentor Mentor { get; set;}

@@ -1,6 +1,7 @@
 ﻿using ISC.Core.ModelsDtos;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,8 +11,11 @@ namespace ISC.Core.Models
 	public class Session
 	{
 		public int Id { get; set; }
+		[Required]
 		public string Topic { get; set; }
+		[Required]
 		public string InstructorName { get; set; }
+		[Required]
 		public DateTime Date { get; set; }
 		public string? LocationName { get; set; }
 		public string? LocationLink { get; set; }

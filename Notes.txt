@@ -10,6 +10,10 @@ MyClass
 myMethod
 MyVariable
 MY_CONSTANT
-_PrivateVariable
+_privateVariable
 
 need Arabic string test for feedbacks
+
+Functions Run every an hour
+get total solved problem for every trainee
+calculate total solved problem for every trainee

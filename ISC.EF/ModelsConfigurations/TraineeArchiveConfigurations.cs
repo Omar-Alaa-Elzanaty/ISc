@@ -14,6 +14,7 @@ namespace ISC.EF.ModelsConfigurations
 		public void Configure(EntityTypeBuilder<TraineeArchive> builder)
 		{
 			builder.HasKey(trainee => trainee.NationalID);
+			builder.Property(trainee => trainee.NationalID).HasMaxLength(14);
 		}
 	}
 }

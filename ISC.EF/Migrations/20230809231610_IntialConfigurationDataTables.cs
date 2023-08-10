@@ -36,6 +36,24 @@ namespace ISC.EF.Migrations
                 table: "Accounts");
 
             migrationBuilder.AlterColumn<string>(
+                name: "NationalId",
+                table: "Accounts",
+                type: "nvarchar(14)",
+                maxLength: 14,
+                nullable: false,
+                oldClrType: typeof(int),
+                oldType: "int");
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "JoinDate",
+                table: "Accounts",
+                type: "datetime2",
+                nullable: false,
+                defaultValueSql: "GETDATE()",
+                oldClrType: typeof(DateTime),
+                oldType: "datetime2");
+
+            migrationBuilder.AlterColumn<string>(
                 name: "FacebookLink",
                 table: "Accounts",
                 type: "nvarchar(100)",
@@ -43,6 +61,18 @@ namespace ISC.EF.Migrations
                 nullable: true,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(450)",
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Email",
+                table: "Accounts",
+                type: "nvarchar(256)",
+                maxLength: 256,
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "nvarchar(256)",
+                oldMaxLength: 256,
                 oldNullable: true);
 
             migrationBuilder.CreateTable(
@@ -84,8 +114,7 @@ namespace ISC.EF.Migrations
                 name: "NewRegitserations",
                 columns: table => new
                 {
-                    NationalID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NationalID = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -113,7 +142,7 @@ namespace ISC.EF.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NumberOfProblems = table.Column<int>(type: "int", nullable: false)
+                    SheetLink = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -124,8 +153,7 @@ namespace ISC.EF.Migrations
                 name: "StuffArchives",
                 columns: table => new
                 {
-                    NationalID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NationalID = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -148,10 +176,9 @@ namespace ISC.EF.Migrations
                 name: "TraineesArchives",
                 columns: table => new
                 {
-                    NationalID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NationalID = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
                     CampName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsCompleted = table.Column<bool>(type: "bit", nullable: false),
+                    IsCompleted = table.Column<bool>(type: "bit", nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -303,7 +330,7 @@ namespace ISC.EF.Migrations
                 {
                     SessionId = table.Column<int>(type: "int", nullable: false),
                     TraineeId = table.Column<int>(type: "int", nullable: false),
-                    Feedback = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Feedback = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
@@ -353,7 +380,7 @@ namespace ISC.EF.Migrations
                 {
                     TraineeId = table.Column<int>(type: "int", nullable: false),
                     SheetId = table.Column<int>(type: "int", nullable: false),
-                    NumberOfProblems = table.Column<int>(type: "int", nullable: false)
+                    NumberOfProblems = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
@@ -382,8 +409,7 @@ namespace ISC.EF.Migrations
                 name: "IX_Accounts_Email",
                 table: "Accounts",
                 column: "Email",
-                unique: true,
-                filter: "[Email] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_NationalId",
@@ -395,15 +421,18 @@ namespace ISC.EF.Migrations
                 name: "IX_Accounts_PhoneNumber",
                 table: "Accounts",
                 column: "PhoneNumber",
-                unique: true,
-                filter: "[PhoneNumber] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_VjudgeHandle",
                 table: "Accounts",
                 column: "VjudgeHandle",
-                unique: true,
-                filter: "[VjudgeHandle] IS NOT NULL");
+                unique: true);
+
+            migrationBuilder.AddCheckConstraint(
+                name: "CK_Gender",
+                table: "Accounts",
+                sql: "Gender in ('Male','Female')");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Materials_SheetId",
@@ -534,6 +563,28 @@ namespace ISC.EF.Migrations
                 name: "IX_Accounts_VjudgeHandle",
                 table: "Accounts");
 
+            migrationBuilder.DropCheckConstraint(
+                name: "CK_Gender",
+                table: "Accounts");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "NationalId",
+                table: "Accounts",
+                type: "int",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(14)",
+                oldMaxLength: 14);
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "JoinDate",
+                table: "Accounts",
+                type: "datetime2",
+                nullable: false,
+                oldClrType: typeof(DateTime),
+                oldType: "datetime2",
+                oldDefaultValueSql: "GETDATE()");
+
             migrationBuilder.AlterColumn<string>(
                 name: "FacebookLink",
                 table: "Accounts",
@@ -543,6 +594,16 @@ namespace ISC.EF.Migrations
                 oldType: "nvarchar(100)",
                 oldMaxLength: 100,
                 oldNullable: true);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Email",
+                table: "Accounts",
+                type: "nvarchar(256)",
+                maxLength: 256,
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(256)",
+                oldMaxLength: 256);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_CodeForceHandle",

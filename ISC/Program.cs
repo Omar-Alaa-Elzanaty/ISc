@@ -19,7 +19,6 @@ namespace ISC
 			builder.Services.AddIdentity<UserAccount, IdentityRole>()
 				.AddEntityFrameworkStores<DataBase>()
 				.AddDefaultTokenProviders();
-
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();

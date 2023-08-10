@@ -29,6 +29,7 @@ SessionsFeedback(sessionid,traineeid,feedback,datetime)
 unique:
 notnull:feedback,datetime
 PK:sessionid,traineeid
+feedback max(500)
 
 
 MentorsOfCamp(mentorid,campid)
@@ -46,7 +47,7 @@ unique:(mentorid,sessionid)
 notnull:mentorid,sessionid
 PK:(mentorid,sessionid)
 
-Sheets(id,name,numberofproblems)
+Sheets(id,name,numberofproblems,ProblemSheetLink)
 unique:name
 notnull:name,numberofproblems
 PK:id
@@ -95,7 +96,7 @@ Sheets - Materials Cascade
 trainee.include(i=>i.mentorid).include(j=>j.account).where(t=>t.id=id);
 [resutl.mentor.account.firstname+result.mentor.account.lastname]
 
-[main tables]
+[Main tables]
 Mentor
 camp
 trainee
@@ -105,4 +106,7 @@ session
 stuffArchive
 traineeArchive
 NewRegisteration
+-------------------------
+Database Testing:
+
 

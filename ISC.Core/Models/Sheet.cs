@@ -11,7 +11,7 @@ namespace ISC.Core.Models
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
-		public int NumberOfProblems { get; set; } = 0;
+		public string SheetLink { get; set; }
 		public virtual List<Material> Materials { get; set; }
 		public virtual HashSet<TraineeSheetAccess> TraineesAccessing { get; set; }
 	}

@@ -12,7 +12,8 @@ namespace ISC.Core.Interfaces
 		public string FirstName { get; set; }
 		public string MiddleName { get; set; }
 		public string LastName { get; set; }
-		public int NationalID { get; set; }
+		[RegularExpression("^[1-9][0-9]*$")]
+		public string NationalID { get; set; }
 		public DateTime BirthDate { get; set; }
 		public int Grade { get; set; }
 		public string College { get; set; }

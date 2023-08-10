@@ -22,6 +22,7 @@ namespace ISC.EF.ModelsConfigurations
 				   .HasForeignKey(access => access.SheetId)
 				   .OnDelete(DeleteBehavior.Restrict);
 			builder.HasKey(access => new {access.TraineeId, access.SheetId});
+			builder.Property(access => access.NumberOfProblems).HasDefaultValue(0);
 		}
 	}
 }

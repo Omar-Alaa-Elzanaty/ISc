@@ -23,6 +23,7 @@ namespace ISC.EF.ModelsConfigurations
 				   .OnDelete(DeleteBehavior.Restrict);
 			builder.HasKey(feed => new {feed.TraineeId, feed.SessionId});
 			builder.Property(i => i.DateTime).HasDefaultValueSql("GETDATE()");
+			builder.Property(i => i.Feedback).HasMaxLength(500);
 		}
 	}
 }

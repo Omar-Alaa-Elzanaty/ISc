@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,8 @@ namespace ISC.Core.Models
 		public string MiddleName { get; set; }
 		public string LastName { get; set; }
 		public string Email { get; set; }
-		public int NationalID { get; set; }
+		[RegularExpression("^[1-9][0-9]*$")]
+		public string NationalID { get; set; }
 		public DateTime BirthDate { get; set; }
 		public int Grade { get; set; }
 		public string College { get; set; }

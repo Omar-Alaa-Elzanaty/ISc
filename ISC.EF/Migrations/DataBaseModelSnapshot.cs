@@ -45,7 +45,7 @@ namespace ISC.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Camps");
+                    b.ToTable("Camps", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Material", b =>
@@ -71,7 +71,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SheetId");
 
-                    b.ToTable("Materials");
+                    b.ToTable("Materials", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Mentor", b =>
@@ -91,16 +91,14 @@ namespace ISC.EF.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Mentors");
+                    b.ToTable("Mentors", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.NewRegitseration", b =>
                 {
-                    b.Property<int>("NationalID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NationalID"));
+                    b.Property<string>("NationalID")
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
@@ -156,7 +154,7 @@ namespace ISC.EF.Migrations
                     b.HasIndex("CodeForceHandle")
                         .IsUnique();
 
-                    b.ToTable("NewRegitserations");
+                    b.ToTable("NewRegitserations", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Session", b =>
@@ -191,7 +189,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("CampId");
 
-                    b.ToTable("Sessions");
+                    b.ToTable("Sessions", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Sheet", b =>
@@ -206,21 +204,20 @@ namespace ISC.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NumberOfProblems")
-                        .HasColumnType("int");
+                    b.Property<string>("SheetLink")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sheets");
+                    b.ToTable("Sheets", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.StuffArchive", b =>
                 {
-                    b.Property<int>("NationalID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NationalID"));
+                    b.Property<string>("NationalID")
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
@@ -266,7 +263,7 @@ namespace ISC.EF.Migrations
 
                     b.HasKey("NationalID");
 
-                    b.ToTable("StuffArchives");
+                    b.ToTable("StuffArchives", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Trainee", b =>
@@ -299,16 +296,14 @@ namespace ISC.EF.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Trainees");
+                    b.ToTable("Trainees", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.TraineeArchive", b =>
                 {
-                    b.Property<int>("NationalID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NationalID"));
+                    b.Property<string>("NationalID")
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
@@ -341,7 +336,7 @@ namespace ISC.EF.Migrations
                     b.Property<int>("Grade")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsCompleted")
+                    b.Property<bool?>("IsCompleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
@@ -360,7 +355,7 @@ namespace ISC.EF.Migrations
 
                     b.HasKey("NationalID");
 
-                    b.ToTable("TraineesArchives");
+                    b.ToTable("TraineesArchives", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.MentorAttendence", b =>
@@ -375,7 +370,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("MentorsAttendences");
+                    b.ToTable("MentorsAttendences", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.MentorOfCamp", b =>
@@ -390,7 +385,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("CampId");
 
-                    b.ToTable("MentorsOfCamps");
+                    b.ToTable("MentorsOfCamps", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.SessionFeedback", b =>
@@ -408,13 +403,14 @@ namespace ISC.EF.Migrations
 
                     b.Property<string>("Feedback")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("TraineeId", "SessionId");
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("SessionsFeedbacks");
+                    b.ToTable("SessionsFeedbacks", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.TraineeAttendence", b =>
@@ -429,7 +425,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("TraineesAttednces");
+                    b.ToTable("TraineesAttednces", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.TraineeSheetAccess", b =>
@@ -441,13 +437,15 @@ namespace ISC.EF.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("NumberOfProblems")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.HasKey("TraineeId", "SheetId");
 
                     b.HasIndex("SheetId");
 
-                    b.ToTable("TraineesSheetsAccess");
+                    b.ToTable("TraineesSheetsAccess", (string)null);
                 });
 
             modelBuilder.Entity("ISC.EF.UserAccount", b =>
@@ -475,6 +473,7 @@ namespace ISC.EF.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -499,7 +498,9 @@ namespace ISC.EF.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("JoinDate")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("LastLoginDate")
                         .HasColumnType("datetime2");
@@ -519,8 +520,10 @@ namespace ISC.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NationalId")
-                        .HasColumnType("int");
+                    b.Property<string>("NationalId")
+                        .IsRequired()
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -561,8 +564,7 @@ namespace ISC.EF.Migrations
                         .IsUnique();
 
                     b.HasIndex("Email")
-                        .IsUnique()
-                        .HasFilter("[Email] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("NationalId")
                         .IsUnique();
@@ -576,14 +578,15 @@ namespace ISC.EF.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.HasIndex("PhoneNumber")
-                        .IsUnique()
-                        .HasFilter("[PhoneNumber] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("VjudgeHandle")
-                        .IsUnique()
-                        .HasFilter("[VjudgeHandle] IS NOT NULL");
+                        .IsUnique();
 
-                    b.ToTable("Accounts", (string)null);
+                    b.ToTable("Accounts", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Gender", "Gender in ('Male','Female')");
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
