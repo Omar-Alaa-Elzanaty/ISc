@@ -27,7 +27,7 @@ namespace ISC.API.Dtos
 		public byte[]? ProfilePicture { get; set; }
 		public string CodeForceHandle { get; set; }
 		public string? FacebookLink { get; set; }
-		public string? VjudgeHandle { get; set; }
+		public string? VjudgeHandle { get; set; } = null;
 		public string phone { get; set; }
 	}
 }

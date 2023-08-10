@@ -14,14 +14,6 @@ namespace ISC.EF.ModelsConfigurations
 	{
 		public void Configure(EntityTypeBuilder<Camp> builder)
 		{
-			builder.HasMany(camp => camp.Sessions)
-				   .WithOne()
-				   .HasForeignKey(session => session.CampId)
-				   .OnDelete(DeleteBehavior.Cascade);
-			builder.HasMany(camp => camp.Trainees)
-				   .WithOne()
-				   .HasForeignKey(trinee => trinee.CampId)
-				   .OnDelete(DeleteBehavior.Cascade); ;
 
 		}
 	}

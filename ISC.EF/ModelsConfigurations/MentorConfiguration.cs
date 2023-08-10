@@ -9,14 +9,10 @@ using System.Threading.Tasks;
 
 namespace ISC.EF.ModelsConfigurations
 {
-	public class MentorConfiguration : IEntityTypeConfiguration<Mentor>
+	internal class MentorConfiguration : IEntityTypeConfiguration<Mentor>
 	{
 		public void Configure(EntityTypeBuilder<Mentor> builder)
 		{
-			builder.HasMany(m => m.Trainees)
-				.WithOne()
-				.HasForeignKey(m => m.MentorId);
-				//.OnDelete(DeleteBehavior.Restrict);
 		}
 	}
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ISC.EF.Migrations
 {
     [DbContext(typeof(DataBase))]
-    [Migration("20230809231610_IntialConfigurationDataTables")]
-    partial class IntialConfigurationDataTables
+    [Migration("20230810211406_addModels")]
+    partial class addModels
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -581,10 +581,12 @@ namespace ISC.EF.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.HasIndex("PhoneNumber")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("PhoneNumber IS NOT NULL");
 
                     b.HasIndex("VjudgeHandle")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("VjudgeHandle IS NOT NULL");
 
                     b.ToTable("Accounts", null, t =>
                         {

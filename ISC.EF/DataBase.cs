@@ -15,9 +15,13 @@ namespace ISC.EF
 	public class DataBase :IdentityDbContext<UserAccount>
 	{
 		public DataBase() { }
-		public DataBase(DbContextOptions<DataBase> options):base(options)
+		public DataBase(DbContextOptions<DataBase> options) : base(options)
 		{
 
+		}
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+			base.OnConfiguring(optionsBuilder);
 		}
 		protected override void OnModelCreating(ModelBuilder builder)
 		{

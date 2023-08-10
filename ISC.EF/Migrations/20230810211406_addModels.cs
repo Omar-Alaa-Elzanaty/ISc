@@ -6,74 +6,50 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ISC.EF.Migrations
 {
     /// <inheritdoc />
-    public partial class IntialConfigurationDataTables : Migration
+    public partial class addModels : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_Accounts_CodeForceHandle",
-                table: "Accounts");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Accounts_Email",
-                table: "Accounts");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Accounts_FacebookLink",
-                table: "Accounts");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Accounts_NationalId",
-                table: "Accounts");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Accounts_PhoneNumber",
-                table: "Accounts");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Accounts_VjudgeHandle",
-                table: "Accounts");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "NationalId",
-                table: "Accounts",
-                type: "nvarchar(14)",
-                maxLength: 14,
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int");
-
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "JoinDate",
-                table: "Accounts",
-                type: "datetime2",
-                nullable: false,
-                defaultValueSql: "GETDATE()",
-                oldClrType: typeof(DateTime),
-                oldType: "datetime2");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "FacebookLink",
-                table: "Accounts",
-                type: "nvarchar(100)",
-                maxLength: 100,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(450)",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Email",
-                table: "Accounts",
-                type: "nvarchar(256)",
-                maxLength: 256,
-                nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(string),
-                oldType: "nvarchar(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
+            migrationBuilder.CreateTable(
+                name: "Accounts",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    NationalId = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Grade = table.Column<int>(type: "int", nullable: false),
+                    College = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    JoinDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    Gender = table.Column<string>(type: "nvarchar(7)", maxLength: 7, nullable: false),
+                    LastLoginDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProfilePicture = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    CodeForceHandle = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FacebookLink = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    VjudgeHandle = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Accounts", x => x.Id);
+                    table.CheckConstraint("CK_Gender", "Gender in ('Male','Female')");
+                });
 
             migrationBuilder.CreateTable(
                 name: "Camps",
@@ -89,25 +65,6 @@ namespace ISC.EF.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Camps", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Mentors",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Mentors", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Mentors_Accounts_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Accounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -133,6 +90,20 @@ namespace ISC.EF.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_NewRegitserations", x => x.NationalID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -198,6 +169,86 @@ namespace ISC.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Mentors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Mentors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Mentors_Accounts_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserClaims_Accounts_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.ForeignKey(
+                        name: "FK_UserLogins_Accounts_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_UserTokens_Accounts_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Sessions",
                 columns: table => new
                 {
@@ -217,6 +268,72 @@ namespace ISC.EF.Migrations
                         name: "FK_Sessions_Camps_CampId",
                         column: x => x.CampId,
                         principalTable: "Camps",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoleClaims_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_UserRoles_Accounts_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserRoles_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Materials",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Link = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SheetId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Materials", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Materials_Sheets_SheetId",
+                        column: x => x.SheetId,
+                        principalTable: "Sheets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -277,27 +394,6 @@ namespace ISC.EF.Migrations
                         principalTable: "Mentors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Materials",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Link = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SheetId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Materials", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Materials_Sheets_SheetId",
-                        column: x => x.SheetId,
-                        principalTable: "Sheets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -400,6 +496,11 @@ namespace ISC.EF.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "EmailIndex",
+                table: "Accounts",
+                column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Accounts_CodeForceHandle",
                 table: "Accounts",
                 column: "CodeForceHandle",
@@ -421,18 +522,22 @@ namespace ISC.EF.Migrations
                 name: "IX_Accounts_PhoneNumber",
                 table: "Accounts",
                 column: "PhoneNumber",
-                unique: true);
+                unique: true,
+                filter: "PhoneNumber IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_VjudgeHandle",
                 table: "Accounts",
                 column: "VjudgeHandle",
-                unique: true);
+                unique: true,
+                filter: "VjudgeHandle IS NOT NULL");
 
-            migrationBuilder.AddCheckConstraint(
-                name: "CK_Gender",
+            migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
                 table: "Accounts",
-                sql: "Gender in ('Male','Female')");
+                column: "NormalizedUserName",
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Materials_SheetId",
@@ -460,6 +565,18 @@ namespace ISC.EF.Migrations
                 table: "NewRegitserations",
                 column: "CodeForceHandle",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoleClaims_RoleId",
+                table: "RoleClaims",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "RoleNameIndex",
+                table: "Roles",
+                column: "NormalizedName",
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sessions_CampId",
@@ -496,6 +613,21 @@ namespace ISC.EF.Migrations
                 name: "IX_TraineesSheetsAccess_SheetId",
                 table: "TraineesSheetsAccess",
                 column: "SheetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserClaims_UserId",
+                table: "UserClaims",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserLogins_UserId",
+                table: "UserLogins",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRoles_RoleId",
+                table: "UserRoles",
+                column: "RoleId");
         }
 
         /// <inheritdoc />
@@ -514,6 +646,9 @@ namespace ISC.EF.Migrations
                 name: "NewRegitserations");
 
             migrationBuilder.DropTable(
+                name: "RoleClaims");
+
+            migrationBuilder.DropTable(
                 name: "SessionsFeedbacks");
 
             migrationBuilder.DropTable(
@@ -529,6 +664,18 @@ namespace ISC.EF.Migrations
                 name: "TraineesSheetsAccess");
 
             migrationBuilder.DropTable(
+                name: "UserClaims");
+
+            migrationBuilder.DropTable(
+                name: "UserLogins");
+
+            migrationBuilder.DropTable(
+                name: "UserRoles");
+
+            migrationBuilder.DropTable(
+                name: "UserTokens");
+
+            migrationBuilder.DropTable(
                 name: "Sessions");
 
             migrationBuilder.DropTable(
@@ -538,102 +685,16 @@ namespace ISC.EF.Migrations
                 name: "Trainees");
 
             migrationBuilder.DropTable(
+                name: "Roles");
+
+            migrationBuilder.DropTable(
                 name: "Camps");
 
             migrationBuilder.DropTable(
                 name: "Mentors");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Accounts_CodeForceHandle",
-                table: "Accounts");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Accounts_Email",
-                table: "Accounts");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Accounts_NationalId",
-                table: "Accounts");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Accounts_PhoneNumber",
-                table: "Accounts");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Accounts_VjudgeHandle",
-                table: "Accounts");
-
-            migrationBuilder.DropCheckConstraint(
-                name: "CK_Gender",
-                table: "Accounts");
-
-            migrationBuilder.AlterColumn<int>(
-                name: "NationalId",
-                table: "Accounts",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(14)",
-                oldMaxLength: 14);
-
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "JoinDate",
-                table: "Accounts",
-                type: "datetime2",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "datetime2",
-                oldDefaultValueSql: "GETDATE()");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "FacebookLink",
-                table: "Accounts",
-                type: "nvarchar(450)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(100)",
-                oldMaxLength: 100,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Email",
-                table: "Accounts",
-                type: "nvarchar(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(256)",
-                oldMaxLength: 256);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Accounts_CodeForceHandle",
-                table: "Accounts",
-                column: "CodeForceHandle");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Accounts_Email",
-                table: "Accounts",
-                column: "Email");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Accounts_FacebookLink",
-                table: "Accounts",
-                column: "FacebookLink");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Accounts_NationalId",
-                table: "Accounts",
-                column: "NationalId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Accounts_PhoneNumber",
-                table: "Accounts",
-                column: "PhoneNumber");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Accounts_VjudgeHandle",
-                table: "Accounts",
-                column: "VjudgeHandle");
+            migrationBuilder.DropTable(
+                name: "Accounts");
         }
     }
 }

@@ -32,7 +32,6 @@ namespace ISC.API.Controllers
 			account.CodeForceHandle=user.CodeForceHandle;
 			account.PhoneNumber = user.phone;
 			account.College=user.College;
-			account.VjudgeHandle=user.VjudgeHandle;
 			var result=await _userManager.CreateAsync(account,user.Password);
 			if(result.Succeeded)
 			{
