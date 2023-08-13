@@ -1,24 +1,54 @@
-
+using ISC.API.Helpers;
+using ISC.API.Services;
 using ISC.EF;
+using ISC.EF.Interfaces;
+using ISC.EF.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ISC
 {
-	public class Program
+    public class Program
 	{
 		public static void Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
+			builder.Services.AddScoped<IAuthanticationServices, AuthanticationModel>();
+			builder.Services.AddScoped<IAccountRepository,AccountRepository>();
 			builder.Services.AddDbContext<DataBase>(option =>
 				option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
-									b=>b.MigrationsAssembly(typeof(DataBase).Assembly.FullName))
+									b => b.MigrationsAssembly(typeof(DataBase).Assembly.FullName))
 									);
 			builder.Services.AddIdentity<UserAccount, IdentityRole>()
 				.AddEntityFrameworkStores<DataBase>()
 				.AddDefaultTokenProviders();
+			builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
+			builder.Services.AddAuthentication(options =>
+			{
+				options.DefaultAuthenticateScheme=JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme=JwtBearerDefaults.AuthenticationScheme;
+			}).AddJwtBearer(o =>
+			{
+				o.RequireHttpsMetadata = false;
+				o.SaveToken = false;
+				o.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuerSigningKey = true,
+					ValidateIssuer = true,
+					ValidateAudience = true,
+					ValidateLifetime = true,
+					ValidIssuer = builder.Configuration["JWT:Issuer"],
+					ValidAudience = builder.Configuration["JWT:Audience"],
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
+					ClockSkew = TimeSpan.Zero
+				};
+			});
+
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
@@ -33,8 +63,9 @@ namespace ISC
 				app.UseSwaggerUI();
 			}
 
+			app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+			app.UseAuthentication();
 			app.UseAuthorization();
-
 
 			app.MapControllers();
 

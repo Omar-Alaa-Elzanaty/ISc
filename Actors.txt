@@ -3,7 +3,7 @@ Actors:
 	-------------------------------------------------------------
 (Authantication for all)
 Leader:
-
+admin can add any individual to system and assign many roles to his/her during account creation
 
 HeadofTraining:
 

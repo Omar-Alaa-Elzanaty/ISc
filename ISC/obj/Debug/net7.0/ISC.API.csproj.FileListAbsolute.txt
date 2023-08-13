@@ -84,3 +84,4 @@ D:\ISC\ISC\obj\Debug\net7.0\refint\ISC.API.dll
 D:\ISC\ISC\obj\Debug\net7.0\ISC.API.pdb
 D:\ISC\ISC\obj\Debug\net7.0\ISC.API.genruntimeconfig.cache
 D:\ISC\ISC\obj\Debug\net7.0\ref\ISC.API.dll
+D:\ISC\ISC\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

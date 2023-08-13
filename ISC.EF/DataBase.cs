@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ISC.Core.ModelsDtos;
+using ISC.EF.Interfaces;
+
 namespace ISC.EF
 {
 	public class DataBase :IdentityDbContext<UserAccount>
@@ -47,19 +49,20 @@ namespace ISC.EF
 			//new TraineeConfigurations().Configure(builder.Entity<Trainee>());
 			new TraineeSheetAccessConfigurations().Configure(builder.Entity<TraineeSheetAccess>());
 		}
-		DbSet<Trainee> Trainees { get; set; }
-		DbSet<Session> Sessions { get; set; }
-		DbSet<TraineeAttendence> TraineesAttednces { get; set; }
-		DbSet<Sheet> Sheets { get; set; }
-		DbSet<TraineeSheetAccess> TraineesSheetsAccess { get; set; }
-		DbSet<Mentor> Mentors { get; set; }
-		DbSet<Camp> Camps { get; set; }
-		DbSet<SessionFeedback> SessionsFeedbacks { get; set; }
-		DbSet<MentorOfCamp> MentorsOfCamps { get; set; }
-		DbSet<MentorAttendence> MentorsAttendences { get; set; }
-		DbSet<Material> Materials { get; set; }
-		DbSet<TraineeArchive> TraineesArchives { get; set; }
-		DbSet<StuffArchive> StuffArchives { get; set; }
-		DbSet<NewRegitseration> NewRegitserations { get; set; }
+		public DbSet<UserAccount> Accounts { get; set; }
+		public DbSet<Trainee> Trainees { get; set; }
+		public DbSet<Session> Sessions { get; set; }
+		public DbSet<TraineeAttendence> TraineesAttednces { get; set; }
+		public DbSet<Sheet> Sheets { get; set; }
+		public DbSet<TraineeSheetAccess> TraineesSheetsAccess { get; set; }
+		public DbSet<Mentor> Mentors { get; set; }
+		public DbSet<Camp> Camps { get; set; }
+		public DbSet<SessionFeedback> SessionsFeedbacks { get; set; }
+		public DbSet<MentorOfCamp> MentorsOfCamps { get; set; }
+		public DbSet<MentorAttendence> MentorsAttendences { get; set; }
+		public DbSet<Material> Materials { get; set; }
+		public DbSet<TraineeArchive> TraineesArchives { get; set; }
+		public DbSet<StuffArchive> StuffArchives { get; set; }
+		public DbSet<NewRegitseration> NewRegitserations { get; set; }
 	}
 }

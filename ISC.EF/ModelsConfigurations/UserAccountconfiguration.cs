@@ -18,13 +18,13 @@ namespace ISC.EF.ModelsConfigurations
 			builder.HasIndex(acc => acc.CodeForceHandle).IsUnique();
 			builder.HasIndex(acc => acc.Email).IsUnique();
 			builder.HasIndex(acc => acc.PhoneNumber).HasFilter("PhoneNumber IS NOT NULL").IsUnique();
-			builder.Property(i => i.UserName).HasMaxLength(20);
+			builder.Property(i => i.UserName).HasMaxLength(40);
 			builder.Property(i => i.FirstName).HasMaxLength(20);
 			builder.Property(i => i.LastName).HasMaxLength(20);
-			builder.Property(i => i.College).HasMaxLength(20);
+			builder.Property(i => i.College).HasMaxLength(30);
 			builder.Property(i => i.Gender).HasMaxLength(7);
 			builder.Property(i => i.NationalId).HasMaxLength(14);
-			builder.Property(i => i.FacebookLink).HasMaxLength(100);
+			builder.Property(i => i.FacebookLink).HasMaxLength(200);
 			builder.Property(i => i.Email).IsRequired();
 			builder.Property(acc => acc.JoinDate).HasDefaultValueSql("GETDATE()");
 			builder.ToTable(b=>b.HasCheckConstraint("CK_Gender","Gender in ('Male','Female')"));

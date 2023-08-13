@@ -10,6 +10,9 @@ uniqe:
 notnull:campid,mentorid
 PK:id
 
+
+Instructor(id,UserId,
+
 Mentor(id,userid)
 uniqe:userid
 notnull:userid
@@ -108,5 +111,7 @@ traineeArchive
 NewRegisteration
 -------------------------
 Database Testing:
+
+------------------------
 
 

@@ -11,9 +11,16 @@ myMethod
 MyVariable
 MY_CONSTANT
 _privateVariable
+myparameter
+
 
 need Arabic string test for feedbacks
 
 Functions Run every an hour
 get total solved problem for every trainee
 calculate total solved problem for every trainee
+
+
+Gender: Male |  Female
+
+Roles :-> Leader |  Instructor | Trainee | Head of Training | Mentor
