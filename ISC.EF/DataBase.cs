@@ -10,7 +10,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ISC.Core.ModelsDtos;
-using ISC.EF.Interfaces;
 
 namespace ISC.EF
 {

@@ -9,8 +9,9 @@ HeadofTraining:
 
 
 
+
 Trainee:
--can access sheets that their sessions date older than the current date && it should pass
+-can access sheets that their sessions date older than the current date && it should pass precent of solved problems
 
 Mentor:
 
