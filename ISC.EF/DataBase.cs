@@ -16,7 +16,7 @@ namespace ISC.EF
 {
 	public class DataBase :IdentityDbContext<UserAccount>
 	{
-		public DataBase() { }
+		public DataBase():base() { }
 		public DataBase(DbContextOptions<DataBase> options) : base(options)
 		{
 
@@ -49,7 +49,6 @@ namespace ISC.EF
 			//new TraineeConfigurations().Configure(builder.Entity<Trainee>());
 			new TraineeSheetAccessConfigurations().Configure(builder.Entity<TraineeSheetAccess>());
 		}
-		public DbSet<UserAccount> Accounts { get; set; }
 		public DbSet<Trainee> Trainees { get; set; }
 		public DbSet<Session> Sessions { get; set; }
 		public DbSet<TraineeAttendence> TraineesAttednces { get; set; }

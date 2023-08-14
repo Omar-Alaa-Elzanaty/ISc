@@ -29,5 +29,6 @@ namespace ISC.EF
 		public string? VjudgeHandle { get; set; }
 		public Mentor? Mentor { get; set; }
 		public Trainee? Trainee { get; set; }
+		public HeadOfTraining? Headofcamp { get; set; }
 	}
 }

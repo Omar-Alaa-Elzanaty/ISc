@@ -1,7 +1,6 @@
 D:\ISC\ISC.Core\bin\Debug\net7.0\ISC.Core.deps.json
 D:\ISC\ISC.Core\bin\Debug\net7.0\ISC.Core.dll
 D:\ISC\ISC.Core\bin\Debug\net7.0\ISC.Core.pdb
-D:\ISC\ISC.Core\obj\Debug\net7.0\ISC.Core.csproj.AssemblyReference.cache
 D:\ISC\ISC.Core\obj\Debug\net7.0\ISC.Core.GeneratedMSBuildEditorConfig.editorconfig
 D:\ISC\ISC.Core\obj\Debug\net7.0\ISC.Core.AssemblyInfoInputs.cache
 D:\ISC\ISC.Core\obj\Debug\net7.0\ISC.Core.AssemblyInfo.cs

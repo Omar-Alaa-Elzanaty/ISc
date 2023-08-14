@@ -30,7 +30,7 @@ namespace ISC.EF.ModelsConfigurations
 			builder.ToTable(b=>b.HasCheckConstraint("CK_Gender","Gender in ('Male','Female')"));
 			builder.HasOne(c => c.Trainee).WithOne().HasForeignKey<Trainee>(t=>t.UserId);
 			builder.HasOne(c => c.Mentor).WithOne().HasForeignKey<Mentor>(m=>m.UserId);
-
+			builder.HasOne(c=>c.Headofcamp).WithOne().HasForeignKey<HeadOfTraining>(h=>h.UserId);
 		}
 	}
 }

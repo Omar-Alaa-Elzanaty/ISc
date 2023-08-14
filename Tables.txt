@@ -95,6 +95,7 @@ Camps - Mentor /Restrict  campid(Mentorofcamp)
 Camps - Sessions Cascade
 Session - Mentor /Restrict sessionid mentorAttendence/ 
 Sheets - Materials Cascade
+camps - HeadOfTraining setnull at headoftraining
 
 trainee.include(i=>i.mentorid).include(j=>j.account).where(t=>t.id=id);
 [resutl.mentor.account.firstname+result.mentor.account.lastname]

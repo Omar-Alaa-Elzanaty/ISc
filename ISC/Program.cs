@@ -2,7 +2,6 @@ using ISC.API.Helpers;
 using ISC.API.Services;
 using ISC.EF;
 using ISC.EF.Interfaces;
-using ISC.EF.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +18,6 @@ namespace ISC
 
 			// Add services to the container.
 			builder.Services.AddScoped<IAuthanticationServices, AuthanticationModel>();
-			builder.Services.AddScoped<IAccountRepository,AccountRepository>();
 			builder.Services.AddDbContext<DataBase>(option =>
 				option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
 									b => b.MigrationsAssembly(typeof(DataBase).Assembly.FullName))

@@ -17,6 +17,7 @@ namespace ISC.Core.Models
 		public List<Trainee> Trainees { get; set; }
 		public HashSet<MentorOfCamp> MentorsOfCamp { get; set; }
 		public List<Session> Sessions { get; set; }
+		public List<HeadOfTraining> Heads { get; set; }
 
 	}
 }

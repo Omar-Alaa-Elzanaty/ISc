@@ -17,7 +17,7 @@ namespace ISC.EF.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.9")
+                .HasAnnotation("ProductVersion", "7.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -45,7 +45,32 @@ namespace ISC.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Camps", (string)null);
+                    b.ToTable("Camps");
+                });
+
+            modelBuilder.Entity("ISC.Core.Models.HeadOfTraining", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CampId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CampId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("HeadOfTraining");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Material", b =>
@@ -71,7 +96,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SheetId");
 
-                    b.ToTable("Materials", (string)null);
+                    b.ToTable("Materials");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Mentor", b =>
@@ -91,7 +116,7 @@ namespace ISC.EF.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Mentors", (string)null);
+                    b.ToTable("Mentors");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.NewRegitseration", b =>
@@ -154,7 +179,7 @@ namespace ISC.EF.Migrations
                     b.HasIndex("CodeForceHandle")
                         .IsUnique();
 
-                    b.ToTable("NewRegitserations", (string)null);
+                    b.ToTable("NewRegitserations");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Session", b =>
@@ -189,7 +214,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("CampId");
 
-                    b.ToTable("Sessions", (string)null);
+                    b.ToTable("Sessions");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Sheet", b =>
@@ -210,7 +235,7 @@ namespace ISC.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sheets", (string)null);
+                    b.ToTable("Sheets");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.StuffArchive", b =>
@@ -263,7 +288,7 @@ namespace ISC.EF.Migrations
 
                     b.HasKey("NationalID");
 
-                    b.ToTable("StuffArchives", (string)null);
+                    b.ToTable("StuffArchives");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Trainee", b =>
@@ -296,7 +321,7 @@ namespace ISC.EF.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Trainees", (string)null);
+                    b.ToTable("Trainees");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.TraineeArchive", b =>
@@ -355,7 +380,7 @@ namespace ISC.EF.Migrations
 
                     b.HasKey("NationalID");
 
-                    b.ToTable("TraineesArchives", (string)null);
+                    b.ToTable("TraineesArchives");
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.MentorAttendence", b =>
@@ -370,7 +395,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("MentorsAttendences", (string)null);
+                    b.ToTable("MentorsAttendences");
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.MentorOfCamp", b =>
@@ -385,7 +410,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("CampId");
 
-                    b.ToTable("MentorsOfCamps", (string)null);
+                    b.ToTable("MentorsOfCamps");
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.SessionFeedback", b =>
@@ -410,7 +435,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("SessionsFeedbacks", (string)null);
+                    b.ToTable("SessionsFeedbacks");
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.TraineeAttendence", b =>
@@ -425,7 +450,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("TraineesAttednces", (string)null);
+                    b.ToTable("TraineesAttednces");
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.TraineeSheetAccess", b =>
@@ -445,7 +470,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SheetId");
 
-                    b.ToTable("TraineesSheetsAccess", (string)null);
+                    b.ToTable("TraineesSheetsAccess");
                 });
 
             modelBuilder.Entity("ISC.EF.UserAccount", b =>
@@ -465,8 +490,8 @@ namespace ISC.EF.Migrations
 
                     b.Property<string>("College")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -481,8 +506,8 @@ namespace ISC.EF.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FacebookLink")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -552,8 +577,8 @@ namespace ISC.EF.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("VjudgeHandle")
                         .HasColumnType("nvarchar(450)");
@@ -722,6 +747,19 @@ namespace ISC.EF.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("ISC.Core.Models.HeadOfTraining", b =>
+                {
+                    b.HasOne("ISC.Core.Models.Camp", null)
+                        .WithMany("Heads")
+                        .HasForeignKey("CampId");
+
+                    b.HasOne("ISC.EF.UserAccount", null)
+                        .WithOne("Headofcamp")
+                        .HasForeignKey("ISC.Core.Models.HeadOfTraining", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Material", b =>
@@ -928,6 +966,8 @@ namespace ISC.EF.Migrations
 
             modelBuilder.Entity("ISC.Core.Models.Camp", b =>
                 {
+                    b.Navigation("Heads");
+
                     b.Navigation("MentorsOfCamp");
 
                     b.Navigation("Sessions");
@@ -971,6 +1011,8 @@ namespace ISC.EF.Migrations
 
             modelBuilder.Entity("ISC.EF.UserAccount", b =>
                 {
+                    b.Navigation("Headofcamp");
+
                     b.Navigation("Mentor");
 
                     b.Navigation("Trainee");
