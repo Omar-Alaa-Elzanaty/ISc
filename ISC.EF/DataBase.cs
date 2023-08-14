@@ -62,5 +62,6 @@ namespace ISC.EF
 		public DbSet<TraineeArchive> TraineesArchives { get; set; }
 		public DbSet<StuffArchive> StuffArchives { get; set; }
 		public DbSet<NewRegitseration> NewRegitserations { get; set; }
+		public DbSet<HeadOfTraining> HeadsOfTraining { get; set;}
 	}
 }

@@ -70,7 +70,7 @@ namespace ISC.EF.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("HeadOfTraining");
+                    b.ToTable("HeadsOfTraining");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Material", b =>
@@ -751,7 +751,7 @@ namespace ISC.EF.Migrations
 
             modelBuilder.Entity("ISC.Core.Models.HeadOfTraining", b =>
                 {
-                    b.HasOne("ISC.Core.Models.Camp", null)
+                    b.HasOne("ISC.Core.Models.Camp", "camp")
                         .WithMany("Heads")
                         .HasForeignKey("CampId");
 
@@ -760,6 +760,8 @@ namespace ISC.EF.Migrations
                         .HasForeignKey("ISC.Core.Models.HeadOfTraining", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("camp");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Material", b =>

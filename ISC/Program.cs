@@ -19,7 +19,8 @@ namespace ISC
 
 			// Add services to the container.
 			builder.Services.AddScoped<IAuthanticationServices, AuthanticationModel>();
-			builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+			builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+			//builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 			builder.Services.AddDbContext<DataBase>(option =>
 				option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
 									b => b.MigrationsAssembly(typeof(DataBase).Assembly.FullName))

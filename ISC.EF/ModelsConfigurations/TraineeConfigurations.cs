@@ -13,7 +13,7 @@ namespace ISC.EF.ModelsConfigurations
 	{
 		public void Configure(EntityTypeBuilder<Trainee> builder)
 		{
-
+			builder.Property(t=>t.MentorId).IsRequired();
 		}
 	}
 }
