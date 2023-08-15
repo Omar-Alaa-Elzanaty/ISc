@@ -3,7 +3,13 @@ Actors:
 	-------------------------------------------------------------
 (Authantication for all)
 Leader:
-admin can add any individual to system and assign many roles to his/her during account creation
+-can add/delete any individual to system and assign many roles to his/her during account creation
+-add/Delete roles
+-can see all camps
+-create/Delete camp
+-assing headoftraining to this camp
+-show session feedbacks
+-
 
 HeadofTraining:
 
