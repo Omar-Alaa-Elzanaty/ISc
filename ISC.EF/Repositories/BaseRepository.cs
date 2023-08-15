@@ -21,23 +21,23 @@ namespace ISC.EF.Repositories
 			return await _Context.Set<T>().FindAsync(id);
 		}
 
-		public async Task<T> findAsync(Expression<Func<T, bool>> match)
-		{
-			return await _Context.Set<T>().SingleOrDefaultAsync(match);
-		}
+		//public async Task<T> findAsync(Expression<Func<T, bool>> match)
+		//{
+		//	return await _Context.Set<T>().SingleOrDefaultAsync(match);
+		//}
 
-		public async Task<T> findWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null)
-		{
-			IQueryable<T>query=_Context.Set<T>();
-			if(includes != null)
-			{
-				foreach(var item in includes)
-				{
-					query=query.Include(item);
-				}
-			}
-			return await query.SingleOrDefaultAsync(match);
-		}
+		//public async Task<T> findWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null)
+		//{
+		//	IQueryable<T>query=_Context.Set<T>();
+		//	if(includes != null)
+		//	{
+		//		foreach(var item in includes)
+		//		{
+		//			query=query.Include(item);
+		//		}
+		//	}
+		//	return await query.SingleOrDefaultAsync(match);
+		//}
 
 		public async void addAsync(T entity)
 		{
@@ -48,5 +48,6 @@ namespace ISC.EF.Repositories
 		{
 			 _Context.Set<T>().Remove(entity);
 		}
+
 	}
 }

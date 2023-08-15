@@ -299,10 +299,10 @@ namespace ISC.EF.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CampId")
+                    b.Property<int?>("CampId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MentorId")
+                    b.Property<int?>("MentorId")
                         .HasColumnType("int");
 
                     b.Property<int>("TotalSolvedProblems")
@@ -799,15 +799,11 @@ namespace ISC.EF.Migrations
                 {
                     b.HasOne("ISC.Core.Models.Camp", "Camp")
                         .WithMany("Trainees")
-                        .HasForeignKey("CampId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CampId");
 
                     b.HasOne("ISC.Core.Models.Mentor", "Mentor")
                         .WithMany("Trainees")
-                        .HasForeignKey("MentorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MentorId");
 
                     b.HasOne("ISC.EF.UserAccount", null)
                         .WithOne("Trainee")

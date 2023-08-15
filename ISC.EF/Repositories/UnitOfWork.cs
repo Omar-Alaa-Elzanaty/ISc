@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ISC.EF.Repositories
 {
-	public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
 	{
 		private readonly DataBase _DataBase;
 		public IBaseRepository<Trainee> Trainees { get; private set; }

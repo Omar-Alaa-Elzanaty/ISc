@@ -85,7 +85,6 @@ D:\ISC\ISC\obj\Debug\net7.0\ISC.API.pdb
 D:\ISC\ISC\obj\Debug\net7.0\ISC.API.genruntimeconfig.cache
 D:\ISC\ISC\obj\Debug\net7.0\ref\ISC.API.dll
 D:\ISC\ISC\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-D:\ISC\ISC\bin\Debug\net7.0\client_secret_420228157018-fji38fd9vjk3l1n30468do4hrd4s508c.apps.googleusercontent.com.json
 D:\ISC\ISC\bin\Debug\net7.0\libman.json
 D:\ISC\ISC\bin\Debug\net7.0\BouncyCastle.Cryptography.dll
 D:\ISC\ISC\bin\Debug\net7.0\MailKit.dll

@@ -1,4 +1,5 @@
 using ISC.API.Helpers;
+using ISC.API.ISerivces;
 using ISC.API.Services;
 using ISC.Core.Interfaces;
 using ISC.EF;
@@ -30,6 +31,7 @@ namespace ISC
 				.AddDefaultTokenProviders();
 			builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 			builder.Services.AddScoped<IMailServices, MailServices>();
+			builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 			builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 			builder.Services.AddAuthentication(options =>
 			{

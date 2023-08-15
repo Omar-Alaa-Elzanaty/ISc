@@ -1,5 +1,5 @@
 ﻿using ISC.API.APIDtos;
-using ISC.API.Services;
+using ISC.API.ISerivces;
 using ISC.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ISC.API.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class AccountController : ControllerBase
 	{
