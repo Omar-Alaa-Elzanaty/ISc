@@ -28,6 +28,8 @@ namespace ISC
 			builder.Services.AddIdentity<UserAccount, IdentityRole>()
 				.AddEntityFrameworkStores<DataBase>()
 				.AddDefaultTokenProviders();
+			builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+			builder.Services.AddScoped<IMailServices, MailServices>();
 			builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 			builder.Services.AddAuthentication(options =>
 			{
