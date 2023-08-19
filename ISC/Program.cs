@@ -19,7 +19,7 @@ namespace ISC
 			var builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
-			builder.Services.AddScoped<IAuthanticationServices, AuthanticationModel>();
+			builder.Services.AddScoped<IAuthanticationServices, AuthanticationServices>();
 			builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 			//builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 			builder.Services.AddDbContext<DataBase>(option =>
