@@ -1,5 +1,5 @@
 use this in begining any request after adding server/api/{Method-Name}
-#Methods
+# Methods
 
 > post
 
