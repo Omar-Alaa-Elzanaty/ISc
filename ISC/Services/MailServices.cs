@@ -84,7 +84,7 @@ namespace ISC.API.Services
 					if (await _AccountRepository.createTraineeAccountAsync(NewUser, password) == false)
 					{
 						NotValidAccount.Add(Trainee);
-						sendEmailAsync(Trainee.Email, "Account Problem", "Please Contact with Us!"); 
+						await sendEmailAsync(Trainee.Email, "Account Problem", "Please Contact with Us!"); 
 					}
 				}
 				else

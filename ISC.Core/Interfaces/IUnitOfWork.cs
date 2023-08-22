@@ -12,7 +12,7 @@ namespace ISC.Core.Interfaces
 	{
 		IBaseRepository<Trainee> Trainees { get; }
 		IBaseRepository<Session> Sessions { get; }
-		IBaseRepository<Mentor> Mentors { get; }
+		IMentorRepository Mentors { get; }
 		IBaseRepository<TraineeAttendence> TraineesAttendence { get; }
 		IBaseRepository<Sheet> Sheets { get; }
 		IBaseRepository<TraineeSheetAccess> TraineesSheetsAccess { get; }

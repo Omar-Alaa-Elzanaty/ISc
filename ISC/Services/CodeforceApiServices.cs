@@ -1,14 +1,10 @@
 ﻿using ISC.API.ISerivces;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using System;
-using System.Diagnostics.Eventing.Reader;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using static ISC.API.APIDtos.CodeForcesDtos;
 
-namespace CodeforcesApiClient
+namespace CodeforceApiSerivces
 {
 	public class CodeforceApiServices:IOnlineJudgeServices
 	{
@@ -18,7 +14,7 @@ namespace CodeforcesApiClient
 		{
 			_httpClient = new HttpClient
 			{
-				BaseAddress = new Uri("https://codeforces.com/")
+				BaseAddress = new Uri("https://codeforces.com/api/")
 			};
 			_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 		}
@@ -27,24 +23,25 @@ namespace CodeforcesApiClient
 		{
 			try
 			{
-				var response = await _httpClient.GetAsync($"api/user.info?handles={handle}");
+				var Response = await _httpClient.GetAsync($"user.info?handles={handle}");
 
-				if (!response.IsSuccessStatusCode)
+				if (!Response.IsSuccessStatusCode)
 				{
 					return false;
 				}
 
-				var responseContent = await response.Content.ReadAsStringAsync();
-				var deserializedResponse = JsonSerializer.Deserialize<CodeforcesApiResponseDto>(responseContent);
+				var ResponseContent = await Response.Content.ReadAsStringAsync();
+				var DeserializedResponse = JsonSerializer.
+										Deserialize<CodeforcesApiResponseDto<CodeforcesUserDto>>(ResponseContent);
 
-				if (deserializedResponse.status != "OK" || deserializedResponse.result.Count == 0)
+				if (DeserializedResponse.status != "OK" || DeserializedResponse.result.Count == 0)
 				{
 					return false;
 				}
 
 				return true;
 			}
-			catch (Exception ex)
+			catch
 			{
 				return false;
 			}

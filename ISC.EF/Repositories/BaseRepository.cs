@@ -49,5 +49,9 @@ namespace ISC.EF.Repositories
 			 _Context.Set<T>().Remove(entity);
 		}
 
+		public async Task<List<T>> getAllAsync()
+		{
+			return await _Context.Set<T>().ToListAsync();
+		}
 	}
 }

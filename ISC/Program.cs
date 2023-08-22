@@ -5,10 +5,12 @@ using ISC.Core.Interfaces;
 using ISC.EF;
 using ISC.EF.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace ISC
 {
@@ -19,8 +21,10 @@ namespace ISC
 			var builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
-			builder.Services.AddScoped<IAuthanticationServices, AuthanticationServices>();
+			builder.Services.AddCors();
 			builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+			builder.Services.AddScoped<IMentorRepository,MentorRepository>();
+			builder.Services.AddScoped<IAuthanticationServices, AuthanticationServices>();
 			//builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 			builder.Services.AddDbContext<DataBase>(option =>
 				option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -53,12 +57,10 @@ namespace ISC
 					ClockSkew = TimeSpan.Zero
 				};
 			});
-
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
-
 			var app = builder.Build();
 
 			// Configure the HTTP request pipeline.
@@ -67,11 +69,10 @@ namespace ISC
 				app.UseSwagger();
 				app.UseSwaggerUI();
 			}
-
+			app.UseHttpsRedirection();
 			app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 			app.UseAuthentication();
 			app.UseAuthorization();
-
 			app.MapControllers();
 
 			app.Run();

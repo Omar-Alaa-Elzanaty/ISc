@@ -12,6 +12,7 @@ namespace ISC.Core.Interfaces
 		void addAsync(T entity);
 		void delete(T entity);
 		Task<T> getByIdAsync(int id);
+		Task<List<T>> getAllAsync();
 		//Task<T> findAsync(Expression<Func<T, bool>> match);
 		//Task<T> findWithChildAsync(Expression<Func<T, bool>> match, string[]includes=null);
 	}

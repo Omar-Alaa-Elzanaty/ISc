@@ -30,5 +30,49 @@ namespace ISC.EF
 		public Mentor? Mentor { get; set; }
 		public Trainee? Trainee { get; set; }
 		public HeadOfTraining? Headofcamp { get; set; }
+		public string generateUserName()
+		{
+			StringBuilder NewUser=new StringBuilder();
+			StringBuilder Hashing=new StringBuilder("#@@!&");
+			var rand=new Random();
+			int x = rand.Next(1000, 10000);
+			while (x > 0)
+			{
+				NewUser.Append(this.NationalId[x%10]);
+				x /= 10;
+			}
+			NewUser.Append(Hashing[rand.Next(Hashing.Length)]);
+			NewUser.Append(this.CodeForceHandle[Math.Min(this.CodeForceHandle.Length,4)]);
+			x = rand.Next(1000000000);
+			int c = 3;
+			while (x > 0 && c > 0)
+			{
+				NewUser.Append(this.NationalId[x % 10]);
+				x /= 10;
+				c--;
+			}
+			return NewUser.ToString();
+		}
+		public string generatePassword()
+		{
+			StringBuilder NewPassword = new StringBuilder();
+			StringBuilder HashingSohag=new StringBuilder("Sohag");
+			StringBuilder Hashing = new StringBuilder("!@#$&");
+			var rand= new Random();
+			int x = 5;
+			while(x > 0){
+				NewPassword.Append(HashingSohag[rand.Next(HashingSohag.Length)]);
+				x--;
+			}
+			NewPassword.Append(Hashing[rand.Next(Hashing.Length)]);
+			x = rand.Next(1000, 9999);
+
+			while(x > 0)
+			{
+				NewPassword.Append(x%10+'0');
+				x /= 10;
+			}
+			return NewPassword.ToString();
+		}
 	}
 }

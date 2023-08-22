@@ -1,4 +1,4 @@
-﻿using CodeforcesApiClient;
+﻿using CodeforceApiSerivces;
 using ISC.API.APIDtos;
 using ISC.API.ISerivces;
 using ISC.Core.Models;
@@ -18,22 +18,6 @@ namespace ISC.API.Controllers
         {
             _auth = auth;
         }
-		[HttpPost("Register")]
-		[Authorize(Roles ="Leader")]
-		public async Task<IActionResult> register([FromForm]AdminRegisterDto newuser)
-		{
-			if(!ModelState.IsValid)
-			{
-				return BadRequest(ModelState);
-			}
-			var model=await _auth.adminRegisterAsync(newuser);
-			if(!model.IsAuthenticated)
-			{
-				return BadRequest(model);
-			}
-
-			return Ok(model);
-		}
         [HttpGet("Login")]
 		public async Task<IActionResult> loginAsync([FromForm]LoginDto user)
 		{

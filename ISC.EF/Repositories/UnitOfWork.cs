@@ -1,6 +1,7 @@
 ﻿using ISC.Core.Interfaces;
 using ISC.Core.Models;
 using ISC.Core.ModelsDtos;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,13 @@ namespace ISC.EF.Repositories
 {
     public class UnitOfWork : IUnitOfWork
 	{
+		private readonly UserManager<UserAccount> _UserManager;
 		private readonly DataBase _DataBase;
 		public IBaseRepository<Trainee> Trainees { get; private set; }
 
 		public IBaseRepository<Session> Sessions { get; private set; }
 
-		public IBaseRepository<Mentor> Mentors { get; private set; }
+		public IMentorRepository Mentors { get; private set; }
 
 		public IBaseRepository<TraineeAttendence> TraineesAttendence { get; private set; }
 
@@ -40,14 +42,14 @@ namespace ISC.EF.Repositories
 		public IBaseRepository<StuffArchive> StuffArchive { get; private set; }
 
 		public IBaseRepository<NewRegitseration> NewRegitseration { get; private set; }
-        public UnitOfWork(DataBase database)
+        public UnitOfWork(DataBase database,UserManager<UserAccount>usermanager)
         {
 			_DataBase = database;
-
+			_UserManager = usermanager;
 
 			Trainees = new BaseRepository<Trainee>(_DataBase);
 			Sessions= new BaseRepository<Session>(_DataBase);
-			Mentors = new BaseRepository<Mentor>(_DataBase);
+			Mentors = new MentorRepository(database,usermanager);
 			TraineesAttendence = new BaseRepository<TraineeAttendence>(_DataBase);
 			Sheets = new BaseRepository<Sheet>(_DataBase);
 			TraineesSheetsAccess = new BaseRepository<TraineeSheetAccess>(_DataBase);

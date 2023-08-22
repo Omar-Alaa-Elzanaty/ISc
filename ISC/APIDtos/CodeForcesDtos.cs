@@ -2,11 +2,11 @@
 {
 	public class CodeForcesDtos
 	{
-		public class CodeforcesApiResponseDto
+		public class CodeforcesApiResponseDto<T>
 		{
 			public string status { get; set; }
 			public string? comment { get; set; }
-			public List<CodeforcesUserDto> result { get; set; }
+			public List<T> result { get; set; }
 		}
 
 		public class CodeforcesUserDto
