@@ -28,8 +28,8 @@ fontsize=15
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>198</x>
-      <y>66</y>
+      <x>209</x>
+      <y>44</y>
       <w>1331</w>
       <h>638</h>
     </coordinates>
@@ -41,8 +41,8 @@ halign=center
   <element>
     <id>UMLActor</id>
     <coordinates>
-      <x>22</x>
-      <y>341</y>
+      <x>33</x>
+      <y>319</y>
       <w>66</w>
       <h>121</h>
     </coordinates>
@@ -52,8 +52,8 @@ halign=center
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>209</x>
-      <y>110</y>
+      <x>220</x>
+      <y>88</y>
       <w>176</w>
       <h>77</h>
     </coordinates>
@@ -63,8 +63,8 @@ halign=center
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>77</x>
-      <y>132</y>
+      <x>88</x>
+      <y>110</y>
       <w>154</w>
       <h>275</h>
     </coordinates>
@@ -74,8 +74,8 @@ halign=center
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>814</x>
-      <y>121</y>
+      <x>825</x>
+      <y>99</y>
       <w>308</w>
       <h>66</h>
     </coordinates>
@@ -86,8 +86,8 @@ halign=center
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>374</x>
-      <y>110</y>
+      <x>385</x>
+      <y>88</y>
       <w>297</w>
       <h>55</h>
     </coordinates>
@@ -98,8 +98,8 @@ halign=center
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>649</x>
-      <y>110</y>
+      <x>660</x>
+      <y>88</y>
       <w>176</w>
       <h>55</h>
     </coordinates>
@@ -109,8 +109,8 @@ halign=center
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>1100</x>
-      <y>110</y>
+      <x>1111</x>
+      <y>88</y>
       <w>363</w>
       <h>110</h>
     </coordinates>
@@ -121,8 +121,8 @@ halign=center
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>913</x>
-      <y>154</y>
+      <x>924</x>
+      <y>132</y>
       <w>176</w>
       <h>44</h>
     </coordinates>
@@ -134,8 +134,8 @@ in case user is trainee</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>1166</x>
-      <y>242</y>
+      <x>1177</x>
+      <y>220</y>
       <w>286</w>
       <h>44</h>
     </coordinates>
@@ -145,8 +145,8 @@ in case user is trainee</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>737</x>
-      <y>154</y>
+      <x>748</x>
+      <y>132</y>
       <w>451</w>
       <h>132</h>
     </coordinates>
@@ -157,8 +157,8 @@ in case user is trainee</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>924</x>
-      <y>264</y>
+      <x>935</x>
+      <y>242</y>
       <w>231</w>
       <h>44</h>
     </coordinates>
@@ -170,8 +170,8 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>77</x>
-      <y>143</y>
+      <x>88</x>
+      <y>121</y>
       <w>616</w>
       <h>264</h>
     </coordinates>
@@ -181,8 +181,8 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>77</x>
-      <y>363</y>
+      <x>88</x>
+      <y>341</y>
       <w>253</w>
       <h>55</h>
     </coordinates>
@@ -192,8 +192,8 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>308</x>
-      <y>374</y>
+      <x>319</x>
+      <y>352</y>
       <w>209</w>
       <h>44</h>
     </coordinates>
@@ -203,8 +203,8 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>715</x>
-      <y>352</y>
+      <x>726</x>
+      <y>330</y>
       <w>132</w>
       <h>44</h>
     </coordinates>
@@ -214,8 +214,8 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>506</x>
-      <y>363</y>
+      <x>517</x>
+      <y>341</y>
       <w>231</w>
       <h>55</h>
     </coordinates>
@@ -226,8 +226,8 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>649</x>
-      <y>440</y>
+      <x>660</x>
+      <y>418</y>
       <w>209</w>
       <h>44</h>
     </coordinates>
@@ -237,8 +237,8 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>440</x>
-      <y>407</y>
+      <x>451</x>
+      <y>385</y>
       <w>231</w>
       <h>77</h>
     </coordinates>
@@ -249,8 +249,8 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>253</x>
-      <y>594</y>
+      <x>264</x>
+      <y>572</y>
       <w>242</w>
       <h>66</h>
     </coordinates>
@@ -260,8 +260,8 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>484</x>
-      <y>605</y>
+      <x>495</x>
+      <y>583</y>
       <w>198</w>
       <h>55</h>
     </coordinates>
@@ -272,8 +272,8 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>660</x>
-      <y>594</y>
+      <x>671</x>
+      <y>572</y>
       <w>275</w>
       <h>88</h>
     </coordinates>
@@ -284,8 +284,8 @@ of stuff tothis camp</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>77</x>
-      <y>374</y>
+      <x>88</x>
+      <y>352</y>
       <w>198</w>
       <h>275</h>
     </coordinates>
@@ -295,8 +295,8 @@ of stuff tothis camp</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>297</x>
-      <y>407</y>
+      <x>308</x>
+      <y>385</y>
       <w>121</w>
       <h>143</h>
     </coordinates>
@@ -306,8 +306,8 @@ of stuff tothis camp</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>385</x>
-      <y>407</y>
+      <x>396</x>
+      <y>385</y>
       <w>143</w>
       <h>143</h>
     </coordinates>
@@ -317,8 +317,8 @@ of stuff tothis camp</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>242</x>
-      <y>528</y>
+      <x>253</x>
+      <y>506</y>
       <w>132</w>
       <h>44</h>
     </coordinates>
@@ -328,8 +328,8 @@ of stuff tothis camp</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>429</x>
-      <y>528</y>
+      <x>440</x>
+      <y>506</y>
       <w>132</w>
       <h>44</h>
     </coordinates>
@@ -339,8 +339,8 @@ of stuff tothis camp</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>1089</x>
-      <y>594</y>
+      <x>1100</x>
+      <y>572</y>
       <w>154</w>
       <h>44</h>
     </coordinates>
@@ -350,8 +350,8 @@ of stuff tothis camp</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>924</x>
-      <y>605</y>
+      <x>935</x>
+      <y>583</y>
       <w>187</w>
       <h>55</h>
     </coordinates>
@@ -362,8 +362,8 @@ of stuff tothis camp</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>1177</x>
-      <y>341</y>
+      <x>1188</x>
+      <y>319</y>
       <w>220</w>
       <h>77</h>
     </coordinates>
@@ -376,8 +376,8 @@ with username&amp; pass</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>341</x>
-      <y>165</y>
+      <x>352</x>
+      <y>143</y>
       <w>858</w>
       <h>231</h>
     </coordinates>

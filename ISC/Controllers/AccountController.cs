@@ -18,7 +18,7 @@ namespace ISC.API.Controllers
         {
             _auth = auth;
         }
-        [HttpGet("Login")]
+        [HttpPost("Login")]
 		public async Task<IActionResult> loginAsync([FromForm]LoginDto user)
 		{
 			if(!ModelState.IsValid)

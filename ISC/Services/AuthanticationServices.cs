@@ -4,7 +4,9 @@ using ISC.API.ISerivces;
 using ISC.Core.Interfaces;
 using ISC.Core.Models;
 using ISC.EF;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
@@ -16,14 +18,16 @@ namespace ISC.API.Services
 {
     public class AuthanticationServices : IAuthanticationServices
 	{
-		private readonly UserManager<UserAccount> _userManager;
+		private readonly UserManager<UserAccount> _UserManager;
 		private readonly JWT _jwt;
+		private readonly RoleManager<IdentityRole> _RoleManager;
 		private readonly IUnitOfWork _unitOfWork;
-        public AuthanticationServices(UserManager<UserAccount> usermanger,IOptions<JWT>jwt,IUnitOfWork unitofwork)
+        public AuthanticationServices(UserManager<UserAccount> usermanger,IOptions<JWT>jwt,IUnitOfWork unitofwork,RoleManager<IdentityRole>rolemanager)
         {
-            _userManager = usermanger;
+            _UserManager = usermanger;
 			_jwt = jwt.Value;
 			_unitOfWork = unitofwork;
+			_RoleManager = rolemanager;
         }
 		public async Task<AuthModel> adminRegisterAsync(AdminRegisterDto user)
 		{
@@ -31,6 +35,17 @@ namespace ISC.API.Services
 			if (NotValidData.IsAuthenticated==false)
 			{
 				return  NotValidData;
+			}
+			foreach (var role in user.Roles)
+			{
+				if (!await _RoleManager.RoleExistsAsync(role))
+				{
+					return new AuthModel()
+					{
+						Message = $"Role {role} not exist in system",
+						IsAuthenticated = false
+					};
+				}
 			}
 			UserAccount NewAccount = new UserAccount()
 			{
@@ -52,7 +67,7 @@ namespace ISC.API.Services
 				JoinDate=DateTime.Now,
 				LastLoginDate=DateTime.Now,
 			};
-			var result = await _userManager.CreateAsync(NewAccount, user.Password);
+			var result = await _UserManager.CreateAsync(NewAccount, user.Password);
 			if (result.Succeeded == false)
 			{
 				var errors = string.Empty;
@@ -63,7 +78,7 @@ namespace ISC.API.Services
 				errors.Remove(errors.Length - 1, 1);
 				return new AuthModel() { Message = errors};
 			}
-			await _userManager.AddToRolesAsync(NewAccount, user.Roles);
+			await _UserManager.AddToRolesAsync(NewAccount, user.Roles);
 			foreach (var Role in user.Roles)
 			{
 				if (Role == Roles.MENTOR)
@@ -95,13 +110,17 @@ namespace ISC.API.Services
 
 		public async Task<AuthModel> loginAsync(LoginDto user)
 		{
-			var UserAccount = await _userManager.FindByNameAsync(user.UserName);
-			if(user is null ||! await _userManager.CheckPasswordAsync(UserAccount, user.Password))
+			var UserAccount = await _UserManager.FindByNameAsync(user.UserName);
+			if(user is null ||! await _UserManager.CheckPasswordAsync(UserAccount, user.Password))
 			{
 				return new AuthModel() { Message = "Email or Passwrod is incorrect!" };
 			}
-			var JwtSecurityToken = await CreateJwtToken(UserAccount);
-			var RolesList=await _userManager.GetRolesAsync(UserAccount);
+			JwtSecurityToken JwtSecurityToken;
+			if (user.RemeberMe!=null)
+			JwtSecurityToken = await CreateJwtToken(UserAccount,(bool)user.RemeberMe);
+			else
+				JwtSecurityToken = await CreateJwtToken(UserAccount);
+			var RolesList=await _UserManager.GetRolesAsync(UserAccount);
 			return new AuthModel()
 			{
 				IsAuthenticated = true,
@@ -112,10 +131,10 @@ namespace ISC.API.Services
 			};
 		}
 
-		private async Task<JwtSecurityToken> CreateJwtToken(UserAccount user)
+		private async Task<JwtSecurityToken> CreateJwtToken(UserAccount user,bool rememberme=false)
 		{
-			var userClaims = await _userManager.GetClaimsAsync(user);
-			var roles = await _userManager.GetRolesAsync(user);
+			var userClaims = await _UserManager.GetClaimsAsync(user);
+			var roles = await _UserManager.GetRolesAsync(user);
 			var roleClaims = new List<Claim>();
 
 			foreach (var role in roles)
@@ -123,7 +142,7 @@ namespace ISC.API.Services
 
 			var claims = new[]
 			{
-				new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+				new Claim(JwtRegisteredClaimNames.Sub, user.Id),
 				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 				new Claim("uid", user.Id),
 				new Claim("username",user.UserName)
@@ -138,22 +157,22 @@ namespace ISC.API.Services
 				issuer: _jwt.Issuer,
 				audience: _jwt.Audience,
 				claims: claims,
-				expires: DateTime.UtcNow.AddDays(_jwt.DurationInDays),
+				expires: (rememberme==true)?DateTime.UtcNow.AddDays(_jwt.DurationInDays):DateTime.UtcNow.AddDays(1),
 				signingCredentials: signingCredentials);
 
 			return jwtSecurityToken;
 		}
 		public async Task<AuthModel> registerationValidation(AdminRegisterDto user)
 		{
-			if (await _userManager.FindByNameAsync(user.UserName) != null)
+			if (await _UserManager.FindByNameAsync(user.UserName) != null)
 				return new AuthModel() { Message = "Username is already Exist!" };
-			if (await _userManager.FindByEmailAsync(user.Email) != null)
+			if (await _UserManager.FindByEmailAsync(user.Email) != null)
 				return new AuthModel() { Message = "Email is already registered!" };
-			if (user.PhoneNumber != null && _userManager.Users.SingleOrDefault(ac => ac.PhoneNumber == user.PhoneNumber) != null)
+			if (user.PhoneNumber != null && _UserManager.Users.SingleOrDefault(ac => ac.PhoneNumber == user.PhoneNumber) != null)
 				return new AuthModel() { Message = "This number is already Exist!" };
-			if (user.VjudgeHandle != null && _userManager.Users.SingleOrDefault(i => i.VjudgeHandle == user.VjudgeHandle) != null)
+			if (user.VjudgeHandle != null && _UserManager.Users.SingleOrDefault(i => i.VjudgeHandle == user.VjudgeHandle) != null)
 				return new AuthModel() { Message = "Vjudge Handle is already Exist!" };
-			if (_userManager.Users.SingleOrDefault(i => i.CodeForceHandle == user.CodeForceHandle) != null)
+			if (_UserManager.Users.SingleOrDefault(i => i.CodeForceHandle == user.CodeForceHandle) != null)
 				return new AuthModel() { Message = "Codeforce Handle is already Exist!" };
 			if (user.Roles == null)
 				return new AuthModel() { Message = "User should assign to one or more Roles" };

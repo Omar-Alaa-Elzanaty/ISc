@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Claims;
 
 namespace ISC.API.Controllers
 {
@@ -16,24 +19,26 @@ namespace ISC.API.Controllers
 	{
 		private readonly RoleManager<IdentityRole> _RoleManager;
 		private readonly UserManager<UserAccount> _UserManager;
-		private readonly IAuthanticationServices _Auth;
 		private readonly IUnitOfWork _UnitOfWork;
-		public LeaderServicesController(RoleManager<IdentityRole> roleManager, UserManager<UserAccount> userManager, IAuthanticationServices auth, IUnitOfWork unitofwork)
+		public LeaderServicesController(RoleManager<IdentityRole> roleManager, UserManager<UserAccount> userManager, IUnitOfWork unitofwork)
 		{
 			_RoleManager = roleManager;
 			_UserManager = userManager;
-			_Auth = auth;
 			_UnitOfWork = unitofwork;
 		}
-		[HttpGet("MentorsDetails")]
-		public async Task<IActionResult> showMentors()
+		
+		
+		[HttpGet("AvailableRoles")]
+		public async Task<IActionResult> displaySystemRoles()
 		{
-			return Ok(await _UnitOfWork.Mentors.showMentorsAccountsAsync());
+			return Ok(_RoleManager.Roles.ToList().Select(role=>role.Name));
 		}
-		[HttpGet("CampsDetails")]
-		public async Task<IActionResult> showCamps()
+		[HttpGet("ShowStuff")]
+		public  async Task<IActionResult> displayStuff()
 		{
-			return Ok(await _UnitOfWork.Camps.getAllAsync());
+			var Accounts = _UserManager.Users.ToList();
+			var TraineeAccounts =await _UserManager.GetUsersInRoleAsync(RolesTemplates.Trainee);
+			return Ok(Accounts.Except(TraineeAccounts));
 		}
 	}
 }

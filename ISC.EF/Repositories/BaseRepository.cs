@@ -40,8 +40,8 @@ namespace ISC.EF.Repositories
 		//}
 
 		public async void addAsync(T entity)
-		{
-			 await _Context.Set<T>().AddAsync(entity);
+		{ 
+			await _Context.Set<T>().AddAsync(entity);
 		}
 
 		public void delete(T entity)

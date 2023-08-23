@@ -26,3 +26,5 @@ Gender: Male |  Female
 Roles :-> Leader |  Instructor | Trainee | Head of Training | Mentor
 
 Date Format MM/DD/YYYY
+
+get name from token	var userId=User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
