@@ -28,12 +28,17 @@
 			public string? openId { get; set; }
 			public string? titlePhoto { get; set; }
 		}
-		public class CodeForceContestStandingApiResponseDto
+		public class CodeforceContestStandingDto
 		{
 			public string status { get; set; }
 			public string? comment { get; set; }
+			public CodeforceStandingResult result { get; set; }
+
+		}
+		public class CodeforceStandingResult
+		{
 			public CodeforcesContestDto contest { get; set; }
-			public List<CodeforcesProblemDto> problem { get; set; }
+			public List<CodeforcesProblemDto> problems { get; set; }
 			public List<CodeforcesRankListRowDto> rows { get; set; }
 		}
 		public class CodeforcesContestDto

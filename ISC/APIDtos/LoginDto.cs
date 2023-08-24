@@ -8,6 +8,6 @@ namespace ISC.API.APIDtos
 		public string UserName { get; set; }
 		[MaxLength(30)]
 		public string Password { get; set; }
-		public bool? RemeberMe { get; set; }=false;
+		public bool? RememberMe { get; set; }
 	}
 }
