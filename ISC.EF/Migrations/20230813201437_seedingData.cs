@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using ISC.EF.Templates;
+﻿using ISC.Core.Models;
+using Microsoft.EntityFrameworkCore.Migrations;
 #nullable disable
 
 namespace ISC.EF.Migrations
@@ -13,8 +13,8 @@ namespace ISC.EF.Migrations
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "Name", "NormalizedName", "ConcurrencyStamp" },
-                values: new object[] { Guid.NewGuid().ToString(),RolesTemplates.Leader,
-                                    RolesTemplates.Leader.ToUpper(),Guid.NewGuid().ToString() }
+                values: new object[] { Guid.NewGuid().ToString(),Roles.LEADER,
+                                    Roles.LEADER.ToUpper(),Guid.NewGuid().ToString() }
                 );
         }
 

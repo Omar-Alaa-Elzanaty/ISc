@@ -25,6 +25,6 @@ namespace ISC.Core.Interfaces
 		IBaseRepository<StuffArchive> StuffArchive { get; }
 		IBaseRepository<NewRegitseration> NewRegitseration { get; }
 
-		int comlete();
+		Task<int> comleteAsync();
 	}
 }

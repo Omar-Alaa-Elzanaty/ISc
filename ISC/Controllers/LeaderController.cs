@@ -1,11 +1,8 @@
-﻿
-using CodeforceApiSerivces;
-using ISC.API.APIDtos;
+﻿using ISC.API.APIDtos;
 using ISC.API.ISerivces;
 using ISC.Core.Interfaces;
 using ISC.Core.Models;
 using ISC.EF;
-using ISC.EF.Templates;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +12,7 @@ namespace ISC.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize(Roles = RolesTemplates.Leader)]
+	[Authorize(Roles = Roles.LEADER)]
 	public class LeaderController : ControllerBase
 	{
 		private readonly RoleManager<IdentityRole> _RoleManager;
@@ -49,9 +46,22 @@ namespace ISC.API.Controllers
 		{
 
 			var newRole = new IdentityRole(role);
+			if (await _RoleManager.RoleExistsAsync(role))
+				return BadRequest("Role is already exist!");
 			var result = await _RoleManager.CreateAsync(newRole);
-			_UnitOfWork.comlete();
+			await _UnitOfWork.comleteAsync();
 			return Ok(result.Succeeded);
+		}
+		[HttpDelete("DeleteTrinees")]
+		public async Task<IActionResult> deleteFromStuff(List<string>traineesid)
+		{
+			List<UserAccount> Trainees=new List<UserAccount>();
+			foreach(string traineeid in traineesid)
+			{
+				await _UserManager.DeleteAsync(await _UserManager.FindByIdAsync(traineeid));
+			}
+			await _UnitOfWork.comleteAsync();
+			return Ok($"removed\n{Trainees}");
 		}
 	}
 }

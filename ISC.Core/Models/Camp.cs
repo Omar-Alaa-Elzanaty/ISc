@@ -18,6 +18,6 @@ namespace ISC.Core.Models
 		public HashSet<MentorOfCamp> MentorsOfCamp { get; set; }
 		public List<Session> Sessions { get; set; }
 		public List<HeadOfTraining> Heads { get; set; }
-
+		public List<Sheet> Sheets { get; set; }
 	}
 }

@@ -62,9 +62,9 @@ namespace ISC.EF.Repositories
 			StuffArchive = new BaseRepository<StuffArchive>(_DataBase);
 			NewRegitseration = new BaseRepository<NewRegitseration>(_DataBase);
 		}
-		public int comlete()
+		public async Task<int> comleteAsync()
 		{
-			return _DataBase.SaveChanges();
+			return await _DataBase.SaveChangesAsync();
 		}
         public void Dispose()
 		{

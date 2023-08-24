@@ -1,4 +1,6 @@
-﻿using ISC.API.ISerivces;
+﻿using ISC.API.Helpers;
+using ISC.API.ISerivces;
+using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -8,22 +10,25 @@ namespace CodeforceApiSerivces
 {
 	public class CodeforceApiServices:IOnlineJudgeServices
 	{
-		private readonly HttpClient _httpClient;
-
-		public CodeforceApiServices()
+		private readonly HttpClient _HttpClient;
+		private readonly CodeForceConnection _CFConnection;
+		private readonly string _BaseLink; 
+		public CodeforceApiServices(IOptions<CodeForceConnection>cfconnection)
 		{
-			_httpClient = new HttpClient
+			_HttpClient = new HttpClient
 			{
 				BaseAddress = new Uri("https://codeforces.com/api/")
 			};
-			_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+			_HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+			_CFConnection = cfconnection.Value;
+			_BaseLink = "https://c...content-available-to-author-only...s.com/api/contest.standings?";
 		}
 
 		public async Task<bool> checkHandleValidationAsync(string handle)
 		{
 			try
 			{
-				var Response = await _httpClient.GetAsync($"user.info?handles={handle}");
+				var Response = await _HttpClient.GetAsync($"user.info?handles={handle}");
 
 				if (!Response.IsSuccessStatusCode)
 				{
@@ -45,6 +50,15 @@ namespace CodeforceApiSerivces
 			{
 				return false;
 			}
+		}
+		private string createTimeInUnix()
+		{
+			var Time = new DateTimeOffset(DateTime.Now);
+			return  (Time.ToUnixTimeMilliseconds() / 1000).ToString();
+		}
+		private async Task<string>generateLink(string parameter,string secret)
+		{
+			return null;
 		}
 	}
 }

@@ -1,7 +1,7 @@
 ﻿using ISC.API.ISerivces;
 using ISC.Core.Interfaces;
+using ISC.Core.Models;
 using ISC.EF;
-using ISC.EF.Templates;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -12,7 +12,7 @@ namespace ISC.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize(Roles =$"!{RolesTemplates.Trainee}")]
+	[Authorize(Roles =$"{Roles.LEADER},{Roles.MENTOR},{Roles.HOC}")]
 	public class StuffController : ControllerBase
 	{
 		private readonly RoleManager<IdentityRole> _RoleManager;

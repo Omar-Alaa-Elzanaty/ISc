@@ -50,7 +50,7 @@ unique:(mentorid,sessionid)
 notnull:mentorid,sessionid
 PK:(mentorid,sessionid)
 
-Sheets(id,name,numberofproblems,ProblemSheetLink)
+Sheets(id,name,numberofproblems,ProblemSheetLink,SheetOrder,campid)
 unique:name
 notnull:name,numberofproblems
 PK:id

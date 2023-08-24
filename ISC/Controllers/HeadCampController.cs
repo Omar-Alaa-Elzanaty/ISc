@@ -1,7 +1,7 @@
 ﻿using ISC.API.ISerivces;
 using ISC.Core.Interfaces;
+using ISC.Core.Models;
 using ISC.EF;
-using ISC.EF.Templates;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +11,7 @@ namespace ISC.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize(Roles =$"{RolesTemplates.Leader},{RolesTemplates.HOC}")]
+	[Authorize(Roles =$"{Roles.LEADER},{Roles.HOC}")]
 	public class HeadCampController : ControllerBase
 	{
 		private readonly RoleManager<IdentityRole> _RoleManager;
@@ -28,7 +28,7 @@ namespace ISC.API.Controllers
 		[HttpGet("DisplayTrainees")]
 		public async Task<IActionResult> displayTrainee()
 		{
-			return Ok(await _UserManager.GetUsersInRoleAsync(RolesTemplates.Trainee));
+			return Ok(await _UserManager.GetUsersInRoleAsync(Roles.TRAINEE));
 		}
 	}
 }

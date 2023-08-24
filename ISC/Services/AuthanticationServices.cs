@@ -47,6 +47,14 @@ namespace ISC.API.Services
 					};
 				}
 			}
+			if (user.Roles.SingleOrDefault(Roles.TRAINEE) != null && (user.MentorId == null || user.CampId == null))
+			{
+				return new AuthModel()
+				{
+					Message = "Should assign mentor to spacific Mentor and Camp",
+					IsAuthenticated = false
+				};
+			}
 			UserAccount NewAccount = new UserAccount()
 			{
 				UserName = user.UserName,
@@ -88,15 +96,21 @@ namespace ISC.API.Services
 				}
 				else if (Role == Roles.HOC)
 				{
-					HeadOfTraining HeadOfTraining = new HeadOfTraining() { UserId = NewAccount.Id,CampId=user.CampId };
-					_unitOfWork.HeadofCamp.addAsync(HeadOfTraining);
+					if(user.CampId!=null)
+					{
+						HeadOfTraining HeadOfTraining = new HeadOfTraining() { UserId = NewAccount.Id, CampId = user.CampId };
+						_unitOfWork.HeadofCamp.addAsync(HeadOfTraining);
+					}
 				}else if (Role == Roles.TRAINEE)
 				{
-					Trainee trainee = new Trainee() { UserId = NewAccount.Id, CampId = (int)user.CampId, MentorId = (int)user.MentorId };
-					_unitOfWork.Trainees.addAsync(trainee);
+					if (user.CampId != null && user.MentorId != null)
+					{
+						Trainee trainee = new Trainee() { UserId = NewAccount.Id, CampId = user.CampId, MentorId = user.MentorId };
+						_unitOfWork.Trainees.addAsync(trainee);
+					}
 				}
 			}
-			_unitOfWork.comlete();
+			await _unitOfWork.comleteAsync();
 			var JwtSecurityToken = await CreateJwtToken(NewAccount);
 			return new AuthModel()
 			{

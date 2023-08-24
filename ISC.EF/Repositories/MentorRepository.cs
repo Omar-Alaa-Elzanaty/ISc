@@ -1,6 +1,5 @@
 ﻿using ISC.Core.Interfaces;
 using ISC.Core.Models;
-using ISC.EF.Templates;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -21,7 +20,7 @@ namespace ISC.EF.Repositories
         }
         public async Task<object> showMentorsAccountsAsync()
         {
-            var Accounts=await _UserManager.GetUsersInRoleAsync(RolesTemplates.Mentor);
+            var Accounts=await _UserManager.GetUsersInRoleAsync(Roles.MENTOR);
 
             return (from account in Accounts
                    from mentor in _Context.Mentors

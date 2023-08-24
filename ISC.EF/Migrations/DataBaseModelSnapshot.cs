@@ -225,6 +225,12 @@ namespace ISC.EF.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CampId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinimumPrecent")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -233,7 +239,12 @@ namespace ISC.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("SheetOrder")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CampId");
 
                     b.ToTable("Sheets");
                 });
@@ -795,6 +806,17 @@ namespace ISC.EF.Migrations
                     b.Navigation("Camp");
                 });
 
+            modelBuilder.Entity("ISC.Core.Models.Sheet", b =>
+                {
+                    b.HasOne("ISC.Core.Models.Camp", "Camp")
+                        .WithMany("Sheets")
+                        .HasForeignKey("CampId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Camp");
+                });
+
             modelBuilder.Entity("ISC.Core.Models.Trainee", b =>
                 {
                     b.HasOne("ISC.Core.Models.Camp", "Camp")
@@ -969,6 +991,8 @@ namespace ISC.EF.Migrations
                     b.Navigation("MentorsOfCamp");
 
                     b.Navigation("Sessions");
+
+                    b.Navigation("Sheets");
 
                     b.Navigation("Trainees");
                 });

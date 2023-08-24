@@ -1,11 +1,12 @@
 ﻿using ISC.API.ISerivces;
 using ISC.Core.Interfaces;
+using ISC.Core.Models;
 using ISC.EF;
-using ISC.EF.Templates;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
@@ -14,7 +15,7 @@ namespace ISC.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize(Roles =RolesTemplates.Leader)]
+	[Authorize(Roles = Roles.LEADER)]
 	public class LeaderServicesController : ControllerBase
 	{
 		private readonly RoleManager<IdentityRole> _RoleManager;
@@ -28,16 +29,17 @@ namespace ISC.API.Controllers
 		}
 		
 		
-		[HttpGet("AvailableRoles")]
+		[HttpGet("DisplayRoles")]
 		public async Task<IActionResult> displaySystemRoles()
 		{
-			return Ok(_RoleManager.Roles.ToList().Select(role=>role.Name));
+			var roles = await _RoleManager.Roles.ToListAsync();
+			return Ok(roles.Select(role=>role.Name));
 		}
-		[HttpGet("ShowStuff")]
+		[HttpGet("DisplayStuff")]
 		public  async Task<IActionResult> displayStuff()
 		{
 			var Accounts = _UserManager.Users.ToList();
-			var TraineeAccounts =await _UserManager.GetUsersInRoleAsync(RolesTemplates.Trainee);
+			var TraineeAccounts =await _UserManager.GetUsersInRoleAsync(Roles.TRAINEE);
 			return Ok(Accounts.Except(TraineeAccounts));
 		}
 	}

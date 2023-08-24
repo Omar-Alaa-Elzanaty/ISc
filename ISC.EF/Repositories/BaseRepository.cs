@@ -48,7 +48,10 @@ namespace ISC.EF.Repositories
 		{
 			 _Context.Set<T>().Remove(entity);
 		}
-
+		public void deleteGroup(List<T> entities)
+		{
+			_Context.Set<T>().RemoveRange(entities);
+		}
 		public async Task<List<T>> getAllAsync()
 		{
 			return await _Context.Set<T>().ToListAsync();
