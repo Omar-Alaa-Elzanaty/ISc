@@ -1,5 +1,4 @@
-﻿using CodeforceApiSerivces;
-using ISC.API.ISerivces;
+﻿using ISC.API.ISerivces;
 using ISC.Core.Interfaces;
 using ISC.EF;
 using Microsoft.AspNetCore.Authorization;
@@ -30,7 +29,7 @@ namespace ISC.API.Controllers
 		[HttpGet]
 		public async Task<IActionResult>getcontest(string contestid)
 		{
-			return Ok(_onlineJudgeServices.getContestStandingAsync(contestid,3,true));
+			return Ok(await _onlineJudgeServices.getContestStandingAsync(contestid,3,true));
 		}
 	}
 }

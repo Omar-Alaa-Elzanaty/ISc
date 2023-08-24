@@ -92,3 +92,6 @@ D:\ISC\ISC\bin\Debug\net7.0\MimeKit.dll
 D:\ISC\ISC\bin\Debug\net7.0\System.Security.Cryptography.Pkcs.dll
 D:\ISC\ISC\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll
 D:\ISC\ISC\bin\Debug\net7.0\RestSharp.dll
+D:\ISC\ISC\bin\Debug\net7.0\Newtonsoft.Json.dll
+D:\ISC\ISC\bin\Debug\net7.0\System.Net.Http.Formatting.dll
+D:\ISC\ISC\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll

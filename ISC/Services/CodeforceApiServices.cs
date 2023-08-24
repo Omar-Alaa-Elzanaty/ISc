@@ -7,82 +7,55 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Diagnostics.Eventing.Reader;
+using System.Threading.Tasks;
 using static ISC.API.APIDtos.CodeForcesDtos;
+using ISC.API.Services;
+using System.Collections.Generic;
 
 namespace CodeforceApiSerivces
 {
 	public class CodeforceApiServices:IOnlineJudgeServices
 	{
-		private readonly HttpClient _HttpClient;
-		private readonly CodeForceConnection _CFConnection; 
+		private readonly CodeForceConnection _CFConnection;
+		private readonly ApiRequestServices _ApiRequest;
 		public CodeforceApiServices(IOptions<CodeForceConnection>cfconnection)
 		{
-			_HttpClient = new HttpClient
-			{
-				BaseAddress = new Uri("https://codeforces.com/api/")
-			};
-			_HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 			_CFConnection = cfconnection.Value;
+			_ApiRequest = new ApiRequestServices("https://codeforces.com/api/");
 		}
-
 		public async Task<bool> checkHandleValidationAsync(string handle)
 		{
 			try
 			{
-				var Response = await _HttpClient.GetAsync($"user.info?handles={handle}");
-
-				if (!Response.IsSuccessStatusCode)
-				{
-					return false;
-				}
-
-				var ResponseContent = await Response.Content.ReadAsStringAsync();
-				var DeserializedResponse = JsonSerializer.
-										Deserialize<CodeforcesApiResponseDto<CodeforcesUserDto>>(ResponseContent);
-
-				if (DeserializedResponse.status != "OK" || DeserializedResponse.result.Count == 0)
-				{
-					return false;
-				}
-
-				return true;
+				var Response = await _ApiRequest
+					.getRequestAsync<CodeforcesApiResponseDto<List<CodeforcesUserDto>>>($"user.info?handles={handle}");
+				if (Response == null) return false;
+				var ResponseContent =(CodeforcesApiResponseDto<List<CodeforcesUserDto>>) Response;
+				return !(ResponseContent.status != "OK" || ResponseContent.result.Count == 0);
 			}
-			catch
+			catch 
 			{
 				return false;
 			}
 		}
-		public async Task<object> getContestStandingAsync(string contestid,int numberofrows,bool unofficial)
+		public async Task<CodeforcesApiResponseDto<CodeforceStandingResult>> getContestStandingAsync(string contestid,int numberofrows,bool unofficial)
 		{
 			try//377686
 			{
-				string BaseLink = "https://codeforces.com/api/";
-				var _HttpClientConteststanding = new HttpClient() {
-					BaseAddress=new Uri(BaseLink)
-				};
-				_HttpClientConteststanding.DefaultRequestHeaders
-					.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				var x = "contest.standings?"+generatecontestStandingrequest(contestid, numberofrows,BaseLink,unofficial);
-				var Response = await _HttpClientConteststanding.GetAsync(x);
-				if(!Response.IsSuccessStatusCode)
-				{
-					return null;
-				}
-				var ResponseContent = await Response.Content.ReadAsStringAsync();
-				var DeserializedResponse = JsonSerializer.
-										Deserialize<CodeforcesApiResponseDto<CodeforceContestStandingDto>>(ResponseContent);
-				if (DeserializedResponse.status != "OK")
-				{
-					return null;
-				}
-				return DeserializedResponse;
+
+				string request = "contest.standings?"+generatecontestStandingrequest(contestid, numberofrows,unofficial);
+				var Response = await _ApiRequest.getRequestAsync<CodeforcesApiResponseDto<CodeforceStandingResult>>(request);
+				var Standing= (CodeforcesApiResponseDto<CodeforceStandingResult>)Response;
+				if (Standing == null) return null;
+				else return Standing;
 			}
 			catch
 			{
 				return null;
 			}
 		}
-		private string generatecontestStandingrequest(string contestid,int numberofrows,string baseaddress,bool unofficial)
+		private string generatecontestStandingrequest(string contestid,int numberofrows,bool unofficial)
 		{
 			string Parameters = "";
 			Parameters = addParameter(Parameters, "apiKey", _CFConnection.Key);
