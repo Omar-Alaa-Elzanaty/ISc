@@ -9,5 +9,9 @@
 			await file.CopyToAsync(DataStream);
 			return DataStream.ToArray();
 		}
+		public string generateTimeInUnix()
+		{
+			return (DateTimeOffset.Now.ToUnixTimeMilliseconds() / 1000).ToString();
+		}
 	}
 }

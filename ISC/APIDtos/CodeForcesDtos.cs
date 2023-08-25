@@ -27,8 +27,6 @@ namespace ISC.API.APIDtos
 			public string? city { get; set; }
 			public string? organization { get; set; }
 			public string? email { get; set; }
-			public string? vkId { get; set; }
-			public string? openId { get; set; }
 			public string? titlePhoto { get; set; }
 		}
 		public class CodeforceStandingResult
@@ -57,13 +55,9 @@ namespace ISC.API.APIDtos
 		}
 		public class CodeforcesProblemDto
 		{
-			//[JsonProperty("contestId")]
 			public int? contestId { get; set; }
 
-			//[JsonProperty("index")]
 			public string index { get; set; }
-
-			//[JsonProperty("name")]
 			public string name { get; set; }
 			//public string type { get; set; }
 			//public double? points { get; set; }
@@ -81,42 +75,25 @@ namespace ISC.API.APIDtos
 			[JsonProperty("points")]
 			public double Points { get; set; }
 
-			[JsonProperty("penalty")]
-			public int? Penalty { get; set; }
+			//[JsonProperty("penalty")]
+			//public int? Penalty { get; set; }
 
-			[JsonProperty("successfulHackCount")]
-			public int? SuccessfulHackCount { get; set; }
+			//[JsonProperty("successfulHackCount")]
+			//public int? SuccessfulHackCount { get; set; }
 
-			[JsonProperty("unsuccessfulHackCount")]
-			public int? UnsuccessfulHackCount { get; set; }
+			//[JsonProperty("unsuccessfulHackCount")]
+			//public int? UnsuccessfulHackCount { get; set; }
 
 			[JsonProperty("problemResults")]
-			public List<CodeforceProblemResultDto> ProblemResults { get; set; }
-			public int? lastSubmissionTimeSeconds { get; set; }
-		}
-        public class CodeforcePartyDto
-        {
-			[JsonProperty("contestId")]
-			public int? ContestId { get; set; }
-
-			[JsonProperty("members")]
-			public List<CodeforceMemberDto> Members { get; set; }
-
-			[JsonProperty("participantType")]
-			public string ParticipantType { get; set; }
-			public int? teamId { get; set; }
-			public string? teamName { get; set; }
-			public bool? ghost { get;set; }
-			public int? room { get; set; }
-			public int? startTimeSeconds { get; set;}
-
+			public List<CodeforceProblemResultDto> problemResults { get; set; }
+			//public int? lastSubmissionTimeSeconds { get; set; }
 		}
 		public class CodeforceMemberDto 
 		{
-			[JsonProperty("handle")]
-			public string Handle { get; set; }
-			[JsonProperty("name")]
-			public string Name { get; set; }
+			//[JsonProperty("handle")]
+			public string? handle { get; set; }
+			//[JsonProperty("name")]
+			public string? name { get; set; }
 		}
 		public class CodeforceProblemResultDto
 		{
@@ -124,11 +101,31 @@ namespace ISC.API.APIDtos
 			public double Points { get; set; }
 
 			[JsonProperty("penalty")]
-			public int Penalty { get; set; }
+			public long? Penalty { get; set; }
 
 			[JsonProperty("rejectedAttemptCount")]
 			public int RejectedAttemptCount { get; set; }
+			public int? bestSubmissionTimeSeconds { get; set; }
 		}
-		
+		public class CodeforceSubmisionDto
+		{
+			public int id { get; set; }
+			public int? contestId { get; set; }
+			public CodeforceProblemDto problem { get; set; }
+			//public string? verdict { get; set; }
+		}
+		public class CodeforceProblemDto
+		{
+			public int? contestId { get; set; }
+			public string name { get; set; }
+
+		}
+		public class CodeforcePartyDto
+		{
+			public int? contestId { get; set; }
+			public List<CodeforceMemberDto> members { get; set; }
+			public string participantType { get; set; }
+		}
+
 	}
 }

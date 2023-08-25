@@ -20,13 +20,14 @@ namespace ISC.API.Services
         }
         public async Task<object> getRequestAsync<T>(string Parameter)
         {
-            HttpResponseMessage Response=await _HttpClient.GetAsync(_BaseLink+Parameter);
+            HttpResponseMessage Response=await _HttpClient.GetAsync(Parameter);
             if(Response.IsSuccessStatusCode!=true)
             {
                 return null; 
             }
-			var ResponseContent = await Response.Content.ReadAsAsync<T>();
-            return ResponseContent;
+			var ResponseContent = await Response.Content.ReadAsStringAsync();
+			var deserializedResponse = JsonSerializer.Deserialize<T>(ResponseContent);
+			return deserializedResponse;
 		}
     }
 }
