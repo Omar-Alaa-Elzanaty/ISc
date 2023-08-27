@@ -29,8 +29,9 @@ namespace ISC.API.Controllers
 		[HttpGet]
 		public async Task<IActionResult>getcontest(string contestid)
 		{
-			return Ok(await _onlineJudgeServices.getContestStandingAsync(contestid,50,true));
+			//return Ok(await _onlineJudgeServices.getContestStandingAsync(contestid,50,true));
 			//return Ok(await _onlineJudgeServices.getContestStatus(contestid));
+			return Ok(await _onlineJudgeServices.getUserStatusAsync());
 		}
 	}
 }

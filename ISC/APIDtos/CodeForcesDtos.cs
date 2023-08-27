@@ -29,7 +29,7 @@ namespace ISC.API.APIDtos
 			public string? email { get; set; }
 			public string? titlePhoto { get; set; }
 		}
-		public class CodeforceStandingResult
+		public class CodeforceStandingResultDto
 		{
 			//[JsonProperty("contest")]
 			public CodeforcesContestDto contest { get; set; }
@@ -112,7 +112,8 @@ namespace ISC.API.APIDtos
 			public int id { get; set; }
 			public int? contestId { get; set; }
 			public CodeforceProblemDto problem { get; set; }
-			//public string? verdict { get; set; }
+			public string? verdict { get; set; }
+			public int? creationTimeSeconds { get; set; }
 		}
 		public class CodeforceProblemDto
 		{

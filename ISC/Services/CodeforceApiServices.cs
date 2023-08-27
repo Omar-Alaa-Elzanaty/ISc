@@ -12,6 +12,11 @@ using System.Threading.Tasks;
 using static ISC.API.APIDtos.CodeForcesDtos;
 using ISC.API.Services;
 using System.Collections.Generic;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.AspNetCore.Http;
+using System.Runtime.CompilerServices;
+using System.Numerics;
 
 namespace CodeforceApiSerivces
 {
@@ -39,14 +44,14 @@ namespace CodeforceApiSerivces
 				return false;
 			}
 		}
-		public async Task<CodeforcesApiResponseDto<CodeforceStandingResult>> getContestStandingAsync(string contestid,int numberofrows,bool unofficial)
+		public async Task<CodeforcesApiResponseDto<CodeforceStandingResultDto>> getContestStandingAsync(string contestid,int numberofrows,bool unofficial)
 		{
 			try//377686
 			{
 
 				string request = "contest.standings?"+generatecontestStandingRequest(contestid, numberofrows,unofficial);
-				var Response = await _ApiRequest.getRequestAsync<CodeforcesApiResponseDto<CodeforceStandingResult>>(request);
-				var Standing= (CodeforcesApiResponseDto<CodeforceStandingResult>)Response;
+				var Response = await _ApiRequest.getRequestAsync<CodeforcesApiResponseDto<CodeforceStandingResultDto>>(request);
+				var Standing= (CodeforcesApiResponseDto<CodeforceStandingResultDto>)Response;
 				if (Standing == null) return null;
 				else return Standing;
 			}
@@ -62,9 +67,9 @@ namespace CodeforceApiSerivces
 
 				string request = "user.status?" + generateUserStatusRequest();
 				var Response = await _ApiRequest.getRequestAsync<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>>(request);
-				var Standing = (CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>)Response;
-				if (Standing == null) return null;
-				else return Standing;
+				var UserStatus = (CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>)Response;
+				if (UserStatus == null) return null;
+				else return UserStatus;
 			}
 			catch
 			{
@@ -78,9 +83,9 @@ namespace CodeforceApiSerivces
 
 				string request = "contest.status?"+generateContestStatusRequest(contestid);
 				var Response = await _ApiRequest.getRequestAsync<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>>(request);
-				var Standing = (CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>)Response;
-				if (Standing == null) return null;
-				else return Standing;
+				var ContestStatus = (CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>)Response;
+				if (ContestStatus == null) return null;
+				else return ContestStatus;
 			}
 			catch
 			{
@@ -90,58 +95,58 @@ namespace CodeforceApiSerivces
 		private string generatecontestStandingRequest(string contestid,int numberofrows,bool unofficial)
 		{
 			string Parameters = "";
-			Parameters = addParameter(Parameters, "apiKey", _CFConnection.Key);
-			Parameters = addParameter(Parameters, "contestId", contestid);
-			Parameters = addParameter(Parameters, "count", numberofrows.ToString());
-			Parameters = addParameter(Parameters, "from", "1");
-			Parameters = addParameter(Parameters, "showUnofficial", unofficial==true?"True":"false");
-			Parameters = addParameter(Parameters, "time", new Converters().generateTimeInUnix().ToString());
+			Parameters += addParameter("apiKey", _CFConnection.Key);
+			Parameters += addParameter("contestId", contestid);
+			Parameters += addParameter("count", numberofrows.ToString());
+			Parameters += addParameter("from", "1");
+			Parameters += addParameter("showUnofficial", unofficial==true?"True":"false");
+			Parameters += addParameter("time", new Converters().generateTimeInUnix().ToString());
 			Parameters = Parameters.Substring(0, Parameters.Length - 1);
 			var ApiSig = generateSig(Parameters, "/contest.standings?");
 			if (ApiSig == null) return null;
 			Parameters += "&";
-			Parameters = addParameter(Parameters, "apiSig", ApiSig);
+			Parameters += addParameter("apiSig", ApiSig);
 			Parameters=Parameters.Substring(0,Parameters.Length - 1);
 			return  Parameters;
 		}
 		private string generateUserStatusRequest()
 		{
-			string Parameters = "";
-			Parameters = addParameter(Parameters, "apiKey", _CFConnection.Key);
-			Parameters = addParameter(Parameters,"handle","ZANATY_");
-			Parameters = addParameter(Parameters,"from","1");
-			Parameters = addParameter(Parameters,"count","5");
-			Parameters = addParameter(Parameters, "time", new Converters().generateTimeInUnix().ToString());
-			Parameters = Parameters.Substring(0, Parameters.Length - 1);
-			var ApiSig = generateSig(Parameters, "/user.status?");
+			string Request = "";
+			Request += addParameter("apiKey", _CFConnection.Key);
+			Request += addParameter("count","2000");
+			Request += addParameter("from","1");
+			Request += addParameter("handle","ZANATY_");
+			Request += addParameter("time", new Converters().generateTimeInUnix().ToString());
+			Request = Request.Substring(0, Request.Length - 1);
+			var ApiSig = generateSig(Request, "/user.status?");
 			if (ApiSig == null) return null;
-			Parameters += "&";
-			Parameters = addParameter(Parameters, "apiSig", ApiSig);
-			Parameters = Parameters.Substring(0, Parameters.Length - 1);
-			return Parameters;
+			Request += "&";
+			Request += addParameter("apiSig", ApiSig);
+			Request = Request.Substring(0, Request.Length - 1);
+			return Request;
 		}
 		private string generateContestStatusRequest(string contestid)
 		{
 			string Parameters = "";
-			Parameters = addParameter(Parameters, "apiKey", _CFConnection.Key);
-			Parameters = addParameter(Parameters, "contestId", contestid);
-			Parameters = addParameter(Parameters, "handle", "ZANATY_");
-			Parameters = addParameter(Parameters, "asManager", "false");
-			Parameters = addParameter(Parameters, "count", "5");
-			Parameters = addParameter(Parameters, "from", "1");
-			Parameters = addParameter(Parameters, "time",new Converters().generateTimeInUnix().ToString());
+			Parameters += addParameter("apiKey", _CFConnection.Key);
+			Parameters += addParameter("asManager", "false");
+			Parameters += addParameter("contestId", contestid);
+			Parameters += addParameter("count", "5");
+			Parameters += addParameter("from", "1");
+			//Parameters += addParameter("handle", "ZANATY_");
+			Parameters += addParameter("time",new Converters().generateTimeInUnix().ToString());
 			Parameters = Parameters.Substring(0, Parameters.Length - 1);
 			var ApiSig = generateSig(Parameters, "/contest.status?");
 			if (ApiSig == null) return null;
 			Parameters += "&";
-			Parameters = addParameter(Parameters, "apiSig", ApiSig);
+			Parameters += addParameter("apiSig", ApiSig);
 			Parameters = Parameters.Substring(0, Parameters.Length - 1);
 			return Parameters;
 		}
-		private string generateSig(string parameterwithattributes,string controller)
+		private string generateSig(string parameters,string controller)
 		{
 			string Rand = new Random().Next(100000, 999999).ToString();
-			string Link = Rand + controller + parameterwithattributes;
+			string Link = Rand + controller + parameters;
 			Link += "#" + _CFConnection.Secret;
 			try
 			{
@@ -159,12 +164,13 @@ namespace CodeforceApiSerivces
 				return null;
 			}
 		}
-		private string addParameter(string parameter, string key, string val) {
-			parameter += key;
-			parameter += "=";
-			parameter += val;
-			parameter+= "&";
-			return parameter;
+		private string addParameter(string key, string val) {
+			string Parameter = "";
+			Parameter += key;
+			Parameter += "=";
+			Parameter += val;
+			Parameter+= "&";
+			return Parameter;
 		}
 	}
 }
