@@ -10,7 +10,7 @@ namespace ISC.Core.Interfaces
 {
 	public interface IUnitOfWork:IDisposable
 	{
-		IBaseRepository<Trainee> Trainees { get; }
+		ITraineeRepository Trainees { get; }
 		IBaseRepository<Session> Sessions { get; }
 		IMentorRepository Mentors { get; }
 		IBaseRepository<TraineeAttendence> TraineesAttendence { get; }
@@ -18,7 +18,7 @@ namespace ISC.Core.Interfaces
 		IBaseRepository<TraineeSheetAccess> TraineesSheetsAccess { get; }
 		IBaseRepository<HeadOfTraining> HeadofCamp { get; }
 		IBaseRepository<Camp> Camps { get; }
-		IBaseRepository<SessionFeedback> SessionsFeedback { get; }
+		ISessionFeedbackRepository SessionsFeedbacks { get; }
 		IBaseRepository<MentorOfCamp> MentorsOfCamps { get; }
 		IBaseRepository<Material> Materials { get; }
 		IBaseRepository<TraineeArchive> TraineesArchive { get; }

@@ -28,9 +28,9 @@ uniqu:topic
 notnull: Topic,instructorname,date,campid
 PK:id
 
-SessionsFeedback(sessionid,traineeid,feedback,datetime)
+SessionsFeedback(sessionid,traineeid,feedback,datetime,Rate)
 unique:
-notnull:feedback,datetime
+notnull:Rate,datetime
 PK:sessionid,traineeid
 feedback max(500)
 

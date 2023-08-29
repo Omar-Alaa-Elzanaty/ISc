@@ -24,6 +24,7 @@ namespace ISC.Core.Models
 		public string? VjudgeHandle { get; set; }
 		public string? PhoneNumber { get; set; }
 		public byte[]? ProfilePictrue { get; set; }
+		public string CampName { get; set; }
 		public bool? Status { get; set; }
 	}
 }

@@ -8,7 +8,7 @@ Leader:
 -can see all camps
 -create/Delete camp
 -assing headoftraining to this camp
--show session feedbacks
+-show sessions feedbacks
 -
 
 HeadofTraining:

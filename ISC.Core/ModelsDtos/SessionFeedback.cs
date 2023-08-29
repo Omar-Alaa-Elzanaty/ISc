@@ -12,8 +12,9 @@ namespace ISC.Core.ModelsDtos
     {
         public int SessionId { get; set; }
         public int TraineeId { get; set; }
-        [MaxLength(500)]
-        public string Feedback { get; set; }
+        [MaxLength(1000)]
+        public string? Feedback { get; set; }
+        public int Rate { get;set; }
         public DateTime DateTime { get; set; }= DateTime.Now;
         public virtual Session Session { get; set; }
         public virtual Trainee Trainee { get; set; }

@@ -128,6 +128,10 @@ namespace ISC.EF.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("CampName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CodeForceHandle")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -438,9 +442,11 @@ namespace ISC.EF.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Feedback")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("Rate")
+                        .HasColumnType("int");
 
                     b.HasKey("TraineeId", "SessionId");
 

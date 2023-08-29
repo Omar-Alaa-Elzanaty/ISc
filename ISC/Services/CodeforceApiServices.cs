@@ -1,22 +1,10 @@
 ﻿using ISC.API.Helpers;
 using ISC.API.ISerivces;
 using Microsoft.Extensions.Options;
-using System.Net.Http.Headers;
-using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using System.Diagnostics.Eventing.Reader;
-using System.Threading.Tasks;
 using static ISC.API.APIDtos.CodeForcesDtos;
 using ISC.API.Services;
-using System.Collections.Generic;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.AspNetCore.Http;
-using System.Runtime.CompilerServices;
-using System.Numerics;
 
 namespace CodeforceApiSerivces
 {

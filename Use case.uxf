@@ -24,14 +24,14 @@ fontsize=15
 
 
 // This text will be stored with each diagram;  use it for notes.</help_text>
-  <zoom_level>11</zoom_level>
+  <zoom_level>12</zoom_level>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>209</x>
-      <y>44</y>
-      <w>1331</w>
-      <h>638</h>
+      <x>192</x>
+      <y>0</y>
+      <w>1452</w>
+      <h>1092</h>
     </coordinates>
     <panel_attributes>ISc (Leader Page)
 halign=center
@@ -41,10 +41,10 @@ halign=center
   <element>
     <id>UMLActor</id>
     <coordinates>
-      <x>33</x>
-      <y>319</y>
-      <w>66</w>
-      <h>121</h>
+      <x>0</x>
+      <y>300</y>
+      <w>72</w>
+      <h>132</h>
     </coordinates>
     <panel_attributes>Leader</panel_attributes>
     <additional_attributes/>
@@ -52,10 +52,10 @@ halign=center
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>220</x>
-      <y>88</y>
-      <w>176</w>
-      <h>77</h>
+      <x>204</x>
+      <y>48</y>
+      <w>192</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>Add User</panel_attributes>
     <additional_attributes/>
@@ -63,10 +63,10 @@ halign=center
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>88</x>
-      <y>110</y>
-      <w>154</w>
-      <h>275</h>
+      <x>60</x>
+      <y>72</y>
+      <w>168</w>
+      <h>300</h>
     </coordinates>
     <panel_attributes/>
     <additional_attributes>10.0;230.0;60.0;20.0;120.0;10.0</additional_attributes>
@@ -74,10 +74,10 @@ halign=center
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>825</x>
-      <y>99</y>
-      <w>308</w>
-      <h>66</h>
+      <x>864</x>
+      <y>60</y>
+      <w>336</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;extends&gt;&gt;</panel_attributes>
@@ -86,10 +86,10 @@ halign=center
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>385</x>
-      <y>88</y>
-      <w>297</w>
-      <h>55</h>
+      <x>384</x>
+      <y>48</y>
+      <w>324</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;includes&gt;&gt;</panel_attributes>
@@ -98,10 +98,10 @@ halign=center
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>660</x>
-      <y>88</y>
-      <w>176</w>
-      <h>55</h>
+      <x>684</x>
+      <y>48</y>
+      <w>192</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>Add user to role</panel_attributes>
     <additional_attributes/>
@@ -109,10 +109,10 @@ halign=center
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>1111</x>
-      <y>88</y>
-      <w>363</w>
-      <h>110</h>
+      <x>1176</x>
+      <y>48</y>
+      <w>396</w>
+      <h>120</h>
     </coordinates>
     <panel_attributes>assign user to spacific (camp) and mentor
 </panel_attributes>
@@ -121,10 +121,10 @@ halign=center
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>924</x>
-      <y>132</y>
-      <w>176</w>
-      <h>44</h>
+      <x>972</x>
+      <y>96</y>
+      <w>192</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>Note..
 bg=green
@@ -134,10 +134,10 @@ in case user is trainee</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>1177</x>
-      <y>220</y>
-      <w>286</w>
-      <h>44</h>
+      <x>1248</x>
+      <y>192</y>
+      <w>312</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>Add user to spacific (Camp)</panel_attributes>
     <additional_attributes/>
@@ -145,10 +145,10 @@ in case user is trainee</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>748</x>
-      <y>132</y>
-      <w>451</w>
-      <h>132</h>
+      <x>780</x>
+      <y>96</y>
+      <w>492</w>
+      <h>144</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;extends&gt;&gt;</panel_attributes>
@@ -157,10 +157,10 @@ in case user is trainee</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>935</x>
-      <y>242</y>
-      <w>231</w>
-      <h>44</h>
+      <x>984</x>
+      <y>216</y>
+      <w>252</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>Note..
 bg=green
@@ -170,10 +170,10 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>88</x>
-      <y>121</y>
-      <w>616</w>
-      <h>264</h>
+      <x>60</x>
+      <y>84</y>
+      <w>672</w>
+      <h>288</h>
     </coordinates>
     <panel_attributes/>
     <additional_attributes>10.0;220.0;540.0;10.0</additional_attributes>
@@ -181,10 +181,10 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>88</x>
-      <y>341</y>
-      <w>253</w>
-      <h>55</h>
+      <x>60</x>
+      <y>324</y>
+      <w>276</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes/>
     <additional_attributes>10.0;20.0;210.0;30.0</additional_attributes>
@@ -192,10 +192,10 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>319</x>
-      <y>352</y>
-      <w>209</w>
-      <h>44</h>
+      <x>312</x>
+      <y>336</y>
+      <w>228</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>Delete user</panel_attributes>
     <additional_attributes/>
@@ -203,10 +203,10 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>726</x>
-      <y>330</y>
-      <w>132</w>
-      <h>44</h>
+      <x>756</x>
+      <y>312</y>
+      <w>144</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>show Users</panel_attributes>
     <additional_attributes/>
@@ -214,10 +214,10 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>517</x>
-      <y>341</y>
-      <w>231</w>
-      <h>55</h>
+      <x>528</x>
+      <y>324</y>
+      <w>252</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;includes&gt;&gt;</panel_attributes>
@@ -226,10 +226,10 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>660</x>
-      <y>418</y>
-      <w>209</w>
-      <h>44</h>
+      <x>684</x>
+      <y>408</y>
+      <w>228</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>Delete 1 or more users</panel_attributes>
     <additional_attributes/>
@@ -237,10 +237,10 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>451</x>
-      <y>385</y>
-      <w>231</w>
-      <h>77</h>
+      <x>456</x>
+      <y>372</y>
+      <w>252</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;includes&gt;&gt;</panel_attributes>
@@ -249,10 +249,10 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>264</x>
-      <y>572</y>
-      <w>242</w>
-      <h>66</h>
+      <x>252</x>
+      <y>576</y>
+      <w>264</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>Add camp</panel_attributes>
     <additional_attributes/>
@@ -260,10 +260,10 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>495</x>
-      <y>583</y>
-      <w>198</w>
-      <h>55</h>
+      <x>504</x>
+      <y>588</y>
+      <w>216</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;includes&gt;&gt;</panel_attributes>
@@ -272,10 +272,10 @@ in case user is Headoftraining</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>671</x>
-      <y>572</y>
-      <w>275</w>
-      <h>88</h>
+      <x>696</x>
+      <y>576</y>
+      <w>300</w>
+      <h>96</h>
     </coordinates>
     <panel_attributes>asign head role to member
 of stuff tothis camp</panel_attributes>
@@ -284,10 +284,10 @@ of stuff tothis camp</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>88</x>
-      <y>352</y>
-      <w>198</w>
-      <h>275</h>
+      <x>60</x>
+      <y>336</y>
+      <w>216</w>
+      <h>300</h>
     </coordinates>
     <panel_attributes/>
     <additional_attributes>10.0;10.0;160.0;230.0</additional_attributes>
@@ -295,10 +295,10 @@ of stuff tothis camp</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>308</x>
-      <y>385</y>
-      <w>121</w>
-      <h>143</h>
+      <x>300</x>
+      <y>372</y>
+      <w>132</w>
+      <h>156</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;110.0;10.0;70.0;90.0;70.0;90.0;10.0</additional_attributes>
@@ -307,9 +307,9 @@ of stuff tothis camp</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>396</x>
-      <y>385</y>
-      <w>143</w>
-      <h>143</h>
+      <y>372</y>
+      <w>156</w>
+      <h>156</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;</panel_attributes>
     <additional_attributes>110.0;110.0;110.0;70.0;10.0;70.0;10.0;10.0</additional_attributes>
@@ -317,10 +317,10 @@ of stuff tothis camp</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>253</x>
-      <y>506</y>
-      <w>132</w>
-      <h>44</h>
+      <x>240</x>
+      <y>504</y>
+      <w>144</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>Stuff</panel_attributes>
     <additional_attributes/>
@@ -328,10 +328,10 @@ of stuff tothis camp</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>440</x>
-      <y>506</y>
-      <w>132</w>
-      <h>44</h>
+      <x>444</x>
+      <y>504</y>
+      <w>144</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>Trainee</panel_attributes>
     <additional_attributes/>
@@ -339,10 +339,10 @@ of stuff tothis camp</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>1100</x>
-      <y>572</y>
-      <w>154</w>
-      <h>44</h>
+      <x>1164</x>
+      <y>576</y>
+      <w>168</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>show stuff names</panel_attributes>
     <additional_attributes/>
@@ -350,10 +350,10 @@ of stuff tothis camp</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>935</x>
-      <y>583</y>
-      <w>187</w>
-      <h>55</h>
+      <x>984</x>
+      <y>588</y>
+      <w>204</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;includes&gt;&gt;</panel_attributes>
@@ -362,10 +362,10 @@ of stuff tothis camp</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>1188</x>
-      <y>319</y>
-      <w>220</w>
-      <h>77</h>
+      <x>1260</x>
+      <y>300</y>
+      <w>240</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>bg=yellow
 halign=center
@@ -376,13 +376,324 @@ with username&amp; pass</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>352</x>
-      <y>143</y>
-      <w>858</w>
-      <h>231</h>
+      <x>348</x>
+      <y>108</y>
+      <w>936</w>
+      <h>252</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;includes&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;390.0;110.0;760.0;190.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>252</x>
+      <y>696</y>
+      <w>264</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>show Training Feedbacks</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>60</x>
+      <y>336</y>
+      <w>216</w>
+      <h>432</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;160.0;340.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>252</x>
+      <y>816</y>
+      <w>276</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>Display / Delete (All) from
+Trainee Archive</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>252</x>
+      <y>936</y>
+      <w>276</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>Display / Delete(All) from
+Stuff Archive</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>60</x>
+      <y>336</y>
+      <w>216</w>
+      <h>552</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;160.0;440.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>60</x>
+      <y>336</y>
+      <w>216</w>
+      <h>672</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;160.0;540.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLActor</id>
+    <coordinates>
+      <x>1764</x>
+      <y>756</y>
+      <w>72</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>Leader</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>1380</x>
+      <y>816</y>
+      <w>240</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>Show Candidate</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1608</x>
+      <y>708</y>
+      <w>192</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;140.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>516</x>
+      <y>840</y>
+      <w>132</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;extends&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;90.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>504</x>
+      <y>720</y>
+      <w>168</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;includes&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;120.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>648</x>
+      <y>720</y>
+      <w>168</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>select camp name</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>624</x>
+      <y>828</y>
+      <w>192</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>search by name
+,nationalId,Email</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>624</x>
+      <y>948</y>
+      <w>192</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>search by name
+,nationalId,Email</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>516</x>
+      <y>960</y>
+      <w>132</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;extends&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;90.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>1380</x>
+      <y>672</y>
+      <w>240</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>Display All Registeration</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1608</x>
+      <y>768</y>
+      <w>192</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;80.0;140.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1284</x>
+      <y>792</y>
+      <w>120</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;includes&gt;&gt;</panel_attributes>
+    <additional_attributes>80.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>1128</x>
+      <y>768</y>
+      <w>168</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>select camp</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>1116</x>
+      <y>852</y>
+      <w>168</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>add contestID to
+filterate on
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1272</x>
+      <y>852</y>
+      <w>132</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;includes&gt;&gt;</panel_attributes>
+    <additional_attributes>90.0;10.0;10.0;30.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1032</x>
+      <y>876</y>
+      <w>108</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;includes&gt;&gt;</panel_attributes>
+    <additional_attributes>70.0;10.0;10.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>864</x>
+      <y>900</y>
+      <w>180</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>add pass precentage</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>888</x>
+      <y>936</y>
+      <w>96</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;extends&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;60.0;60.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>816</x>
+      <y>1008</y>
+      <w>144</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>submit</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>1092</x>
+      <y>1020</y>
+      <w>144</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>Add Trainees</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>948</x>
+      <y>1008</y>
+      <w>168</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;extends&gt;&gt;</panel_attributes>
+    <additional_attributes>120.0;30.0;10.0;20.0</additional_attributes>
   </element>
 </diagram>
