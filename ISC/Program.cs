@@ -1,4 +1,5 @@
-using CodeforceApiSerivces;
+using CodeforceApiServices;
+using Hangfire;
 using ISC.API.Helpers;
 using ISC.API.ISerivces;
 using ISC.API.Services;
@@ -37,7 +38,7 @@ namespace ISC
 			builder.Services.Configure<CodeForceConnection>(builder.Configuration.GetSection("CodeForceConnection"));
 			builder.Services.AddScoped<IMailServices, MailServices>();
 			builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-			builder.Services.AddScoped<IOnlineJudgeServices, CodeforceApiServices>();
+			builder.Services.AddScoped<IOnlineJudgeServices, CodeforceApiService>();
 			builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 			builder.Services.AddAuthentication(options =>
 			{
@@ -62,6 +63,11 @@ namespace ISC
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
+			//builder.Services.AddHangfire(configuration => configuration
+			//.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+			//.UseSimpleAssemblyNameTypeSerializer()
+			//.UseRecommendedSerializerSettings()
+			//.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
 			builder.Services.AddCors();
 			//builder.Services.AddSwaggerGen();
 			builder.Services.AddSwaggerGen(c =>
@@ -116,7 +122,8 @@ namespace ISC
 
 			app.UseStaticFiles();
 			app.UseHttpsRedirection();
-
+			//app.UseHangfireServer();
+			//RecurringJob.AddOrUpdate<CodeforceApiService>("contest-job", service => service.getContestStatus("377686"), "0 */1 * * *");
 			app.UseAuthentication();
 			app.UseAuthorization();
 			app.MapControllers();

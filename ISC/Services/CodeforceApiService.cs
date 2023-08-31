@@ -6,13 +6,13 @@ using System.Text;
 using static ISC.API.APIDtos.CodeForcesDtos;
 using ISC.API.Services;
 
-namespace CodeforceApiSerivces
+namespace CodeforceApiServices
 {
-	public class CodeforceApiServices:IOnlineJudgeServices
+	public class CodeforceApiService:IOnlineJudgeServices
 	{
 		private readonly CodeForceConnection _CFConnection;
 		private readonly ApiRequestServices _ApiRequest;
-		public CodeforceApiServices(IOptions<CodeForceConnection>cfconnection)
+		public CodeforceApiService(IOptions<CodeForceConnection>cfconnection)
 		{
 			_CFConnection = cfconnection.Value;
 			_ApiRequest = new ApiRequestServices("https://codeforces.com/api/");
@@ -68,7 +68,7 @@ namespace CodeforceApiSerivces
 		{
 			try//377686
 			{
-
+				Console.WriteLine("test okay ");
 				string request = "contest.status?"+generateContestStatusRequest(contestid);
 				var Response = await _ApiRequest.getRequestAsync<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>>(request);
 				var ContestStatus = (CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>)Response;
