@@ -7,6 +7,6 @@ namespace ISC.API.ISerivces
 		Task<bool> checkHandleValidationAsync(string handle);
 		Task<CodeforcesApiResponseDto<CodeforceStandingResultDto>> getContestStandingAsync(string contestid, int numberofrows,bool unofficial);
 		Task<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>> getUserStatusAsync();
-		Task<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>> getContestStatus(string contestid);
+		Task<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>> getContestStatusAsync(string contestid,string handle="");
 	}
 }

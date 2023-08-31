@@ -111,6 +111,7 @@ namespace ISC.API.APIDtos
 		{
 			public int id { get; set; }
 			public int? contestId { get; set; }
+			public CodeforcePartyDto author { get; set; }
 			public CodeforceProblemDto problem { get; set; }
 			public string? verdict { get; set; }
 			public int? creationTimeSeconds { get; set; }
