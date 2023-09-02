@@ -1,4 +1,5 @@
 ﻿using ISC.API.ISerivces;
+using ISC.API.Services;
 using ISC.Core.Interfaces;
 using ISC.EF;
 using Microsoft.AspNetCore.Authorization;
@@ -31,7 +32,8 @@ namespace ISC.API.Controllers
 		{
 			//return Ok(await _onlineJudgeServices.getContestStandingAsync(contestid,50,true));
 			//return Ok(await _onlineJudgeServices.getContestStatus(contestid));
-			return Ok(await _onlineJudgeServices.getUserStatusAsync());
+			//return Ok(await _onlineJudgeServices.getUserStatusAsync());
+			return Ok(await new ScheduleSerives(_UnitOfWork, _onlineJudgeServices, _UserManager).updateTraineeSolveCurrentAccessAsync());
 		}
 	}
 }

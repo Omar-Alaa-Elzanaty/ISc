@@ -1,5 +1,4 @@
 using CodeforceApiServices;
-using Hangfire;
 using ISC.API.Helpers;
 using ISC.API.ISerivces;
 using ISC.API.Services;
@@ -7,7 +6,6 @@ using ISC.Core.Interfaces;
 using ISC.EF;
 using ISC.EF.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -16,7 +14,7 @@ using System.Text;
 
 namespace ISC
 {
-    public class Program
+	public class Program
 	{
 		public static void Main(string[] args)
 		{
@@ -61,15 +59,10 @@ namespace ISC
 				};
 			});
 			builder.Services.AddControllers();
+			builder.Services.AddInfrastructure();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
-			//builder.Services.AddHangfire(configuration => configuration
-			//.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-			//.UseSimpleAssemblyNameTypeSerializer()
-			//.UseRecommendedSerializerSettings()
-			//.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
 			builder.Services.AddCors();
-			//builder.Services.AddSwaggerGen();
 			builder.Services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo", Version = "v1" });
@@ -110,7 +103,6 @@ namespace ISC
 				});
 			});
 			var app = builder.Build();
-
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())
 			{
@@ -122,10 +114,10 @@ namespace ISC
 
 			app.UseStaticFiles();
 			app.UseHttpsRedirection();
-			//app.UseHangfireServer();
-			//RecurringJob.AddOrUpdate<CodeforceApiService>("contest-job", service => service.getContestStatus("377686"), "0 */1 * * *");
+
 			app.UseAuthentication();
 			app.UseAuthorization();
+
 			app.MapControllers();
 
 			app.Run();

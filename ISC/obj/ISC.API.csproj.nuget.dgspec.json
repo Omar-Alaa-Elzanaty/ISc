@@ -178,10 +178,6 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
-            "Hangfire": {
-              "target": "Package",
-              "version": "[1.8.5, )"
-            },
             "MailKit": {
               "target": "Package",
               "version": "[4.1.0, )"
@@ -211,6 +207,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
+            },
+            "Quartz.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[3.7.0, )"
             },
             "RestSharp": {
               "target": "Package",

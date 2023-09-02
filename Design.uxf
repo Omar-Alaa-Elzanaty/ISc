@@ -65,7 +65,6 @@ fontsize=20
     <panel_attributes>Trainee
 -
 +id: int
-+TotalSolvedProblems: int=0
 +CampId:int
 +UserId: string
 +MentorId: int
@@ -215,9 +214,9 @@ fontsize=20
     <id>UMLClass</id>
     <coordinates>
       <x>504</x>
-      <y>539</y>
+      <y>532</y>
       <w>189</w>
-      <h>112</h>
+      <h>154</h>
     </coordinates>
     <panel_attributes>Sheet
 -
@@ -226,14 +225,16 @@ fontsize=20
 +SheetLink: string
 +MinimumPrecent: int
 +SheetOrder: int
-+CampId: int</panel_attributes>
++CampId: int
++SheetCfId: string
++ProblemsCount:int</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
       <x>504</x>
-      <y>665</y>
+      <y>700</y>
       <w>189</w>
       <h>98</h>
     </coordinates>
@@ -327,7 +328,7 @@ fontsize=20
       <w>210</w>
       <h>70</h>
     </coordinates>
-    <panel_attributes>CodeForce
+    <panel_attributes>CodeForceApiService
 -
 </panel_attributes>
     <additional_attributes/>
@@ -351,7 +352,7 @@ fontsize=20
       <w>217</w>
       <h>21</h>
     </coordinates>
-    <panel_attributes>/IOnlineJudge/
+    <panel_attributes>/IOnlineJudgeServices/
 </panel_attributes>
     <additional_attributes/>
   </element>
@@ -431,13 +432,13 @@ train</panel_attributes>
       <x>357</x>
       <y>154</y>
       <w>161</w>
-      <h>546</h>
+      <h>581</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..n
 m2=0..1
 acces</panel_attributes>
-    <additional_attributes>210.0;750.0;10.0;750.0;10.0;10.0;210.0;10.0</additional_attributes>
+    <additional_attributes>210.0;800.0;10.0;800.0;10.0;10.0;210.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -445,13 +446,13 @@ acces</panel_attributes>
       <x>686</x>
       <y>560</y>
       <w>119</w>
-      <h>147</h>
+      <h>182</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..n
 m2=0..1
 access</panel_attributes>
-    <additional_attributes>10.0;180.0;90.0;180.0;90.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;230.0;90.0;230.0;90.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -471,15 +472,15 @@ joined</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>686</x>
-      <y>539</y>
+      <y>609</y>
       <w>203</w>
-      <h>196</h>
+      <h>133</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..n
 m2=0..1
 contain</panel_attributes>
-    <additional_attributes>270.0;250.0;120.0;250.0;120.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>270.0;160.0;120.0;160.0;120.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -627,7 +628,7 @@ m2=0..1</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>497</x>
-      <y>791</y>
+      <y>805</y>
       <w>210</w>
       <h>84</h>
     </coordinates>
@@ -645,13 +646,13 @@ m2=0..1</panel_attributes>
       <x>700</x>
       <y>217</y>
       <w>532</w>
-      <h>630</h>
+      <h>644</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..n
 m2=0..1
 </panel_attributes>
-    <additional_attributes>10.0;870.0;740.0;870.0;730.0;10.0;510.0;10.0</additional_attributes>
+    <additional_attributes>10.0;890.0;740.0;890.0;730.0;10.0;510.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -659,12 +660,12 @@ m2=0..1
       <x>182</x>
       <y>434</y>
       <w>329</w>
-      <h>399</h>
+      <h>413</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..1
 m2=0..1</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;540.0;450.0;540.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;560.0;450.0;560.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>

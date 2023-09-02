@@ -66,5 +66,15 @@ namespace ISC.EF.Repositories
 			}
 			return await Query.ToListAsync();
 		}
+
+		public List<T> getAll()
+		{
+			return _Context.Set<T>().ToList();
+		}
+
+		public T getById(int id)
+		{
+			return  _Context.Set<T>().Find(id);
+		}
 	}
 }
