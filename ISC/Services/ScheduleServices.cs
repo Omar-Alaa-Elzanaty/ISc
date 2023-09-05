@@ -25,7 +25,7 @@ namespace ISC.API.Services
 		}
 		public async Task<int> updateTraineeSolveCurrentAccessAsync()
 		{
-			  Console.WriteLine("enter");
+			Console.WriteLine("enter");
 			int EffectedRows = 0;
 			var TraineeSheets = await _UnitOfWork.TraineesSheetsAccess.getAllAsync();
 			var SheetsIds = TraineeSheets.DistinctBy(STA => STA.SheetId).Select(STA=>STA.SheetId);
@@ -41,6 +41,7 @@ namespace ISC.API.Services
 					SheetsSubmissions[sid] =await _OnlineJudge.getContestStatusAsync(SheetInfo.SheetCfId, "");
 				}
 			}
+			
 			foreach(var tid in TraineesIds)
 			{
 				var TraineeInfo=await _UnitOfWork.Trainees.getByIdAsync(tid);
@@ -56,14 +57,13 @@ namespace ISC.API.Services
 
 			foreach (var Access in TraineeSheets)
 			{
-				int Old = Access.NumberOfProblems;
 				int Changes = SheetsSubmissions[Access.SheetId].
 					result.Where(
 					s => s.verdict == "OK" &&
 					s.author.members.Exists(m => m.name == AccountsHandles[Access.TraineeId])
 					)
 					.Count();
-				EffectedRows += Changes ==  Old? 0 : 1;
+				EffectedRows += Changes == Access.NumberOfProblems ? 0 : 1;
 				Access.NumberOfProblems = Changes;
 			}
 			await _UnitOfWork.comleteAsync();

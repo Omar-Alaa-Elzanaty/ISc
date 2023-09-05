@@ -109,11 +109,11 @@ namespace ISC
 				app.UseSwagger();
 				app.UseSwaggerUI();
 			}
-			app.UseRouting();
-			app.UseCors(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
-
-			app.UseStaticFiles();
 			app.UseHttpsRedirection();
+			app.UseStaticFiles();
+
+			app.UseRouting();
+			app.UseCors(c => c.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 			app.UseAuthentication();
 			app.UseAuthorization();

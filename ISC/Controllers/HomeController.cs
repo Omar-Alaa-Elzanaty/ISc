@@ -21,9 +21,10 @@ namespace ISC.API.Controllers
 			_UserManager = usermanager;
         }
         [HttpGet("DisplayFeedbacks")]
-		public async Task<IActionResult> displayFeedbacks()
+		public async Task<IActionResult> displayFeedbacksAsync()
+		
 		{
-			var Feedbacks =await _UnitOfWork.SessionsFeedbacks.getTopFeedbacksAsync(3);
+			var Feedbacks =await _UnitOfWork.SessionsFeedbacks.getTopAsync(3);
 			List<object> traineesFeeds = new List<object>();
 			foreach(var feed in Feedbacks)
 			{
@@ -38,6 +39,11 @@ namespace ISC.API.Controllers
 				return BadRequest("No feedbacks found!");
 
 			return Ok(traineesFeeds);
+		}
+		[HttpGet("Test")]
+		public async Task<IActionResult> test()
+		{
+			return Ok("OK TEST GET METHOD YA SAEED");
 		}
 	}
 }

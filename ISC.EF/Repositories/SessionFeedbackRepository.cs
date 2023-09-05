@@ -16,7 +16,7 @@ namespace ISC.EF.Repositories
         {
             _Context = context;
         }
-		public async Task<List<SessionFeedback>> getTopFeedbacksAsync(int count)
+		public async Task<List<SessionFeedback>> getTopAsync(int count)
 		{
 			var Feedbacks=await _Context.SessionsFeedbacks.OrderByDescending(feed=>feed.Rate).Take(count).ToListAsync();
 			return Feedbacks;

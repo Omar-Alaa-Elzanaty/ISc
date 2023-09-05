@@ -18,9 +18,9 @@ namespace ISC.API.Controllers
             _auth = auth;
         }
         [HttpPost("Login")]
-		public async Task<IActionResult> loginAsync([FromForm]LoginDto user)
+		public async Task<IActionResult> loginAsync([FromForm] LoginDto user)
 		{
-			if(!ModelState.IsValid)
+			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 			var result= await _auth.loginAsync(user);
 			return Ok(new

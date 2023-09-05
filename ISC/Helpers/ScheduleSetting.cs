@@ -14,12 +14,12 @@ namespace ISC.API.Helpers
 {
 	public class ScheduleSetting : IJob
 	{
-		private readonly ILogger<ScheduleSetting> logger;
+		private readonly ILogger<ScheduleSetting> _Logger;
 		private ScheduleSerives _Services;
 
-		public ScheduleSetting(ILogger<ScheduleSetting>services, IUnitOfWork unitofwork, IOnlineJudgeServices onlinejudge, UserManager<UserAccount> usermanger)
+		public ScheduleSetting(ILogger<ScheduleSetting>logger, IUnitOfWork unitofwork, IOnlineJudgeServices onlinejudge, UserManager<UserAccount> usermanger)
         {
-			logger = services;
+			this._Logger = logger;
 			_Services=new ScheduleSerives(unitofwork, onlinejudge,usermanger);
 		}
 
