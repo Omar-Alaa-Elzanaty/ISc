@@ -11,7 +11,7 @@ namespace ISC.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	//[Authorize]
+	[Authorize]
 	public class PublicController : ControllerBase
 	{
 		private readonly RoleManager<IdentityRole> _RoleManager;

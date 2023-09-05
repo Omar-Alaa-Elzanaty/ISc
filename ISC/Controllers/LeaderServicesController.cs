@@ -42,5 +42,23 @@ namespace ISC.API.Controllers
 			var TraineeAccounts =await _UserManager.GetUsersInRoleAsync(Roles.TRAINEE);
 			return Ok(Accounts.Except(TraineeAccounts));
 		}
+		[HttpPost("DisplayAccounts")]
+		public async Task<IActionResult> displayAll()
+		{
+
+			var Accounts = await _UserManager.Users.Select(i => new
+			{
+				i.Id,
+				i.UserName,
+				FullName=i.FirstName+' '+i.MiddleName+' '+i.LastName,
+				Role=_UserManager.GetRolesAsync(i),
+				i.CodeForceHandle,
+				i.Email,
+				i.College,
+				i.Gender,
+				i.PhoneNumber
+			}).ToListAsync();
+			return Ok(Accounts);
+		}
 	}
 }

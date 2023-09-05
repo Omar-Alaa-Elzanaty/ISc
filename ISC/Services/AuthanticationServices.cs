@@ -21,12 +21,12 @@ namespace ISC.API.Services
 		private readonly UserManager<UserAccount> _UserManager;
 		private readonly JWT _jwt;
 		private readonly RoleManager<IdentityRole> _RoleManager;
-		private readonly IUnitOfWork _unitOfWork;
+		private readonly IUnitOfWork _UnitOfWork;
         public AuthanticationServices(UserManager<UserAccount> usermanger,IOptions<JWT>jwt,IUnitOfWork unitofwork,RoleManager<IdentityRole>rolemanager)
         {
             _UserManager = usermanger;
 			_jwt = jwt.Value;
-			_unitOfWork = unitofwork;
+			_UnitOfWork = unitofwork;
 			_RoleManager = rolemanager;
         }
 		public async Task<AuthModel> adminRegisterAsync(AdminRegisterDto user)
@@ -86,31 +86,20 @@ namespace ISC.API.Services
 				errors.Remove(errors.Length - 1, 1);
 				return new AuthModel() { Message = errors};
 			}
-			await _UserManager.AddToRolesAsync(NewAccount, user.Roles);
 			foreach (var Role in user.Roles)
 			{
-				if (Role == Roles.MENTOR)
+				bool Result=await new Roles(_UserManager, _UnitOfWork)
+						.addToRoleAsync(NewAccount, Role, new { user.MentorId,user.CampId });
+				if (Result == false) 
 				{
-					Mentor Mentor = new Mentor() { UserId = NewAccount.Id };
-					_unitOfWork.Mentors.addAsync(Mentor);
-				}
-				else if (Role == Roles.HOC)
-				{
-					if(user.CampId!=null)
+					return new AuthModel()
 					{
-						HeadOfTraining HeadOfTraining = new HeadOfTraining() { UserId = NewAccount.Id, CampId = user.CampId };
-						_unitOfWork.HeadofCamp.addAsync(HeadOfTraining);
-					}
-				}else if (Role == Roles.TRAINEE)
-				{
-					if (user.CampId != null && user.MentorId != null)
-					{
-						Trainee trainee = new Trainee() { UserId = NewAccount.Id, CampId = user.CampId, MentorId = user.MentorId };
-						_unitOfWork.Trainees.addAsync(trainee);
-					}
+						Message = "Maybe some fields are required or some data is invalid.",
+						IsAuthenticated = false
+					};
 				}
 			}
-			await _unitOfWork.comleteAsync();
+			await _UnitOfWork.comleteAsync();
 			var JwtSecurityToken = await CreateJwtToken(NewAccount);
 			return new AuthModel()
 			{
@@ -118,7 +107,7 @@ namespace ISC.API.Services
 				IsAuthenticated = true,
 				Roles = user.Roles,
 				Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken),
-				UserId=NewAccount.Id
+				UserId = NewAccount.Id
 			};
 		}
 

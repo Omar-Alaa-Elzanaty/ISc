@@ -1,4 +1,6 @@
-﻿using ISC.Core.Interfaces;
+﻿using ISC.API.APIDtos;
+using ISC.API.ISerivces;
+using ISC.Core.Interfaces;
 using ISC.Core.Models;
 using ISC.EF;
 using Microsoft.AspNetCore.Http;
@@ -15,12 +17,13 @@ namespace ISC.API.Controllers
 	{
 		private readonly IUnitOfWork _UnitOfWork;
 		private readonly UserManager<UserAccount> _UserManager;
-        public HomeController(IUnitOfWork unitOfWork,UserManager<UserAccount>usermanager)
+		public HomeController(IUnitOfWork unitOfWork,UserManager<UserAccount>usermanager)
         {
             _UnitOfWork = unitOfWork;
 			_UserManager = usermanager;
         }
-        [HttpGet("DisplayFeedbacks")]
+
+		[HttpGet("DisplayFeedbacks")]
 		public async Task<IActionResult> displayFeedbacksAsync()
 		
 		{
@@ -39,11 +42,6 @@ namespace ISC.API.Controllers
 				return BadRequest("No feedbacks found!");
 
 			return Ok(traineesFeeds);
-		}
-		[HttpGet("Test")]
-		public async Task<IActionResult> test()
-		{
-			return Ok("OK TEST GET METHOD YA SAEED");
 		}
 	}
 }

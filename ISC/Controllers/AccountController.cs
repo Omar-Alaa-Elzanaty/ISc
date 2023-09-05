@@ -1,6 +1,7 @@
 ﻿using ISC.API.APIDtos;
 using ISC.API.ISerivces;
 using ISC.Core.Models;
+using MailKit.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -12,17 +13,22 @@ namespace ISC.API.Controllers
 	[ApiController]
 	public class AccountController : ControllerBase
 	{
-		private readonly IAuthanticationServices _auth;
+		private readonly IAuthanticationServices _Auth;
         public AccountController(IAuthanticationServices auth)
         {
-            _auth = auth;
+            _Auth = auth;
         }
-        [HttpPost("Login")]
+		[HttpPost("NewTrainee")]
+		public async Task<IActionResult> newTraineeRegisteration()
+		{
+			throw new NotImplementedException();
+		}
+		[HttpPost("Login")]
 		public async Task<IActionResult> loginAsync([FromForm] LoginDto user)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
-			var result= await _auth.loginAsync(user);
+			var result= await _Auth.loginAsync(user);
 			return Ok(new
 			{
 				result.ExpireOn,
