@@ -77,8 +77,7 @@ namespace ISC.API.Controllers
 			}
 			foreach(var Role in model.Roles)
 			{
-				bool Result=await new Roles(_UserManager, _UnitOfWork)
-					.addToRoleAsync(Account, Role, new { model.MentorId, model.CampId });
+				bool Result = await _UnitOfWork.addToRoleAsync(Account, Role, new { model.MentorId, model.CampId });
 				if (Result == false)
 					return BadRequest("Can't save updates");
 			}

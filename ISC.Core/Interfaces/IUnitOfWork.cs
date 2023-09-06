@@ -25,6 +25,7 @@ namespace ISC.Core.Interfaces
 		IBaseRepository<StuffArchive> StuffArchive { get; }
 		IBaseRepository<NewRegitseration> NewRegitseration { get; }
 
+		Task<bool> addToRoleAsync<T>(T account, string role, dynamic type);
 		Task<int> comleteAsync();
 	}
 }

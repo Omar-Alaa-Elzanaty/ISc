@@ -12,6 +12,7 @@ using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 
 namespace ISC.API.Services
@@ -88,8 +89,7 @@ namespace ISC.API.Services
 			}
 			foreach (var Role in user.Roles)
 			{
-				bool Result=await new Roles(_UserManager, _UnitOfWork)
-						.addToRoleAsync(NewAccount, Role, new { user.MentorId,user.CampId });
+				bool Result = await _UnitOfWork.addToRoleAsync(NewAccount, Role, new { user.MentorId, user.CampId });
 				if (Result == false) 
 				{
 					return new AuthModel()

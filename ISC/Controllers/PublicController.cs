@@ -34,7 +34,7 @@ namespace ISC.API.Controllers
 			//return Ok(await _onlineJudgeServices.getContestStatus(contestid));
 			//return Ok(await _onlineJudgeServices.getUserStatusAsync());
 			//return Ok(await new ScheduleSerives(_UnitOfWork, _onlineJudgeServices, _UserManager).updateTraineeSolveCurrentAccessAsync());
-			return Ok(_UnitOfWork.Mentors.testvirtual().Result);
+			return Ok();
 		}
 	}
 }

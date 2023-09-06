@@ -339,8 +339,8 @@ of stuff tothis camp</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>2420</x>
-      <y>510</y>
+      <x>2410</x>
+      <y>530</y>
       <w>140</w>
       <h>40</h>
     </coordinates>
@@ -351,13 +351,13 @@ of stuff tothis camp</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>2270</x>
-      <y>520</y>
-      <w>170</w>
-      <h>50</h>
+      <y>530</y>
+      <w>160</w>
+      <h>40</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;includes&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;30.0;150.0;10.0</additional_attributes>
+    <additional_attributes>10.0;20.0;140.0;20.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
