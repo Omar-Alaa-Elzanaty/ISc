@@ -48,11 +48,11 @@ namespace ISC.API.Services
 					};
 				}
 			}
-			if (user.Roles.SingleOrDefault(Roles.TRAINEE) != null && (user.MentorId == null || user.CampId == null))
+			if (user.Roles.Contains(Roles.TRAINEE) == true && (user.MentorId == null || user.CampId == null))
 			{
 				return new AuthModel()
 				{
-					Message = "Should assign mentor to spacific Mentor and Camp",
+					Message = "Should assign Trainee to spacific Mentor and Camp",
 					IsAuthenticated = false
 				};
 			}

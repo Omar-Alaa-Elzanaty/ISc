@@ -44,11 +44,11 @@ namespace ISC.API.Controllers
 						"this is your creadntial informations\n" +
 						$"Username: {newuser.UserName}\n" +
 						$"Password: {newuser.Password}";
-			bool Result=await _MailServices.sendEmailAsync(newuser.Email, "ICPC Sohag account validation",body);
-			if (Result == false)
-			{
-				return BadRequest("There was error happened");
-			}
+			//bool Result=await _MailServices.sendEmailAsync(newuser.Email, "ICPC Sohag account validation",body);
+			//if (Result == false)
+			//{
+			//	return BadRequest("There was error happened");
+			//}
 			return Ok(model);
 		}
 		[HttpPost("AddRole")]
