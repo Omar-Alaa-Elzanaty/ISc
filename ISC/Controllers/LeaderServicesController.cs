@@ -15,7 +15,7 @@ namespace ISC.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize(Roles = Roles.LEADER)]
+	//[Authorize(Roles = Roles.LEADER)]
 	public class LeaderServicesController : ControllerBase
 	{
 		private readonly RoleManager<IdentityRole> _RoleManager;
@@ -41,6 +41,13 @@ namespace ISC.API.Controllers
 			var Accounts = _UserManager.Users.ToList();
 			var TraineeAccounts =await _UserManager.GetUsersInRoleAsync(Roles.TRAINEE);
 			return Ok(Accounts.Except(TraineeAccounts));
+		}
+		[HttpGet("DisplayTrainee")]
+		public async Task<IActionResult> displayTrainee()
+		{
+			var Accounts=await _UserManager.Users.Where(i=> 
+			 _UserManager.GetRolesAsync(i).Result.Contains(Roles.TRAINEE)).ToListAsync();
+			return Ok(Accounts);
 		}
 		[HttpPost("DisplayAccounts")]
 		public async Task<IActionResult> displayAll()

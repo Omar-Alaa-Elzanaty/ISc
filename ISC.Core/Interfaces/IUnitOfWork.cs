@@ -16,7 +16,7 @@ namespace ISC.Core.Interfaces
 		IBaseRepository<TraineeAttendence> TraineesAttendence { get; }
 		IBaseRepository<Sheet> Sheets { get; }
 		IBaseRepository<TraineeSheetAccess> TraineesSheetsAccess { get; }
-		IBaseRepository<HeadOfTraining> HeadofCamp { get; }
+		IHeadOfCampRepository HeadofCamp { get; }
 		IBaseRepository<Camp> Camps { get; }
 		ISessionFeedbackRepository SessionsFeedbacks { get; }
 		IBaseRepository<MentorOfCamp> MentorsOfCamps { get; }

@@ -44,9 +44,17 @@ namespace ISC.EF.Repositories
 			await _Context.Set<T>().AddAsync(entity);
 		}
 
-		public void delete(T entity)
+		public async Task<bool> delete(T entity)
 		{
-			 _Context.Set<T>().Remove(entity);
+			try
+			{
+				_Context.Set<T>().Remove(entity);
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 		public void deleteGroup(List<T> entities)
 		{
@@ -75,6 +83,11 @@ namespace ISC.EF.Repositories
 		public T getById(int id)
 		{
 			return  _Context.Set<T>().Find(id);
+		}
+
+		public virtual async Task<string> testvirtual()
+		{
+			return "base repo";
 		}
 	}
 }

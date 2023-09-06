@@ -90,7 +90,7 @@ OnDelete:
 Trainee - camps Cascade -->should delect the account
 Trainee - Mentor Restrict -->should assign trainee to another mentor/edit on migration file not fluentapi
 Trainee - sheets Cascade/Restrict sheetid (TraineeSheetAccess) 
-Trainee - Session /Restrict sessionid (sessionfeedback)/same in (traineeAttendnces) (SessionFeedback) (TraineeAttendence)
+Trainee - Session /Restrict sessionid (sessionfeedback)/same in (SessionFeedback) (TraineeAttendence)
 Camps - Mentor /Restrict  campid(Mentorofcamp)
 Camps - Sessions Cascade
 Session - Mentor /Restrict sessionid mentorAttendence/ 

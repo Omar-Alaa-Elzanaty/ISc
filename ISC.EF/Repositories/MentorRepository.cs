@@ -1,6 +1,7 @@
 ﻿using ISC.Core.Interfaces;
 using ISC.Core.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,5 +28,28 @@ namespace ISC.EF.Repositories
                    where mentor.UserId==account.Id
                    select new {account, mentor}).ToList();
         }
-    }
+        public async Task<bool> deleteEntityAsync(Mentor mentor)
+        {
+			if (mentor == null) return false;
+			int Trainees = await _Context.Trainees.Where(t=>t.MentorId==mentor.Id).CountAsync();
+			if (Trainees != 0)
+				return false;
+			try
+			{
+				_Context.Remove(mentor);
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+        public async Task<bool> deleteEntityAsync(string userid)
+        {
+            var Mentor = await _Context.Mentors.Where(mentor => mentor.UserId == userid).FirstOrDefaultAsync();
+            if(Mentor == null) return false;
+            bool Result =await deleteEntityAsync(Mentor);
+            return Result;
+		}
+	}
 }

@@ -6,12 +6,13 @@ using ISC.EF;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
 
 namespace ISC.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize(Roles = Roles.LEADER)]
+	//[Authorize(Roles = Roles.LEADER)]
 	public class LeaderController : ControllerBase
 	{
 		private readonly RoleManager<IdentityRole> _RoleManager;
@@ -85,16 +86,41 @@ namespace ISC.API.Controllers
 			return Ok("Changes have been successfully");
 			
 		}
-		[HttpDelete("DeleteTrinees")]
-		public async Task<IActionResult> deleteFromStuff(List<string>traineesid)
+		[HttpDelete("DeleteFromTrainees")]
+		public async Task<IActionResult> deleteFromTrainees(List<string>traineesusersid)
 		{
 			List<UserAccount> Trainees=new List<UserAccount>();
-			foreach(string traineeid in traineesid)
+			foreach(string traineeuserid in traineesusersid)
 			{
-				await _UserManager.DeleteAsync(await _UserManager.FindByIdAsync(traineeid));
+				await _UserManager.DeleteAsync(await _UserManager.FindByIdAsync(traineeuserid));
 			}
 			await _UnitOfWork.comleteAsync();
 			return Ok($"removed\n{Trainees}");
+		}
+		[HttpDelete("DeleteFromStuff")]
+		public async Task<IActionResult> deleteFromStuff(List<string> stuffusersid)
+		{
+			List<UserAccount>ErrorsList=new List<UserAccount>();
+			foreach(string UserId in stuffusersid)
+			{
+				var Account = await _UserManager.FindByIdAsync(UserId);
+				var UserRoles = _UserManager.GetRolesAsync(Account).Result.ToList();
+				bool result = true;
+				if (UserRoles.Contains(Roles.MENTOR))
+				{
+					result =await _UnitOfWork.Mentors.deleteEntityAsync(UserId);
+				}
+				if(UserRoles.Contains(Roles.HOC)&&result==true)
+				{
+					result = await _UnitOfWork.HeadofCamp.deleteEntityAsync(UserId);
+				}
+				if (result == true)
+					await _UserManager.DeleteAsync(Account);
+				else
+					ErrorsList.Append(Account);
+			}
+			await _UnitOfWork.comleteAsync();
+			return Ok(ErrorsList);
 		}
 	}
 }

@@ -27,7 +27,7 @@ namespace ISC.EF.Repositories
 
 		public IBaseRepository<TraineeSheetAccess> TraineesSheetsAccess { get; private set; }
 
-		public IBaseRepository<HeadOfTraining> HeadofCamp { get; private set; }
+		public IHeadOfCampRepository HeadofCamp { get; private set; }
 
 		public IBaseRepository<Camp> Camps { get; private set; }
 
@@ -53,7 +53,7 @@ namespace ISC.EF.Repositories
 			TraineesAttendence = new BaseRepository<TraineeAttendence>(_DataBase);
 			Sheets = new BaseRepository<Sheet>(_DataBase);
 			TraineesSheetsAccess = new BaseRepository<TraineeSheetAccess>(_DataBase);
-			HeadofCamp = new BaseRepository<HeadOfTraining>(_DataBase);
+			HeadofCamp = new HeadOfCampRepository(_DataBase);
 			Camps = new BaseRepository<Camp>(_DataBase);
 			SessionsFeedbacks = new SessionFeedbackRepository(_DataBase);
 			MentorsOfCamps = new BaseRepository<MentorOfCamp>(_DataBase);

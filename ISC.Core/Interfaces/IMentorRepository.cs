@@ -10,5 +10,7 @@ namespace ISC.Core.Interfaces
 	public interface IMentorRepository:IBaseRepository<Mentor>
 	{
 		Task<object> showMentorsAccountsAsync();
+		Task<bool> deleteEntityAsync(string userid);
+		Task<bool> deleteEntityAsync(Mentor mentor);
 	}
 }

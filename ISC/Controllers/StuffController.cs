@@ -12,7 +12,7 @@ namespace ISC.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize(Roles =$"{Roles.LEADER},{Roles.MENTOR},{Roles.HOC}")]
+	//[Authorize(Roles =$"{Roles.LEADER},{Roles.MENTOR},{Roles.HOC},{Roles.INSTRUCTOR}")]
 	public class StuffController : ControllerBase
 	{
 		private readonly RoleManager<IdentityRole> _RoleManager;

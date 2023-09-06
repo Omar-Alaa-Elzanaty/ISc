@@ -10,13 +10,14 @@ namespace ISC.Core.Interfaces
 	public interface IBaseRepository<T>where T : class
 	{
 		void addAsync(T entity);
-		void delete(T entity);
+		Task<bool> delete(T entity);
 		Task<T> getByIdAsync(int id);
 		T getById(int id);
 		Task<List<T>> getAllAsync();
 		List<T> getAll();
 		void deleteGroup(List<T> entities);
 		Task<List<T>> getAllwithNavigationsAsync(string[] includes = null);
+		Task<string> testvirtual();
 		//Task<T> findAsync(Expression<Func<T, bool>> match);
 		//Task<T> findWithChildAsync(Expression<Func<T, bool>> match, string[]includes=null);
 	}
