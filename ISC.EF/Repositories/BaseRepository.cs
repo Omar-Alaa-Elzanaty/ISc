@@ -84,10 +84,5 @@ namespace ISC.EF.Repositories
 		{
 			return  _Context.Set<T>().Find(id);
 		}
-
-		public virtual async Task<string> testvirtual()
-		{
-			return "base repo";
-		}
 	}
 }
