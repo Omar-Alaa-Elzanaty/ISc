@@ -18,12 +18,12 @@ namespace ISC.EF.Repositories
         {
             _Context = context;
         }
-		public async Task<bool> createTraineeAccountAsync(UserAccount account,string password)
+		public async Task<bool> tryCreateTraineeAccountAsync(UserAccount account,string password)
 		{
 			var result = await _UserManger.CreateAsync(account, password);
 			if (result.Succeeded)
 			{
-				Trainee NewTrainee = new Trainee(){UserId=account.Id};
+				Trainee NewTrainee = new Trainee(){UserId=account.Id};//wrong logic
 				_Context.Trainees.Add(NewTrainee);
 				_Context.SaveChanges();
 				return true;

@@ -48,17 +48,16 @@ namespace ISC.API.Services
 					};
 				}
 			}
-			if (user.Roles.Contains(Roles.TRAINEE) == true && (user.MentorId == null || user.CampId == null))
+			if (user.Roles.Contains(Roles.TRAINEE) == true && (user.CampId == null))
 			{
 				return new AuthModel()
 				{
-					Message = "Should assign Trainee to spacific Mentor and Camp",
+					Message = "Should assign Trainee to spacific Camp",
 					IsAuthenticated = false
 				};
 			}
 			UserAccount NewAccount = new UserAccount()
 			{
-				UserName = user.UserName,
 				Email = user.Email,
 				PhoneNumber = user.PhoneNumber,
 				FirstName = user.FirstName,
@@ -76,7 +75,9 @@ namespace ISC.API.Services
 				JoinDate=DateTime.Now,
 				LastLoginDate=DateTime.Now,
 			};
-			var result = await _UserManager.CreateAsync(NewAccount, user.Password);
+			var Password = NewAccount.generatePassword();
+			NewAccount.UserName = NewAccount.generateUserName();
+			var result = await _UserManager.CreateAsync(NewAccount, Password);
 			if (result.Succeeded == false)
 			{
 				var errors = string.Empty;
@@ -89,12 +90,12 @@ namespace ISC.API.Services
 			}
 			foreach (var Role in user.Roles)
 			{
-				bool Result = await _UnitOfWork.addToRoleAsync(NewAccount, Role, new { user.MentorId, user.CampId });
+				bool Result = await _UnitOfWork.addToRoleAsync(NewAccount, Role, user.CampId, user.MentorId);
 				if (Result == false) 
 				{
 					return new AuthModel()
 					{
-						Message = "Maybe some fields are required or some data is invalid.",
+						Message = "May be some of roles must be add or modify.",
 						IsAuthenticated = false
 					};
 				}
@@ -107,7 +108,9 @@ namespace ISC.API.Services
 				IsAuthenticated = true,
 				Roles = user.Roles,
 				Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken),
-				UserId = NewAccount.Id
+				UserId = NewAccount.Id,
+				UserName = NewAccount.UserName,
+				Password = Password
 			};
 		}
 
@@ -167,8 +170,6 @@ namespace ISC.API.Services
 		}
 		public async Task<AuthModel> registerationValidation(AdminRegisterDto user)
 		{
-			if (await _UserManager.FindByNameAsync(user.UserName) != null)
-				return new AuthModel() { Message = "Username is already Exist!" };
 			if (await _UserManager.FindByEmailAsync(user.Email) != null)
 				return new AuthModel() { Message = "Email is already registered!" };
 			if (user.PhoneNumber != null && _UserManager.Users.SingleOrDefault(ac => ac.PhoneNumber == user.PhoneNumber) != null)
@@ -177,6 +178,8 @@ namespace ISC.API.Services
 				return new AuthModel() { Message = "Vjudge Handle is already Exist!" };
 			if (_UserManager.Users.SingleOrDefault(i => i.CodeForceHandle == user.CodeForceHandle) != null)
 				return new AuthModel() { Message = "Codeforce Handle is already Exist!" };
+			if (_UserManager.Users.SingleOrDefault(i => i.NationalId == user.NationalId) != null)
+				return new AuthModel() { Message = "National Id is already exist!" };
 			if (user.Roles == null)
 				return new AuthModel() { Message = "User should assign to one or more Roles" };
 			return new AuthModel(){ IsAuthenticated = true};

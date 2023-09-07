@@ -14,12 +14,10 @@ namespace ISC.API.Services
     public class MailServices : IMailServices
 	{
 		private readonly MailSettings _MailSettings;
-		private readonly IUnitOfWork _UnitOfWork;
 		private readonly IAccountRepository _AccountRepository;
         public MailServices(IOptions<MailSettings> mailsettings,IUnitOfWork unitofwork,IAccountRepository accountRepository)
         {
             _MailSettings = mailsettings.Value;
-			_UnitOfWork = unitofwork;
 			_AccountRepository = accountRepository;
         }
 		public async Task<bool> sendEmailAsync(string mailTo, string subject, string body, IList<IFormFile> attachments = null)
@@ -70,18 +68,20 @@ namespace ISC.API.Services
 			smtp.Disconnect(true);
 			return true;
 		}
+		/// <summary>
+		///I think that is function may be implement in endpoint
+		/// </summary>
 		public async Task<List<NewRegitseration>> sendMailToAcceptedAsync(List<NewRegitseration>trainees,string subject,string body)
 		{
 			List<NewRegitseration>NotValidAccount = new List<NewRegitseration>();
 			foreach(var Trainee in trainees)
 			{
 				//logic of html body (method should impelement in converter)
-				//create username / create password (method in implement in NewRgeisteration)
-				UserAccount NewUser=new UserAccount();
+				UserAccount NewUser = new UserAccount();
 				string password = string.Empty;
 				if(await sendEmailAsync(Trainee.Email, subject, body))
 				{
-					if (await _AccountRepository.createTraineeAccountAsync(NewUser, password) == false)
+					if (await _AccountRepository.tryCreateTraineeAccountAsync(NewUser, password) == false)
 					{
 						NotValidAccount.Add(Trainee);
 						await sendEmailAsync(Trainee.Email, "Account Problem", "Please Contact with Us!"); 

@@ -28,7 +28,7 @@ namespace ISC.API.Controllers
 			_MailServices = mailServices;
 			_Auth = auth;
 		}
-		[HttpPost("Register")]
+		[HttpPost("RegisterNewUser")]
 		public async Task<IActionResult> registerAsync([FromForm] AdminRegisterDto newuser)
 		{
 			if (!ModelState.IsValid)
@@ -42,12 +42,12 @@ namespace ISC.API.Controllers
 			}
 			string body = "We need to inform you that your account on ISc being ready to use\n" +
 						"this is your creadntial informations\n" +
-						$"Username: {newuser.UserName}\n" +
-						$"Password: {newuser.Password}";
-			//bool Result=await _MailServices.sendEmailAsync(newuser.Email, "ICPC Sohag account validation",body);
+						$"Username: {model.UserName}\n" +
+						$"\nPassword: {model.Password}";
+			//bool Result = await _MailServices.sendEmailAsync(newuser.Email, "ICPC Sohag account", body);
 			//if (Result == false)
 			//{
-			//	return BadRequest("There was error happened");
+			//	return BadRequest("Email is not valid");
 			//}
 			return Ok(model);
 		}
@@ -77,7 +77,7 @@ namespace ISC.API.Controllers
 			}
 			foreach(var Role in model.Roles)
 			{
-				bool Result = await _UnitOfWork.addToRoleAsync(Account, Role, new { model.MentorId, model.CampId });
+				bool Result = await _UnitOfWork.addToRoleAsync(Account, Role, model.CampId, model.MentorId);
 				if (Result == false)
 					return BadRequest("Can't save updates");
 			}

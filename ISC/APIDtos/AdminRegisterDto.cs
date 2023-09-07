@@ -13,9 +13,6 @@ namespace ISC.API.APIDtos
 		public string LastName { get; set; }
 		[RegularExpression("^[1-9][0-9]*$")]
 		public string NationalId { get; set; }
-		[MaxLength(30)]
-		public string UserName { get; set; }
-		public string Password { get; set; }
 		public string Email{ get; set; }
 		public string BirthDate { get; set; }
 		public int Grade { get; set; }

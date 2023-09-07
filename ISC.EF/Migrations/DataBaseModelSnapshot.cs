@@ -239,6 +239,10 @@ namespace ISC.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SheetCfId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SheetLink")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -314,13 +318,10 @@ namespace ISC.EF.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CampId")
+                    b.Property<int>("CampId")
                         .HasColumnType("int");
 
                     b.Property<int?>("MentorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalSolvedProblems")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -827,7 +828,9 @@ namespace ISC.EF.Migrations
                 {
                     b.HasOne("ISC.Core.Models.Camp", "Camp")
                         .WithMany("Trainees")
-                        .HasForeignKey("CampId");
+                        .HasForeignKey("CampId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ISC.Core.Models.Mentor", "Mentor")
                         .WithMany("Trainees")

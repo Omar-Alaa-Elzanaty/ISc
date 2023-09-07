@@ -9,12 +9,15 @@ using System.Threading.Tasks;
 
 namespace ISC.EF.Repositories
 {
-	internal class TraineeRepository:BaseRepository<Trainee>,ITraineeRepository
+	public class TraineeRepository:BaseRepository<Trainee>,ITraineeRepository
 	{
-        private readonly DataBase _Context;
-        public TraineeRepository(DataBase context):base(context) 
-        {
-            _Context = context;
-        }
+		private readonly DataBase _Context;
+		private readonly UserManager<UserAccount> _UserManager;
+		public TraineeRepository(DataBase context, UserManager<UserAccount> usermanager) : base(context)
+		{
+			_Context = context;
+			_UserManager = usermanager;
+		}
+
 	}
 }

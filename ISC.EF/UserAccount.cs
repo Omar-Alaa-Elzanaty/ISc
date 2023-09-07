@@ -32,41 +32,39 @@ namespace ISC.EF
 		public HeadOfTraining? Headofcamp { get; set; }
 		public string generateUserName()
 		{
-			StringBuilder NewUser=new StringBuilder();
-			StringBuilder Hashing=new StringBuilder("#@@!&");
+			StringBuilder UserName=new StringBuilder("ICPC");
 			var rand=new Random();
-			int x = rand.Next(1000, 10000);
+			int x = rand.Next(10, 100);
 			while (x > 0)
 			{
-				NewUser.Append(this.NationalId[x%10]);
+				UserName.Append(this.NationalId[x%10]);
 				x /= 10;
 			}
-			NewUser.Append(Hashing[rand.Next(Hashing.Length)]);
-			NewUser.Append(this.CodeForceHandle[Math.Min(this.CodeForceHandle.Length,4)]);
-			x = rand.Next(1000000000);
-			int c = 3;
-			while (x > 0 && c > 0)
+			x = 4;
+			while (x-- > 0)
 			{
-				NewUser.Append(this.NationalId[x % 10]);
-				x /= 10;
-				c--;
+				UserName.Append(this.CodeForceHandle[rand.Next(this.CodeForceHandle.Length-1)]);
 			}
-			return NewUser.ToString();
+			int c = 2;
+			while (c-- > 0)
+			{
+				UserName.Append(this.NationalId[rand.Next(0,11)]);
+			}
+			return UserName.ToString();
 		}
 		public string generatePassword()
 		{
-			StringBuilder NewPassword = new StringBuilder();
-			StringBuilder HashingSohag=new StringBuilder("Sohag");
+			StringBuilder NewPassword = new StringBuilder("ICPC");
+			StringBuilder HashingSohag=new StringBuilder("sohag");
 			StringBuilder Hashing = new StringBuilder("!@#$&");
 			var rand= new Random();
 			int x = 5;
 			while(x > 0){
-				NewPassword.Append(HashingSohag[rand.Next(HashingSohag.Length)]);
+				NewPassword.Append(HashingSohag[rand.Next(HashingSohag.Length-1)]);
 				x--;
 			}
-			NewPassword.Append(Hashing[rand.Next(Hashing.Length)]);
+			NewPassword.Append(Hashing[rand.Next(Hashing.Length-1)]);
 			x = rand.Next(1000, 9999);
-
 			while(x > 0)
 			{
 				NewPassword.Append(x%10+'0');

@@ -9,5 +9,6 @@ namespace ISC.Core.Interfaces
 {
 	public interface ITraineeRepository:IBaseRepository<Trainee>
 	{
+
 	}
 }

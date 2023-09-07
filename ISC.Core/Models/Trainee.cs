@@ -16,7 +16,7 @@ namespace ISC.Core.Models
 		public string UserId { get; set; }
 		public int? MentorId { get; set; }
 		public virtual Mentor Mentor { get; set;}
-		public int? CampId { get; set; }
+		public int CampId { get; set; }
 		public virtual Camp Camp { get; set; }
 		public virtual HashSet<SessionFeedback> SessionsFeedbacks { get; set; }
 		public virtual HashSet<TraineeSheetAccess> SheetsAccessing { get; set; }

@@ -47,7 +47,7 @@ namespace ISC.EF.Repositories
 			_DataBase = database;
 			_UserManager = usermanager;
 
-			Trainees = new TraineeRepository(_DataBase);
+			Trainees = new TraineeRepository(_DataBase,_UserManager);
 			Sessions= new BaseRepository<Session>(_DataBase);
 			Mentors = new MentorRepository(database,usermanager);
 			TraineesAttendence = new BaseRepository<TraineeAttendence>(_DataBase);
@@ -62,24 +62,24 @@ namespace ISC.EF.Repositories
 			StuffArchive = new BaseRepository<StuffArchive>(_DataBase);
 			NewRegitseration = new BaseRepository<NewRegitseration>(_DataBase);
 		}
-		public async Task<bool> addToRoleAsync<T>(T account, string role, dynamic type)
+		public async Task<bool> addToRoleAsync<T>(T account, string role,int?CampId,int?MentorId)
 		{
 			var Acc=account as UserAccount;
 			try
 			{
 				if (role == Roles.TRAINEE)
 				{
-					if (type.CampId == null)
+					if (CampId == null)
 					{
 						await  _UserManager.DeleteAsync(Acc);
 						return false;
 					}
 					await _UserManager.AddToRoleAsync(Acc, role);
 					Trainee Trainee;
-					if (type.MentorId != null)
-						Trainee = new Trainee() { UserId = Acc.Id, CampId = type.CampId, MentorId = type.MentorId };
+					if (MentorId != null)
+						Trainee = new Trainee() { UserId = Acc.Id, CampId =(int)CampId, MentorId = MentorId };
 					else
-						Trainee = new Trainee() { UserId = Acc.Id, CampId = type.CampId };
+						Trainee = new Trainee() { UserId = Acc.Id, CampId = (int)CampId };
 					Trainees.addAsync(Trainee);
 					return true;
 				}
@@ -93,28 +93,25 @@ namespace ISC.EF.Repositories
 				else if (role == Roles.HOC)
 				{
 					await _UserManager.AddToRoleAsync(Acc, role);
-					if (type.CampId != null)
+					if (CampId != null)
 					{
-						HeadOfTraining HeadOfTraining = new HeadOfTraining() { UserId = Acc.Id, CampId = type.CampId };
+						HeadOfTraining HeadOfTraining = new HeadOfTraining() { UserId = Acc.Id, CampId = CampId };
 						HeadofCamp.addAsync(HeadOfTraining);
 					}
 					return true;
 				}
-				else
+				else if (role == Roles.LEADER || role == Roles.INSTRUCTOR)
 				{
-					if (role == Roles.LEADER || role == Roles.INSTRUCTOR)
-					{
-						await _UserManager.AddToRoleAsync(Acc, role);
-						return true;
-					}
-					else
-					{
-						return false;
-					}
+					await _UserManager.AddToRoleAsync(Acc, role);
+					return true;
+				}else
+				{
+					return false;
 				}
 			}
 			catch
 			{
+				await _UserManager.DeleteAsync(Acc);
 				return false;
 			}
 

@@ -9,6 +9,6 @@ namespace ISC.EF
 {
     public interface IAccountRepository : IBaseRepository<UserAccount>
     {
-        Task<bool> createTraineeAccountAsync(UserAccount account, string password);
+        Task<bool> tryCreateTraineeAccountAsync(UserAccount account, string password);
     }
 }
