@@ -30,7 +30,7 @@ namespace ISC.API.Services
 			_UnitOfWork = unitofwork;
 			_RoleManager = rolemanager;
         }
-		public async Task<AuthModel> adminRegisterAsync(AdminRegisterDto user)
+		public async Task<AuthModel> adminRegisterAsync(RegisterDto user)
 		{
 			AuthModel NotValidData =await registerationValidation(user);
 			if (NotValidData.IsAuthenticated==false)
@@ -93,6 +93,7 @@ namespace ISC.API.Services
 				bool Result = await _UnitOfWork.addToRoleAsync(NewAccount, Role, user.CampId, user.MentorId);
 				if (Result == false) 
 				{
+					await _UserManager.DeleteAsync(NewAccount);
 					return new AuthModel()
 					{
 						Message = "May be some of roles must be add or modify.",
@@ -168,7 +169,7 @@ namespace ISC.API.Services
 
 			return jwtSecurityToken;
 		}
-		public async Task<AuthModel> registerationValidation(AdminRegisterDto user)
+		public async Task<AuthModel> registerationValidation(RegisterDto user)
 		{
 			if (await _UserManager.FindByEmailAsync(user.Email) != null)
 				return new AuthModel() { Message = "Email is already registered!" };

@@ -2,9 +2,13 @@
 {
 	public class StuffNewRolesDto
 	{
-		public string Id { get; set; }
-		public List<string> Roles { get; set; }
+		public string UserId { get; set; }
+		public List<RoleDto> UserRoles { get; set; }
+	}
+	public class RoleDto
+	{
+		public string Role { get; set;}
 		public int? MentorId { get; set; }
-		public int CampId { get; set; }
+		public int? CampId { get; set; }
 	}
 }

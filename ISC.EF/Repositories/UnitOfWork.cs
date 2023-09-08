@@ -64,56 +64,61 @@ namespace ISC.EF.Repositories
 		}
 		public async Task<bool> addToRoleAsync<T>(T account, string role,int?CampId,int?MentorId)
 		{
-			var Acc=account as UserAccount;
-			try
+			if(account is UserAccount Acc)
 			{
-				if (role == Roles.TRAINEE)
+				if (Acc != null && _UserManager.GetRolesAsync(Acc).Result.Contains(role) == true)
+					return true;
+				try
 				{
-					if (CampId == null)
+					if (role == Roles.TRAINEE)
 					{
-						await  _UserManager.DeleteAsync(Acc);
-						return false;
+						if (CampId == null)
+						{
+							return false;
+						}
+						await _UserManager.AddToRoleAsync(Acc, role);
+						Trainee Trainee;
+						if (MentorId != null)
+							Trainee = new Trainee() { UserId = Acc.Id, CampId = (int)CampId, MentorId = MentorId };
+						else
+							Trainee = new Trainee() { UserId = Acc.Id, CampId = (int)CampId };
+						Trainees.addAsync(Trainee);
+						return true;
 					}
-					await _UserManager.AddToRoleAsync(Acc, role);
-					Trainee Trainee;
-					if (MentorId != null)
-						Trainee = new Trainee() { UserId = Acc.Id, CampId =(int)CampId, MentorId = MentorId };
-					else
-						Trainee = new Trainee() { UserId = Acc.Id, CampId = (int)CampId };
-					Trainees.addAsync(Trainee);
-					return true;
-				}
-				else if (role == Roles.MENTOR)
-				{
-					await _UserManager.AddToRoleAsync(Acc, role);
-					Mentor Mentor = new Mentor() { UserId = Acc.Id };
-					Mentors.addAsync(Mentor);
-					return true;
-				}
-				else if (role == Roles.HOC)
-				{
-					await _UserManager.AddToRoleAsync(Acc, role);
-					if (CampId != null)
+					else if (role == Roles.MENTOR)
 					{
+						await _UserManager.AddToRoleAsync(Acc, role);
+						Mentor Mentor = new Mentor() { UserId = Acc.Id };
+						Mentors.addAsync(Mentor);
+						return true;
+					}
+					else if (role == Roles.HOC && CampId!=null)
+					{
+						await _UserManager.AddToRoleAsync(Acc, role);
 						HeadOfTraining HeadOfTraining = new HeadOfTraining() { UserId = Acc.Id, CampId = CampId };
 						HeadofCamp.addAsync(HeadOfTraining);
+						return true;
 					}
-					return true;
+					else if (role == Roles.LEADER || role == Roles.INSTRUCTOR)
+					{
+						await _UserManager.AddToRoleAsync(Acc, role);
+						return true;
+					}
+					else
+					{
+						return false;
+					}
 				}
-				else if (role == Roles.LEADER || role == Roles.INSTRUCTOR)
-				{
-					await _UserManager.AddToRoleAsync(Acc, role);
-					return true;
-				}else
+				catch
 				{
 					return false;
 				}
 			}
-			catch
+			else
 			{
-				await _UserManager.DeleteAsync(Acc);
 				return false;
 			}
+			
 
 		}
 		public async Task<int> comleteAsync()

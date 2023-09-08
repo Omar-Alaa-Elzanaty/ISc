@@ -6,6 +6,7 @@ using ISC.EF;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Reflection.Metadata.Ecma335;
 
 namespace ISC.API.Controllers
@@ -29,7 +30,7 @@ namespace ISC.API.Controllers
 			_Auth = auth;
 		}
 		[HttpPost("RegisterNewUser")]
-		public async Task<IActionResult> registerAsync([FromForm] AdminRegisterDto newuser)
+		public async Task<IActionResult> registerAsync([FromForm] RegisterDto newuser)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -70,18 +71,22 @@ namespace ISC.API.Controllers
 			{
 				return BadRequest("some Data is required");
 			}
-			var Account=await _UserManager.FindByIdAsync(model.Id);
+			var Account=await _UserManager.FindByIdAsync(model.UserId);
 			if (Account == null)
 			{
-				return BadRequest("there is no Account with this properities!");
+				return BadRequest("there is no Account with these properities!");
 			}
-			foreach(var Role in model.Roles)
+			List<string>ErrorList = new List<string>();
+			foreach(var Role in model.UserRoles)
 			{
-				bool Result = await _UnitOfWork.addToRoleAsync(Account, Role, model.CampId, model.MentorId);
+				bool Result = await _UnitOfWork.addToRoleAsync(Account, Role.Role, Role.CampId, Role.MentorId);
 				if (Result == false)
-					return BadRequest("Can't save updates");
+					ErrorList.Append(Role.Role+',');
 			}
 			await _UnitOfWork.comleteAsync();
+			if(ErrorList.Count != 0) {
+				return BadRequest($"Can't save User to these roles{ErrorList}");
+			}
 			return Ok("Changes have been successfully");
 			
 		}
