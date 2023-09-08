@@ -69,7 +69,7 @@ namespace ISC.API.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				return BadRequest("some Data is required");
+				return BadRequest("some data is required");
 			}
 			var Account=await _UserManager.FindByIdAsync(model.UserId);
 			if (Account == null)

@@ -49,7 +49,7 @@ namespace ISC.API.Controllers
 			 _UserManager.GetRolesAsync(i).Result.Contains(Roles.TRAINEE)).ToListAsync();
 			return Ok(Accounts);
 		}
-		[HttpPost("DisplayAccounts")]
+		[HttpGet("DisplayAccounts")]
 		public async Task<IActionResult> displayAll()
 		{
 
@@ -66,6 +66,14 @@ namespace ISC.API.Controllers
 				i.PhoneNumber
 			}).ToListAsync();
 			return Ok(Accounts);
+		}
+		[HttpGet("DisplayStuffWithoutHoc")]
+		public async Task<IActionResult> displayStuffWithoutHoc()
+		{
+			var HocUserId = _UnitOfWork.HeadofCamp.getAllAsync().Result.Select(hoc=>hoc.UserId).ToList();
+			var StuffWithoutHoc = _UserManager.Users.ToListAsync()
+				.Result.Where(user=>HocUserId.Contains(user.Id)==false);
+			return Ok(StuffWithoutHoc);
 		}
 	}
 }
