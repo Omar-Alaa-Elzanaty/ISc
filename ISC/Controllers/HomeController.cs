@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Reflection.Metadata.Ecma335;
 
 namespace ISC.API.Controllers
@@ -25,23 +26,22 @@ namespace ISC.API.Controllers
 
 		[HttpGet("DisplayFeedbacks")]
 		public async Task<IActionResult> displayFeedbacksAsync()
-		
 		{
 			var Feedbacks =await _UnitOfWork.SessionsFeedbacks.getTopRateAsync(3);
-			List<object> traineesFeeds = new List<object>();
-			foreach(var feed in Feedbacks)
-			{
-				var Trainee = await _UnitOfWork.Trainees.getByIdAsync(feed.TraineeId);
-				if (Trainee == null) continue;
-				var Account = await _UserManager.FindByIdAsync(Trainee.UserId);
-				if (Account == null) continue;
-				string FullName=string.Concat(Account.FirstName,' ',Account.MiddleName);
-				traineesFeeds.Add(new {FullName,feed.Feedback,feed.Rate });
-			}
-			if (traineesFeeds.Count == 0)
+			var Trainees = await _UnitOfWork.Trainees.getAllAsync();
+
+			var Result = (from Trainee in Trainees
+						 join user in _UserManager.Users
+						 on Trainee.UserId equals user.Id
+						 join Feed in Feedbacks
+						 on Trainee.Id equals Feed.TraineeId
+						 select new { FullName = user.FirstName + ' ' + user.MiddleName + ' ' + user.LastName,
+  						 Feed.Feedback,Feed.Rate }).ToList();
+
+			if (Result.Count == 0)
 				return BadRequest("No feedbacks found!");
 
-			return Ok(traineesFeeds);
+			return Ok(Result);
 		}
 	}
 }

@@ -11,7 +11,7 @@ namespace ISC.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize(Roles =$"{Roles.LEADER},{Roles.HOC}")]
+	//[Authorize(Roles =$"{Roles.LEADER},{Roles.HOC}")]
 	public class HeadCampController : ControllerBase
 	{
 		private readonly RoleManager<IdentityRole> _RoleManager;
