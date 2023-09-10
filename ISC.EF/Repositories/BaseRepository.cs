@@ -84,5 +84,10 @@ namespace ISC.EF.Repositories
 		{
 			return  _Context.Set<T>().Find(id);
 		}
+
+		public virtual Task<bool> deleteEntityAsync(T entity)
+		{
+			return delete(entity);
+		}
 	}
 }

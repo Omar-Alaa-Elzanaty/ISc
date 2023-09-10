@@ -36,7 +36,7 @@ namespace ISC.API.Controllers
 			{
 				return BadRequest(ModelState);
 			}
-			var model = await _Auth.adminRegisterAsync(newuser);
+			var model = await _Auth.RegisterAsync(newuser);
 			if (!model.IsAuthenticated)
 			{
 				return BadRequest(model);
@@ -85,7 +85,7 @@ namespace ISC.API.Controllers
 			}
 			await _UnitOfWork.comleteAsync();
 			if(ErrorList.Count != 0) {
-				return BadRequest($"Can't save User to these roles{ErrorList}");
+				return BadRequest($"Can't save user to these roles{ErrorList}");
 			}
 			return Ok("Changes have been successfully");
 			

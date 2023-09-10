@@ -46,7 +46,6 @@ namespace ISC.EF.Repositories
         {
 			_DataBase = database;
 			_UserManager = usermanager;
-
 			Trainees = new TraineeRepository(_DataBase,_UserManager);
 			Sessions= new BaseRepository<Session>(_DataBase);
 			Mentors = new MentorRepository(database,usermanager);
@@ -68,6 +67,8 @@ namespace ISC.EF.Repositories
 			{
 				if (Acc != null && _UserManager.GetRolesAsync(Acc).Result.Contains(role) == true)
 					return true;
+				else if(Acc==null)
+					return false;
 				try
 				{
 					if (role == Roles.TRAINEE)
@@ -83,31 +84,28 @@ namespace ISC.EF.Repositories
 						else
 							Trainee = new Trainee() { UserId = Acc.Id, CampId = (int)CampId };
 						Trainees.addAsync(Trainee);
-						return true;
 					}
 					else if (role == Roles.MENTOR)
 					{
 						await _UserManager.AddToRoleAsync(Acc, role);
 						Mentor Mentor = new Mentor() { UserId = Acc.Id };
 						Mentors.addAsync(Mentor);
-						return true;
 					}
 					else if (role == Roles.HOC && CampId!=null)
 					{
 						await _UserManager.AddToRoleAsync(Acc, role);
 						HeadOfTraining HeadOfTraining = new HeadOfTraining() { UserId = Acc.Id, CampId = CampId };
 						HeadofCamp.addAsync(HeadOfTraining);
-						return true;
 					}
 					else if (role == Roles.LEADER || role == Roles.INSTRUCTOR)
 					{
 						await _UserManager.AddToRoleAsync(Acc, role);
-						return true;
 					}
 					else
 					{
 						return false;
 					}
+					return true;
 				}
 				catch
 				{

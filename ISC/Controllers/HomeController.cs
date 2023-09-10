@@ -27,7 +27,7 @@ namespace ISC.API.Controllers
 		public async Task<IActionResult> displayFeedbacksAsync()
 		
 		{
-			var Feedbacks =await _UnitOfWork.SessionsFeedbacks.getTopAsync(3);
+			var Feedbacks =await _UnitOfWork.SessionsFeedbacks.getTopRateAsync(3);
 			List<object> traineesFeeds = new List<object>();
 			foreach(var feed in Feedbacks)
 			{

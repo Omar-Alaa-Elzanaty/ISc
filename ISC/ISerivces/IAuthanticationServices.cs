@@ -5,7 +5,7 @@ namespace ISC.API.ISerivces
 {
     public interface IAuthanticationServices
     {
-        Task<AuthModel> adminRegisterAsync(RegisterDto user);
+        Task<AuthModel> RegisterAsync(RegisterDto user);
         Task<AuthModel> loginAsync(LoginDto user);
 
     }

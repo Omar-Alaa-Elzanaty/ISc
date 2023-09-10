@@ -9,6 +9,6 @@ namespace ISC.Core.Interfaces
 {
 	public interface ISessionFeedbackRepository:IBaseRepository<SessionFeedback>
 	{
-		Task<List<SessionFeedback>> getTopAsync(int count);
+		Task<List<SessionFeedback>> getTopRateAsync(int count);
 	}
 }

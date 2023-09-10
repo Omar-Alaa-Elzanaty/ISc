@@ -23,14 +23,16 @@ namespace ISC.API.Services
 		private readonly JWT _jwt;
 		private readonly RoleManager<IdentityRole> _RoleManager;
 		private readonly IUnitOfWork _UnitOfWork;
-        public AuthanticationServices(UserManager<UserAccount> usermanger,IOptions<JWT>jwt,IUnitOfWork unitofwork,RoleManager<IdentityRole>rolemanager)
+		private readonly IOnlineJudgeServices _Onlinejudge;
+        public AuthanticationServices(UserManager<UserAccount> usermanger,IOptions<JWT>jwt,IUnitOfWork unitofwork,RoleManager<IdentityRole>rolemanager,IOnlineJudgeServices onlineJudge)
         {
             _UserManager = usermanger;
 			_jwt = jwt.Value;
 			_UnitOfWork = unitofwork;
 			_RoleManager = rolemanager;
+			_Onlinejudge = onlineJudge;
         }
-		public async Task<AuthModel> adminRegisterAsync(RegisterDto user)
+		public async Task<AuthModel> RegisterAsync(RegisterDto user)
 		{
 			AuthModel NotValidData =await registerationValidation(user);
 			if (NotValidData.IsAuthenticated==false)
@@ -96,7 +98,7 @@ namespace ISC.API.Services
 					await _UserManager.DeleteAsync(NewAccount);
 					return new AuthModel()
 					{
-						Message = "May be some of roles must be add or modify.",
+						Message = "May be some of roles must be add or modify... please try again.",
 						IsAuthenticated = false
 					};
 				}
@@ -177,6 +179,8 @@ namespace ISC.API.Services
 				return new AuthModel() { Message = "This number is already Exist!" };
 			if (user.VjudgeHandle != null && _UserManager.Users.SingleOrDefault(i => i.VjudgeHandle == user.VjudgeHandle) != null)
 				return new AuthModel() { Message = "Vjudge Handle is already Exist!" };
+			if (await _Onlinejudge.checkHandleValidationAsync(user.CodeForceHandle) == false)
+				return new AuthModel() { Message = "Codeforce Handle is not Correct!" };
 			if (_UserManager.Users.SingleOrDefault(i => i.CodeForceHandle == user.CodeForceHandle) != null)
 				return new AuthModel() { Message = "Codeforce Handle is already Exist!" };
 			if (_UserManager.Users.SingleOrDefault(i => i.NationalId == user.NationalId) != null)

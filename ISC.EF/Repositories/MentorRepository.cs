@@ -28,7 +28,7 @@ namespace ISC.EF.Repositories
                    where mentor.UserId==account.Id
                    select new {account, mentor}).ToList();
         }
-        public async Task<bool> deleteEntityAsync(Mentor mentor)
+        public override async Task<bool> deleteEntityAsync(Mentor mentor)
         {
 			if (mentor == null) return false;
 			int Trainees = await _Context.Trainees.Where(t=>t.MentorId==mentor.Id).CountAsync();
