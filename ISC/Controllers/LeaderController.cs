@@ -6,6 +6,7 @@ using ISC.EF;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Reflection.Metadata.Ecma335;
 
@@ -41,15 +42,6 @@ namespace ISC.API.Controllers
 			{
 				return BadRequest(model);
 			}
-			string body = "We need to inform you that your account on ISc being ready to use\n" +
-						"this is your creadntial informations\n" +
-						$"Username: {model.UserName}\n" +
-						$"\nPassword: {model.Password}";
-			//bool Result = await _MailServices.sendEmailAsync(newuser.Email, "ICPC Sohag account", body);
-			//if (Result == false)
-			//{
-			//	return BadRequest("Email is not valid");
-			//}
 			return Ok(model);
 		}
 		[HttpPost("AddRole")]
@@ -93,13 +85,36 @@ namespace ISC.API.Controllers
 		[HttpDelete("DeleteFromTrainees")]
 		public async Task<IActionResult> deleteFromTrainees(List<string>traineesusersid)
 		{
-			List<UserAccount> Trainees=new List<UserAccount>();
 			foreach(string traineeuserid in traineesusersid)
 			{
-				await _UserManager.DeleteAsync(await _UserManager.FindByIdAsync(traineeuserid));
+				var TraineeAccount=await _UserManager.Users.Include(i=>i.Trainee).Where(user=>user.Id==traineeuserid).SingleOrDefaultAsync();
+				if (TraineeAccount != null)
+				{
+					var Camp = await _UnitOfWork.Trainees.getCampofTrainee(TraineeAccount.Trainee.Id);
+					TraineeArchive Archive = new TraineeArchive()
+					{
+						FirstName = TraineeAccount.FirstName,
+						MiddleName = TraineeAccount.MiddleName,
+						LastName = TraineeAccount.LastName,
+						NationalID = TraineeAccount.NationalId,
+						BirthDate = TraineeAccount.BirthDate,
+						Grade = TraineeAccount.Grade,
+						Gender = TraineeAccount.Gender,
+						College = TraineeAccount.College,
+						CodeForceHandle = TraineeAccount.CodeForceHandle,
+						FacebookLink = TraineeAccount.FacebookLink,
+						VjudgeHandle = TraineeAccount.VjudgeHandle,
+						Email = TraineeAccount.Email,
+						PhoneNumber = TraineeAccount.PhoneNumber,
+						CampName = Camp.Name,
+						IsCompleted = false
+					};
+					_UnitOfWork.TraineesArchive.addAsync(Archive);
+					await _UserManager.DeleteAsync(TraineeAccount);
+				}
 			}
 			await _UnitOfWork.comleteAsync();
-			return Ok($"removed\n{Trainees}");
+			return Ok();
 		}
 		[HttpDelete("DeleteFromStuff")]
 		public async Task<IActionResult> deleteFromStuff(List<string> stuffusersid)
@@ -119,7 +134,25 @@ namespace ISC.API.Controllers
 					result = await _UnitOfWork.HeadofCamp.deleteEntityAsync(UserId);
 				}
 				if (result == true)
+				{
+					StuffArchive Archive = new StuffArchive()
+					{
+						FirstName = Account.FirstName,
+						MiddleName = Account.MiddleName,
+						LastName = Account.LastName,
+						NationalID = Account.NationalId,
+						BirthDate = Account.BirthDate,
+						Grade = Account.Grade,
+						College = Account.College,
+						Gender = Account.Gender,
+						CodeForceHandle = Account.CodeForceHandle,
+						FacebookLink = Account.FacebookLink,
+						VjudgeHandle = Account.VjudgeHandle,
+						Email = Account.Email,
+						PhoneNumber = Account.PhoneNumber
+					};
 					await _UserManager.DeleteAsync(Account);
+				}
 				else
 					ErrorsList.Append(Account);
 			}

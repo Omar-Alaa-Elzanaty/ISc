@@ -346,11 +346,11 @@ namespace ISC.EF.Migrations
                         .HasMaxLength(14)
                         .HasColumnType("nvarchar(14)");
 
+                    b.Property<string>("CampName")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("CampName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CodeForceHandle")
                         .HasColumnType("nvarchar(max)");
@@ -394,7 +394,7 @@ namespace ISC.EF.Migrations
                     b.Property<string>("VjudgeHandle")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("NationalID");
+                    b.HasKey("NationalID", "CampName");
 
                     b.ToTable("TraineesArchives");
                 });

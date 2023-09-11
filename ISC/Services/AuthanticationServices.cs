@@ -24,13 +24,15 @@ namespace ISC.API.Services
 		private readonly RoleManager<IdentityRole> _RoleManager;
 		private readonly IUnitOfWork _UnitOfWork;
 		private readonly IOnlineJudgeServices _Onlinejudge;
-        public AuthanticationServices(UserManager<UserAccount> usermanger,IOptions<JWT>jwt,IUnitOfWork unitofwork,RoleManager<IdentityRole>rolemanager,IOnlineJudgeServices onlineJudge)
+		private readonly IMailServices _MailServices;
+        public AuthanticationServices(UserManager<UserAccount> usermanger,IOptions<JWT>jwt,IUnitOfWork unitofwork,RoleManager<IdentityRole>rolemanager,IOnlineJudgeServices onlineJudge,IMailServices mailservices)
         {
             _UserManager = usermanger;
 			_jwt = jwt.Value;
 			_UnitOfWork = unitofwork;
 			_RoleManager = rolemanager;
 			_Onlinejudge = onlineJudge;
+			_MailServices = mailservices;
         }
 		public async Task<AuthModel> RegisterAsync(RegisterDto user)
 		{
@@ -103,6 +105,16 @@ namespace ISC.API.Services
 					};
 				}
 			}
+			//string body = "We need to inform you that your account on ISc being ready to use\n" +
+			//			"this is your creadntial informations\n" +
+			//			$"Username: {NewAccount.UserName}\n" +
+			//			$"\nPassword: {Password}";
+			//bool EmailResult = await _MailServices.sendEmailAsync(user.Email, "ICPC Sohag account", body);
+			//if (EmailResult == false)
+			//{
+			//	await _UserManager.DeleteAsync(NewAccount);
+			//	return new AuthModel() { Message="Email is not Valid" };
+			//}
 			await _UnitOfWork.comleteAsync();
 			var JwtSecurityToken = await CreateJwtToken(NewAccount);
 			return new AuthModel()
@@ -179,8 +191,8 @@ namespace ISC.API.Services
 				return new AuthModel() { Message = "This number is already Exist!" };
 			if (user.VjudgeHandle != null && _UserManager.Users.SingleOrDefault(i => i.VjudgeHandle == user.VjudgeHandle) != null)
 				return new AuthModel() { Message = "Vjudge Handle is already Exist!" };
-			if (await _Onlinejudge.checkHandleValidationAsync(user.CodeForceHandle) == false)
-				return new AuthModel() { Message = "Codeforce Handle is not Correct!" };
+			//if (await _Onlinejudge.checkHandleValidationAsync(user.CodeForceHandle) == false)
+			//	return new AuthModel() { Message = "Codeforce Handle is not valid!" };
 			if (_UserManager.Users.SingleOrDefault(i => i.CodeForceHandle == user.CodeForceHandle) != null)
 				return new AuthModel() { Message = "Codeforce Handle is already Exist!" };
 			if (_UserManager.Users.SingleOrDefault(i => i.NationalId == user.NationalId) != null)
