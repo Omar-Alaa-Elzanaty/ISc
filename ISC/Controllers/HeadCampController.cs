@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Crypto;
+using System.Security.Claims;
+using System.Text;
 
 namespace ISC.API.Controllers
 {
@@ -69,9 +72,11 @@ namespace ISC.API.Controllers
 			return Ok();
 		}
 		[HttpDelete("WeeklyFilteration")]
-		public async Task<IActionResult> weeklyFilter(List<int> traineesid,int campid)
+		public async Task<IActionResult> weeklyFilter(List<int> traineesid)
 		{
-			var TraineeSheetAcess =await _UnitOfWork.TraineesSheetsAccess.getAllwithNavigationsAsync(new[] { "Sheet","Trainee" });
+			string? userId = "5fcdb308-f4ed-4f57-af19-bb03c6dc5f82"; //User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			Camp Camp=await _UnitOfWork.Camps.getCampByUserIdAsync(userId);
+			var TraineeSheetAcess = await _UnitOfWork.TraineesSheetsAccess.getAllwithNavigationsAsync(new[] { "Sheet", "Trainee" });
 			bool[]? IsFound;
 			if (traineesid.Count() > 0)
 			{
@@ -84,58 +89,85 @@ namespace ISC.API.Controllers
 			}
 			else IsFound = null;
 			TraineeSheetAcess = TraineeSheetAcess
-								.Where(ts => ts.Sheet.CampId == campid &&(IsFound!=null?!IsFound[ts.TraineeId]:true))
-								.OrderBy(ts=>ts.TraineeId)
+								.Where(ts => ts.Sheet.CampId == Camp.Id && (IsFound != null ? !IsFound[ts.TraineeId] : true))
+								.OrderBy(ts => ts.TraineeId)
 								.ToList();
-			Camp Camp =await _UnitOfWork.Camps.getByIdAsync(campid);
-			Dictionary<int,int> ProblemSheetCount = TraineeSheetAcess
-				.DistinctBy(tsa=>tsa.SheetId)
-				.Select(async i => new {i.SheetId,
-				Count=_OnlineJudgeSrvices.getContestStandingAsync(i.Sheet.SheetCfId,1,false)
-				.Result.result.problems.Count()})
-				.ToDictionary(i=>i.Result.SheetId,i=>i.Result.Count);
-			List<TraineeSheetAccess> RedFlagTrainees = new List<TraineeSheetAccess>();
-			int TSASize = TraineeSheetAcess.Count();
-			for(int Trainee=0;Trainee<TSASize;Trainee++)
+			Dictionary<int, int> ProblemSheetCount = TraineeSheetAcess
+				.DistinctBy(tsa => tsa.SheetId)
+				.Select(async i => new { i.SheetId,
+					Count = _OnlineJudgeSrvices.getContestStandingAsync(i.Sheet.SheetCfId, 1, true)
+				.Result.result.problems.Count() })
+				.ToDictionary(i => i.Result.SheetId, i => i.Result.Count);
+			HashSet<int>FilteredOnSheets = new HashSet<int>();
+			int TSA_Size = TraineeSheetAcess.Count();
+			for (int Trainee = 0; Trainee < TSA_Size; ++Trainee)
 			{
-				double precent = ((double)TraineeSheetAcess[Trainee].NumberOfProblems / (double)ProblemSheetCount[TraineeSheetAcess[Trainee].SheetId]);
-				var TraineePrecent = Math.Ceiling(precent * 100);
+				double precent = TraineeSheetAcess[Trainee].NumberOfProblems / (double)ProblemSheetCount[TraineeSheetAcess[Trainee].SheetId];
+				int TraineePrecent = ((int)Math.Ceiling(precent * 100.0));
 				if (TraineePrecent < TraineeSheetAcess[Trainee].Sheet.MinimumPrecent)
 				{
-					RedFlagTrainees.Add(TraineeSheetAcess[Trainee]);
+					FilteredOnSheets.Add(TraineeSheetAcess[Trainee].TraineeId);
 					int CurrentTrainee = TraineeSheetAcess[Trainee].TraineeId;
-					while (Trainee < TSASize && TraineeSheetAcess[Trainee].TraineeId == CurrentTrainee) ++Trainee;
+					while (Trainee < TSA_Size && TraineeSheetAcess[Trainee].TraineeId == CurrentTrainee) ++Trainee;
 					--Trainee;
 				}
 			}
-			List<TraineeArchive> Filtered=new List<TraineeArchive>();
-			foreach(var Trainee in RedFlagTrainees)
+			var TraineeAttendence = _UnitOfWork.TraineesAttendence
+					.getInListAsync(tr => TraineeSheetAcess
+								.Select(i => i.TraineeId)
+								.Contains(tr.TraineeId))
+					.Result.GroupBy(attend => attend.TraineeId)
+					.Select(g => new { TraineeId = g.Key, NumberOfAttendence = g.Count() }).ToList();
+			HashSet<int> FilteredOnSessions = new HashSet<int>();
+			if (TraineeAttendence.Count > 0)
 			{
-				UserAccount TraineeAccount =await _UserManager.FindByIdAsync(Trainee.Trainee.UserId);
-				if(TraineeAccount != null)
+				int MaxAttendence = TraineeAttendence.Max(ta => ta.NumberOfAttendence);
+				FilteredOnSessions = TraineeAttendence
+								.Where(i => MaxAttendence - i.NumberOfAttendence > 3)
+								.Select(ta => ta.TraineeId).ToHashSet();
+			}
+			List<KeyValuePair<TraineeArchive, string>> Filtered = new List<KeyValuePair<TraineeArchive, string>>();
+			for(int Trainee = 0; Trainee < TSA_Size; Trainee++)
+			{
+				bool FoundInSheetFilter = FilteredOnSheets.Contains(TraineeSheetAcess[Trainee].TraineeId);
+				bool FoundInSessionFilter = FilteredOnSessions.Contains(TraineeSheetAcess[Trainee].TraineeId);
+				if( FoundInSheetFilter && FoundInSessionFilter)
 				{
-					TraineeArchive ToArchive = new TraineeArchive()
+					UserAccount TraineeAccount = await _UserManager.FindByIdAsync(TraineeSheetAcess[Trainee].Trainee.UserId);
+					if (TraineeAccount != null)
 					{
-						FirstName = TraineeAccount.FirstName,
-						MiddleName = TraineeAccount.MiddleName,
-						LastName = TraineeAccount.LastName,
-						NationalID = TraineeAccount.NationalId,
-						BirthDate = TraineeAccount.BirthDate,
-						Grade = TraineeAccount.Grade,
-						College = TraineeAccount.College,
-						Gender = TraineeAccount.Gender,
-						CodeForceHandle = TraineeAccount.CodeForceHandle,
-						FacebookLink = TraineeAccount.FacebookLink,
-						VjudgeHandle = TraineeAccount.VjudgeHandle,
-						Email = TraineeAccount.Email,
-						PhoneNumber = TraineeAccount.PhoneNumber,
-						Year = Camp.Year,
-						CampName = Camp.Name,
-						IsCompleted = false
-					};
-					_UnitOfWork.TraineesArchive.addAsync(ToArchive);
-					Filtered.Add(ToArchive);
-					await _UserManager.DeleteAsync(TraineeAccount);
+						TraineeArchive ToArchive = new TraineeArchive()
+						{
+							FirstName = TraineeAccount.FirstName,
+							MiddleName = TraineeAccount.MiddleName,
+							LastName = TraineeAccount.LastName,
+							NationalID = TraineeAccount.NationalId,
+							BirthDate = TraineeAccount.BirthDate,
+							Grade = TraineeAccount.Grade,
+							College = TraineeAccount.College,
+							Gender = TraineeAccount.Gender,
+							CodeForceHandle = TraineeAccount.CodeForceHandle,
+							FacebookLink = TraineeAccount.FacebookLink,
+							VjudgeHandle = TraineeAccount.VjudgeHandle,
+							Email = TraineeAccount.Email,
+							PhoneNumber = TraineeAccount.PhoneNumber,
+							Year = Camp.Year,
+							CampName = Camp.Name,
+							IsCompleted = false
+						};
+						StringBuilder Reason = new StringBuilder();
+						if (FoundInSheetFilter == true)
+						{
+							Reason.Append("Sheets");
+						}
+						if (FoundInSessionFilter == true)
+						{
+							Reason.Append(Reason.Length == 0 ? "/Sessions" : "Sessions");
+						}
+						Filtered.Add(new(ToArchive, Reason.ToString()));
+						_UnitOfWork.TraineesArchive.addAsync(ToArchive);
+						await _UserManager.DeleteAsync(TraineeAccount);
+					}
 				}
 			}
 			await _UnitOfWork.comleteAsync();

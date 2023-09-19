@@ -77,7 +77,7 @@ namespace ISC.API.Services
 				VjudgeHandle = user.VjudgeHandle,
 				ProfilePicture = await new Converters().photoconverterasync(user.ProfilePicture),
 				JoinDate=DateTime.Now,
-				LastLoginDate=DateTime.Now,
+				LastLoginDate=DateTime.Now
 			};
 			var Password = NewAccount.generatePassword();
 			NewAccount.UserName = NewAccount.generateUserName();
@@ -101,7 +101,7 @@ namespace ISC.API.Services
 					await _UserManager.DeleteAsync(NewAccount);
 					return new AuthModel()
 					{
-						Message = "May be some of roles must be add or modify... please try again.",
+						Message = $"May be some of roles must be add or modify on Role {Role}... please try again.",
 						IsAuthenticated = false
 					};
 				}
@@ -133,7 +133,7 @@ namespace ISC.API.Services
 		public async Task<AuthModel> loginAsync(LoginDto user)
 		{
 			var UserAccount = await _UserManager.FindByNameAsync(user.UserName);
-			if(user is null ||! await _UserManager.CheckPasswordAsync(UserAccount, user.Password))
+			if(UserAccount is null ||! await _UserManager.CheckPasswordAsync(UserAccount, user.Password))
 			{
 				return new AuthModel() { Message = "Email or Passwrod is incorrect!" };
 			}
@@ -184,7 +184,7 @@ namespace ISC.API.Services
 
 			return jwtSecurityToken;
 		}
-		public async Task<AuthModel> registerationValidation(RegisterDto user)
+		private async Task<AuthModel> registerationValidation(RegisterDto user)
 		{
 			if (await _UserManager.FindByEmailAsync(user.Email) != null)
 				return new AuthModel() { Message = "Email is already registered!" };

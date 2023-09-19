@@ -20,6 +20,7 @@ namespace ISC.EF.ModelsConfigurations
 			builder.HasIndex(acc => acc.PhoneNumber).HasFilter("PhoneNumber IS NOT NULL").IsUnique();
 			builder.Property(i => i.UserName).HasMaxLength(40);
 			builder.Property(i => i.FirstName).HasMaxLength(20);
+			builder.Property(i => i.MiddleName).HasMaxLength(20);
 			builder.Property(i => i.LastName).HasMaxLength(20);
 			builder.Property(i => i.College).HasMaxLength(30);
 			builder.Property(i => i.Gender).HasMaxLength(7);

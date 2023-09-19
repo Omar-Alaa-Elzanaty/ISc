@@ -5,11 +5,11 @@ namespace ISC.API.APIDtos
 {
 	public class RegisterDto
 	{
-		[MaxLength(10)]
+		[MaxLength(20)]
 		public string FirstName { get; set; }
-		[MaxLength(10)]
+		[MaxLength(20)]
 		public string MiddleName { get; set; }
-		[MaxLength(10)]
+		[MaxLength(20)]
 		public string LastName { get; set; }
 		[RegularExpression("^[1-9][0-9]*$")]
 		public string NationalId { get; set; }

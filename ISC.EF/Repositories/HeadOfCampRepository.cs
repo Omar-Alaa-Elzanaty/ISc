@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,7 +18,6 @@ namespace ISC.EF.Repositories
 		{
 			_Context = context;
 		}
-
 		public async Task<bool> deleteEntityAsync(string userid)
 		{
 			var head=await _Context.HeadsOfTraining.Where(head=>head.UserId == userid).FirstOrDefaultAsync();

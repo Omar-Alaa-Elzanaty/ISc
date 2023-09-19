@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="15.1">
   <help_text>// Uncomment the following line to change the fontsize and font:
-fontsize=15
+fontsize=10
 // fontfamily=SansSerif //possible: SansSerif,Serif,Monospaced
 
 
@@ -44,7 +44,7 @@ halign=center
       <x>66</x>
       <y>275</y>
       <w>66</w>
-      <h>121</h>
+      <h>110</h>
     </coordinates>
     <panel_attributes>Leader</panel_attributes>
     <additional_attributes/>
@@ -87,13 +87,13 @@ halign=center
     <id>Relation</id>
     <coordinates>
       <x>418</x>
-      <y>44</y>
+      <y>55</y>
       <w>297</w>
-      <h>55</h>
+      <h>44</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;includes&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;30.0;250.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;250.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
@@ -182,12 +182,12 @@ in case user is Headoftraining</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>121</x>
-      <y>297</y>
+      <y>308</y>
       <w>253</w>
-      <h>55</h>
+      <h>44</h>
     </coordinates>
     <panel_attributes/>
-    <additional_attributes>10.0;20.0;210.0;30.0</additional_attributes>
+    <additional_attributes>10.0;10.0;210.0;20.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
@@ -459,7 +459,7 @@ Stuff Archive</panel_attributes>
       <x>1694</x>
       <y>671</y>
       <w>66</w>
-      <h>121</h>
+      <h>110</h>
     </coordinates>
     <panel_attributes>Leader</panel_attributes>
     <additional_attributes/>
@@ -561,13 +561,13 @@ Stuff Archive</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>1210</x>
-      <y>649</y>
+      <y>660</y>
       <w>143</w>
-      <h>55</h>
+      <h>44</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;includes&gt;&gt;</panel_attributes>
-    <additional_attributes>110.0;30.0;10.0;20.0</additional_attributes>
+    <additional_attributes>110.0;20.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
@@ -598,7 +598,7 @@ filterate on
     <coordinates>
       <x>1243</x>
       <y>671</y>
-      <w>154</w>
+      <w>121</w>
       <h>110</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
@@ -610,7 +610,7 @@ filterate on
     <coordinates>
       <x>1078</x>
       <y>748</y>
-      <w>121</w>
+      <w>88</w>
       <h>99</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
@@ -633,7 +633,7 @@ filterate on
     <coordinates>
       <x>968</x>
       <y>836</y>
-      <w>121</w>
+      <w>99</w>
       <h>77</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
@@ -680,7 +680,7 @@ filterate on
       <x>44</x>
       <y>1496</y>
       <w>66</w>
-      <h>121</h>
+      <h>110</h>
     </coordinates>
     <panel_attributes>HOC</panel_attributes>
     <additional_attributes/>
@@ -831,13 +831,13 @@ for spacific sheet</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>506</x>
-      <y>1848</y>
+      <y>1859</y>
       <w>506</w>
-      <h>55</h>
+      <h>44</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;extends&gt;&gt;</panel_attributes>
-    <additional_attributes>440.0;20.0;10.0;27.0</additional_attributes>
+    <additional_attributes>440.0;10.0;10.0;17.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -1062,13 +1062,13 @@ Data will sort with gender</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>517</x>
-      <y>550</y>
+      <y>561</y>
       <w>143</w>
-      <h>55</h>
+      <h>44</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;includes&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;20.0;110.0;30.0</additional_attributes>
+    <additional_attributes>10.0;10.0;110.0;20.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
@@ -1119,13 +1119,13 @@ Data will sort with gender</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>979</x>
-      <y>550</y>
+      <y>561</y>
       <w>121</w>
-      <h>55</h>
+      <h>44</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;extends&gt;&gt;</panel_attributes>
-    <additional_attributes>90.0;20.0;10.0;30.0</additional_attributes>
+    <additional_attributes>90.0;10.0;10.0;20.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>

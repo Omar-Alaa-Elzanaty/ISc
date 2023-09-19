@@ -64,7 +64,6 @@ namespace ISC.EF.Repositories
 		{
 			return await _Context.Set<T>().ToListAsync();
 		}
-
 		public async Task<List<T>> getAllwithNavigationsAsync(string[] includes = null)
 		{
 			IQueryable<T> Query = _Context.Set<T>();
