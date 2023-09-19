@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace ISC.EF.ModelsConfigurations
 {
-	internal class NewRegisterationConfigurations : IEntityTypeConfiguration<NewRegitseration>
+	internal class NewRegisterationConfigurations : IEntityTypeConfiguration<NewRegistration>
 	{
-		public void Configure(EntityTypeBuilder<NewRegitseration> builder)
+		public void Configure(EntityTypeBuilder<NewRegistration> builder)
 		{
 			builder.HasKey(reg => reg.NationalID);
 			builder.HasIndex(reg => reg.CodeForceHandle).IsUnique();

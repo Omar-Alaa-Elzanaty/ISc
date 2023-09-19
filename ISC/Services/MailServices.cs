@@ -71,9 +71,9 @@ namespace ISC.API.Services
 		/// <summary>
 		///I think that is function may be implement in endpoint
 		/// </summary>
-		public async Task<List<NewRegitseration>> sendMailToAcceptedAsync(List<NewRegitseration>trainees,string subject,string body)
+		public async Task<List<NewRegistration>> sendMailToAcceptedAsync(List<NewRegistration>trainees,string subject,string body)
 		{
-			List<NewRegitseration>NotValidAccount = new List<NewRegitseration>();
+			List<NewRegistration>NotValidAccount = new List<NewRegistration>();
 			foreach(var Trainee in trainees)
 			{
 				//logic of html body (method should impelement in converter)

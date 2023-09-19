@@ -82,40 +82,7 @@ namespace ISC.API.Controllers
 			return Ok("Changes have been successfully");
 			
 		}
-		[HttpDelete("DeleteFromTrainees")]
-		public async Task<IActionResult> deleteFromTrainees(List<string>traineesusersid)
-		{
-			foreach(string traineeuserid in traineesusersid)
-			{
-				var TraineeAccount=await _UserManager.Users.Include(i=>i.Trainee).Where(user=>user.Id==traineeuserid).SingleOrDefaultAsync();
-				if (TraineeAccount != null)
-				{
-					var Camp = await _UnitOfWork.Trainees.getCampofTrainee(TraineeAccount.Trainee.Id);
-					TraineeArchive Archive = new TraineeArchive()
-					{
-						FirstName = TraineeAccount.FirstName,
-						MiddleName = TraineeAccount.MiddleName,
-						LastName = TraineeAccount.LastName,
-						NationalID = TraineeAccount.NationalId,
-						BirthDate = TraineeAccount.BirthDate,
-						Grade = TraineeAccount.Grade,
-						Gender = TraineeAccount.Gender,
-						College = TraineeAccount.College,
-						CodeForceHandle = TraineeAccount.CodeForceHandle,
-						FacebookLink = TraineeAccount.FacebookLink,
-						VjudgeHandle = TraineeAccount.VjudgeHandle,
-						Email = TraineeAccount.Email,
-						PhoneNumber = TraineeAccount.PhoneNumber,
-						CampName = Camp.Name,
-						IsCompleted = false
-					};
-					_UnitOfWork.TraineesArchive.addAsync(Archive);
-					await _UserManager.DeleteAsync(TraineeAccount);
-				}
-			}
-			await _UnitOfWork.comleteAsync();
-			return Ok();
-		}
+
 		[HttpDelete("DeleteFromStuff")]
 		public async Task<IActionResult> deleteFromStuff(List<string> stuffusersid)
 		{
@@ -151,6 +118,7 @@ namespace ISC.API.Controllers
 						Email = Account.Email,
 						PhoneNumber = Account.PhoneNumber
 					};
+					_UnitOfWork.StuffArchive.addAsync(Archive);
 					await _UserManager.DeleteAsync(Account);
 				}
 				else

@@ -29,7 +29,7 @@ namespace ISC.EF.Repositories
 
 		public IHeadOfCampRepository HeadofCamp { get; private set; }
 
-		public IBaseRepository<Camp> Camps { get; private set; }
+		public ICampRepository Camps { get; private set; }
 
 		public ISessionFeedbackRepository SessionsFeedbacks { get; private set; }
 
@@ -41,7 +41,7 @@ namespace ISC.EF.Repositories
 
 		public IBaseRepository<StuffArchive> StuffArchive { get; private set; }
 
-		public IBaseRepository<NewRegitseration> NewRegitseration { get; private set; }
+		public IBaseRepository<NewRegistration> NewRegitseration { get; private set; }
         public UnitOfWork(DataBase database,UserManager<UserAccount>usermanager)
         {
 			_DataBase = database;
@@ -53,13 +53,13 @@ namespace ISC.EF.Repositories
 			Sheets = new BaseRepository<Sheet>(_DataBase);
 			TraineesSheetsAccess = new BaseRepository<TraineeSheetAccess>(_DataBase);
 			HeadofCamp = new HeadOfCampRepository(_DataBase);
-			Camps = new BaseRepository<Camp>(_DataBase);
+			Camps = new CampRepository(_DataBase);
 			SessionsFeedbacks = new SessionFeedbackRepository(_DataBase);
 			MentorsOfCamps = new BaseRepository<MentorOfCamp>(_DataBase);
 			Materials = new BaseRepository<Material>(_DataBase);
 			TraineesArchive = new BaseRepository<TraineeArchive>(_DataBase);
 			StuffArchive = new BaseRepository<StuffArchive>(_DataBase);
-			NewRegitseration = new BaseRepository<NewRegitseration>(_DataBase);
+			NewRegitseration = new BaseRepository<NewRegistration>(_DataBase);
 		}
 		public async Task<bool> addToRoleAsync<T>(T account, string role,int?CampId,int?MentorId)
 		{

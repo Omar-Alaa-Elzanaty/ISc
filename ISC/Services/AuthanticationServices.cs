@@ -90,6 +90,7 @@ namespace ISC.API.Services
 					errors +=$"{error.Description},";
 				}
 				errors.Remove(errors.Length - 1, 1);
+				await _UserManager.DeleteAsync(NewAccount);
 				return new AuthModel() { Message = errors};
 			}
 			foreach (var Role in user.Roles)

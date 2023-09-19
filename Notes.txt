@@ -33,4 +33,5 @@ get name from token	var userId=User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 uncomment
 {
  Leader controller add register part of send email
+ Authorize of controllers
 }

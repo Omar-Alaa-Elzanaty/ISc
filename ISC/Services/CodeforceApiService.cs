@@ -85,7 +85,7 @@ namespace CodeforceApiServices
 			string Parameters = "";
 			Parameters += addParameter("apiKey", _CFConnection.Key);
 			Parameters += addParameter("contestId", contestid);
-			Parameters += addParameter("count", numberofrows.ToString());
+			Parameters += addParameter("count", Math.Max(numberofrows,1).ToString());
 			Parameters += addParameter("from", "1");
 			Parameters += addParameter("showUnofficial", unofficial==true?"True":"false");
 			Parameters += addParameter("time", new Converters().generateTimeInUnix().ToString());

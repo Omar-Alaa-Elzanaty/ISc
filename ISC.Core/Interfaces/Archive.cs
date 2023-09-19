@@ -23,5 +23,6 @@ namespace ISC.Core.Interfaces
 		public string? FacebookLink { get; set; }
 		public string? PhoneNumber { get; set; }
 		public string Email { get; set; }
+		public int Year  = DateTime.Now.Year;
 	}
 }

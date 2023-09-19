@@ -17,13 +17,13 @@ namespace ISC.Core.Interfaces
 		IBaseRepository<Sheet> Sheets { get; }
 		IBaseRepository<TraineeSheetAccess> TraineesSheetsAccess { get; }
 		IHeadOfCampRepository HeadofCamp { get; }
-		IBaseRepository<Camp> Camps { get; }
+		ICampRepository Camps { get; }
 		ISessionFeedbackRepository SessionsFeedbacks { get; }
 		IBaseRepository<MentorOfCamp> MentorsOfCamps { get; }
 		IBaseRepository<Material> Materials { get; }
 		IBaseRepository<TraineeArchive> TraineesArchive { get; }
 		IBaseRepository<StuffArchive> StuffArchive { get; }
-		IBaseRepository<NewRegitseration> NewRegitseration { get; }
+		IBaseRepository<NewRegistration> NewRegitseration { get; }
 
 		Task<bool> addToRoleAsync<T>(T account, string role,int?CampId,int?MentorId);
 		Task<int> comleteAsync();

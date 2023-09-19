@@ -40,31 +40,31 @@ namespace ISC.EF
 				UserName.Append(this.NationalId[x%10]);
 				x /= 10;
 			}
-			x = 4;
+			x = 3;
 			while (x-- > 0)
 			{
 				UserName.Append(this.CodeForceHandle[rand.Next(this.CodeForceHandle.Length-1)]);
 			}
-			int c = 2;
-			while (c-- > 0)
+			x = 2;
+			while (x-- > 0)
 			{
-				UserName.Append(this.NationalId[rand.Next(0,11)]);
+				UserName.Append(this.NationalId[rand.Next(12)]);
 			}
 			return UserName.ToString();
 		}
 		public string generatePassword()
 		{
-			StringBuilder NewPassword = new StringBuilder("ICPC");
-			StringBuilder HashingSohag=new StringBuilder("sohag");
-			StringBuilder Hashing = new StringBuilder("!@#$&");
+			StringBuilder NewPassword = new StringBuilder("ICPC"),
+						  HashingSohag=new StringBuilder("sohag"),
+						  HashingSymbols = new StringBuilder("!@#$&");
 			var rand= new Random();
-			int x = 5;
+			int x = 3;
 			while(x > 0){
 				NewPassword.Append(HashingSohag[rand.Next(HashingSohag.Length-1)]);
 				x--;
 			}
-			NewPassword.Append(Hashing[rand.Next(Hashing.Length-1)]);
-			x = rand.Next(1000, 9999);
+			NewPassword.Append(HashingSymbols[rand.Next(HashingSymbols.Length-1)]);
+			x = rand.Next(100, 1001);
 			while(x > 0)
 			{
 				NewPassword.Append(x%10+'0');
