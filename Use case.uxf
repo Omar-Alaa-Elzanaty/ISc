@@ -33,7 +33,7 @@ fontsize=15
       <w>1331</w>
       <h>1001</h>
     </coordinates>
-    <panel_attributes>ISc (Leader Page)
+    <panel_attributes>Leader Pages
 halign=center
 -</panel_attributes>
     <additional_attributes/>
@@ -788,7 +788,7 @@ for training</panel_attributes>
       <w>220</w>
       <h>66</h>
     </coordinates>
-    <panel_attributes>Show Trainees stainding</panel_attributes>
+    <panel_attributes>Show Trainees standing</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -959,7 +959,7 @@ with mentors name</panel_attributes>
       <w>1331</w>
       <h>979</h>
     </coordinates>
-    <panel_attributes>HOC Page
+    <panel_attributes>HOC Pages
 -
 halign=center</panel_attributes>
     <additional_attributes/>
@@ -980,8 +980,8 @@ Data will sort with gender</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>550</x>
-      <y>1925</y>
+      <x>946</x>
+      <y>1914</y>
       <w>220</w>
       <h>66</h>
     </coordinates>
@@ -993,35 +993,12 @@ Data will sort with gender</panel_attributes>
     <coordinates>
       <x>462</x>
       <y>1892</y>
-      <w>110</w>
-      <h>88</h>
-    </coordinates>
-    <panel_attributes>lt=.&gt;
-&lt;&lt;extends&gt;&gt;</panel_attributes>
-    <additional_attributes>80.0;60.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>957</x>
-      <y>1914</y>
-      <w>220</w>
-      <h>66</h>
-    </coordinates>
-    <panel_attributes>Filter on attendence</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>473</x>
-      <y>1881</y>
       <w>506</w>
-      <h>88</h>
+      <h>77</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;extends&gt;&gt;</panel_attributes>
-    <additional_attributes>440.0;60.0;10.0;10.0</additional_attributes>
+    <additional_attributes>440.0;50.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
@@ -1263,6 +1240,19 @@ will be filter</panel_attributes>
       <h>44</h>
     </coordinates>
     <panel_attributes>ٍSubmit filter</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>198</x>
+      <y>2024</y>
+      <w>1331</w>
+      <h>726</h>
+    </coordinates>
+    <panel_attributes>Mentor Pages
+-
+halign=center</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>
