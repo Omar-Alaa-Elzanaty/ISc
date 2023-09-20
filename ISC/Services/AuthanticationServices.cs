@@ -137,6 +137,8 @@ namespace ISC.API.Services
 			{
 				return new AuthModel() { Message = "Email or Passwrod is incorrect!" };
 			}
+			UserAccount.LastLoginDate = DateTime.Now;
+			await _UnitOfWork.comleteAsync();
 			JwtSecurityToken JwtSecurityToken;
 			if (user.RememberMe!=null)
 			JwtSecurityToken = await CreateJwtToken(UserAccount,(bool)user.RememberMe);

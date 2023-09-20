@@ -26,18 +26,30 @@ namespace ISC.EF.Repositories
 		//	return await _Context.Set<T>().SingleOrDefaultAsync(match);
 		//}
 
-		//public async Task<T> findWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null)
-		//{
-		//	IQueryable<T>query=_Context.Set<T>();
-		//	if(includes != null)
-		//	{
-		//		foreach(var item in includes)
-		//		{
-		//			query=query.Include(item);
-		//		}
-		//	}
-		//	return await query.SingleOrDefaultAsync(match);
-		//}
+		public async Task<List<T>> findManyWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null)
+		{
+			IQueryable<T> query = _Context.Set<T>();
+			if (includes != null)
+			{
+				foreach (var item in includes)
+				{
+					query = query.Include(item);
+				}
+			}
+			return await query.Where(match).ToListAsync();
+		}
+		public async Task<T> findWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null)
+		{
+			IQueryable<T> query = _Context.Set<T>();
+			if (includes != null)
+			{
+				foreach (var item in includes)
+				{
+					query = query.Include(item);
+				}
+			}
+			return await query?.SingleOrDefaultAsync(match)??null;
+		}
 
 		public async void addAsync(T entity)
 		{ 
