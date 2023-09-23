@@ -806,14 +806,14 @@ for spacific sheet</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>462</x>
+      <x>451</x>
       <y>1782</y>
-      <w>495</w>
-      <h>110</h>
+      <w>506</w>
+      <h>99</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;includes&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;80.0;430.0;10.0</additional_attributes>
+    <additional_attributes>10.0;70.0;440.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -1248,11 +1248,68 @@ will be filter</panel_attributes>
       <x>198</x>
       <y>2024</y>
       <w>1331</w>
-      <h>726</h>
+      <h>308</h>
     </coordinates>
     <panel_attributes>Mentor Pages
 -
 halign=center</panel_attributes>
     <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLActor</id>
+    <coordinates>
+      <x>99</x>
+      <y>2244</y>
+      <w>66</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>Mentor</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>341</x>
+      <y>2068</y>
+      <w>154</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>Display Trainees
+ data </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>154</x>
+      <y>2101</y>
+      <w>209</w>
+      <h>198</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;160.0;170.0;15.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>286</x>
+      <y>2211</y>
+      <w>319</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>Display Trainee problem count
+for every sheet</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>154</x>
+      <y>2233</y>
+      <w>154</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;40.0;120.0;15.0</additional_attributes>
   </element>
 </diagram>

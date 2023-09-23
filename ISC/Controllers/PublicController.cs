@@ -1,17 +1,20 @@
 ﻿using ISC.API.ISerivces;
 using ISC.API.Services;
 using ISC.Core.Interfaces;
+using ISC.Core.Models;
 using ISC.EF;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Esf;
+using System.Security.Claims;
 
 namespace ISC.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	//[Authorize]
+	[Authorize(Roles = $"{Roles.TRAINEE}")]
 	public class PublicController : ControllerBase
 	{
 		private readonly RoleManager<IdentityRole> _RoleManager;
@@ -30,11 +33,23 @@ namespace ISC.API.Controllers
 		[HttpGet]
 		public async Task<IActionResult>getcontest(string contestid)
 		{
+			setLastRegister();
 			//return Ok(await _onlineJudgeServices.getContestStandingAsync(contestid,50,true));
 			//return Ok(await _onlineJudgeServices.getContestStatus(contestid));
 			//return Ok(await _onlineJudgeServices.getUserStatusAsync());
 			//return Ok(await new ScheduleSerives(_UnitOfWork, _onlineJudgeServices, _UserManager).updateTraineeSolveCurrentAccessAsync());
 			return Ok();
+		}
+		[ApiExplorerSettings(IgnoreApi =true)]
+		public async void setLastRegister()
+		{
+			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			var TraineeAccount = await _UserManager.FindByIdAsync(userId);
+			if (TraineeAccount != null)
+			{
+				TraineeAccount.LastLoginDate = DateTime.Now;
+				await _UnitOfWork.comleteAsync();
+			}
 		}
 	}
 }
