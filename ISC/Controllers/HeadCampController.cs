@@ -1,17 +1,15 @@
 ﻿using ISC.API.APIDtos;
+using ISC.API.Helpers;
 using ISC.API.ISerivces;
 using ISC.Core.Interfaces;
 using ISC.Core.Models;
-using ISC.Core.ModelsDtos;
 using ISC.EF;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Org.BouncyCastle.Bcpg;
-using Org.BouncyCastle.Crypto;
 using System.Security.Claims;
 using System.Text;
 
@@ -19,7 +17,7 @@ namespace ISC.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	//[Authorize(Roles =$"{Roles.LEADER},{Roles.HOC}")]
+	[Authorize(Roles =$"{Roles.LEADER},{Roles.HOC}")]
 	public class HeadCampController : ControllerBase
 	{
 		private readonly RoleManager<IdentityRole> _RoleManager;
@@ -28,7 +26,8 @@ namespace ISC.API.Controllers
 		private readonly IUnitOfWork _UnitOfWork;
 		private readonly IMailServices _MailService;
 		private readonly IOnlineJudgeServices _OnlineJudgeSrvices;
-		public HeadCampController(RoleManager<IdentityRole> roleManager, UserManager<UserAccount> userManager, IAuthanticationServices auth, IUnitOfWork unitofwork,IOnlineJudgeServices onlinejudgeservices, IMailServices mailService)
+		private readonly CodeForceConnection _CFConnect;
+		public HeadCampController(RoleManager<IdentityRole> roleManager, UserManager<UserAccount> userManager, IAuthanticationServices auth, IUnitOfWork unitofwork,IOnlineJudgeServices onlinejudgeservices, IMailServices mailService,IOptions<CodeForceConnection>cfconnect)
 		{
 			_RoleManager = roleManager;
 			_UserManager = userManager;
@@ -36,6 +35,7 @@ namespace ISC.API.Controllers
 			_UnitOfWork = unitofwork;
 			_OnlineJudgeSrvices = onlinejudgeservices;
 			_MailService = mailService;
+			_CFConnect = cfconnect.Value;
 		}
 		[HttpGet("DisplayTrainees")]
 		public async Task<IActionResult> displayTrainee()
@@ -99,10 +99,12 @@ namespace ISC.API.Controllers
 			
 			Dictionary<int, int> ProblemSheetCount = TraineeSheetAcess
 				.DistinctBy(tsa => tsa.SheetId)
-				.Select(async i => new { i.SheetId,
-					Count = _OnlineJudgeSrvices.getContestStandingAsync(i.Sheet.SheetCfId, 1, true)
+				.Select( i => new { i.SheetId,
+					Count = _OnlineJudgeSrvices.getContestStandingAsync(i.Sheet.SheetCfId, 1, true,
+							i.Sheet.IsSohag?_CFConnect.SohagKey:_CFConnect.AssuitKey
+							,i.Sheet.IsSohag?_CFConnect.SohagSecret:_CFConnect.AssuitSecret)
 				.Result.result.problems.Count() })
-				.ToDictionary(i => i.Result.SheetId, i => i.Result.Count);
+				.ToDictionary(i => i.SheetId, i => i.Count);
 			HashSet<int>FilteredOnSheets = new HashSet<int>();
 			int TSA_Size = TraineeSheetAcess.Count();
 			for (int Trainee = 0; Trainee < TSA_Size; ++Trainee)

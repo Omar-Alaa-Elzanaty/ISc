@@ -21,10 +21,10 @@ namespace ISC.EF.Repositories
 			return await _Context.Set<T>().FindAsync(id);
 		}
 
-		//public async Task<T> findAsync(Expression<Func<T, bool>> match)
-		//{
-		//	return await _Context.Set<T>().SingleOrDefaultAsync(match);
-		//}
+		public async Task<T> findAsync(Expression<Func<T, bool>> match)
+		{
+			return await _Context.Set<T>().SingleOrDefaultAsync(match);
+		}
 
 		public async Task<List<T>> findManyWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null)
 		{

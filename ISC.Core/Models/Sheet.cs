@@ -13,6 +13,7 @@ namespace ISC.Core.Models
 		public string Name { get; set; }
 		public string SheetLink { get; set; }
 		public string SheetCfId { get;set; }
+		public bool IsSohag { get; set; }
 		public int SheetOrder { get; set; }
 		public int MinimumPrecent { get; set; }
 		public virtual List<Material> Materials { get; set; }

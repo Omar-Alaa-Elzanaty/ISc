@@ -806,26 +806,26 @@ for spacific sheet</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>451</x>
+      <x>473</x>
       <y>1782</y>
-      <w>506</w>
-      <h>99</h>
+      <w>484</w>
+      <h>110</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;includes&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;70.0;440.0;10.0</additional_attributes>
+    <additional_attributes>10.0;80.0;420.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>462</x>
+      <x>473</x>
       <y>1848</y>
-      <w>506</w>
+      <w>495</w>
       <h>55</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;extends&gt;&gt;</panel_attributes>
-    <additional_attributes>440.0;20.0;10.0;27.0</additional_attributes>
+    <additional_attributes>430.0;20.0;10.0;27.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -957,7 +957,7 @@ with mentors name</panel_attributes>
       <x>198</x>
       <y>1023</y>
       <w>1331</w>
-      <h>979</h>
+      <h>1177</h>
     </coordinates>
     <panel_attributes>HOC Pages
 -
@@ -1246,9 +1246,9 @@ will be filter</panel_attributes>
     <id>UMLGeneric</id>
     <coordinates>
       <x>198</x>
-      <y>2024</y>
+      <y>2211</y>
       <w>1331</w>
-      <h>308</h>
+      <h>539</h>
     </coordinates>
     <panel_attributes>Mentor Pages
 -
@@ -1259,7 +1259,7 @@ halign=center</panel_attributes>
     <id>UMLActor</id>
     <coordinates>
       <x>99</x>
-      <y>2244</y>
+      <y>2431</y>
       <w>66</w>
       <h>121</h>
     </coordinates>
@@ -1270,7 +1270,7 @@ halign=center</panel_attributes>
     <id>UMLUseCase</id>
     <coordinates>
       <x>341</x>
-      <y>2068</y>
+      <y>2255</y>
       <w>154</w>
       <h>99</h>
     </coordinates>
@@ -1282,7 +1282,7 @@ halign=center</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>154</x>
-      <y>2101</y>
+      <y>2288</y>
       <w>209</w>
       <h>198</h>
     </coordinates>
@@ -1293,7 +1293,7 @@ halign=center</panel_attributes>
     <id>UMLUseCase</id>
     <coordinates>
       <x>286</x>
-      <y>2211</y>
+      <y>2398</y>
       <w>319</w>
       <h>77</h>
     </coordinates>
@@ -1305,11 +1305,147 @@ for every sheet</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>154</x>
-      <y>2233</y>
+      <y>2420</y>
       <w>154</w>
       <h>66</h>
     </coordinates>
     <panel_attributes/>
     <additional_attributes>10.0;40.0;120.0;15.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>319</x>
+      <y>2497</y>
+      <w>286</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>Display Trainee Attendence</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>154</x>
+      <y>2453</y>
+      <w>187</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;150.0;85.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>341</x>
+      <y>2618</y>
+      <w>242</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>Add Session Atendence</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>154</x>
+      <y>2453</y>
+      <w>209</w>
+      <h>231</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;170.0;190.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>220</x>
+      <y>1958</y>
+      <w>264</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>Attendence
+Mentor / Trainee</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>55</x>
+      <y>1551</y>
+      <w>187</w>
+      <h>484</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;150.0;420.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>231</x>
+      <y>2090</y>
+      <w>198</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>give / Remove
+Attendence Access</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>55</x>
+      <y>1551</y>
+      <w>198</w>
+      <h>594</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;160.0;520.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>418</x>
+      <y>2068</y>
+      <w>220</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;includes&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;50.0;180.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>418</x>
+      <y>2112</y>
+      <w>198</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;includes&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;160.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>616</x>
+      <y>2046</y>
+      <w>198</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>Select available Mentor</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>594</x>
+      <y>2123</y>
+      <w>220</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>Select session</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>

@@ -2,7 +2,9 @@
 {
 	public class CodeForceConnection
 	{
-		public string Key { get; set; }
-		public string Secret { get; set; }
+		public string AssuitKey { get; set; }
+		public string AssuitSecret { get; set; }
+		public string SohagKey { get; set; }
+		public string SohagSecret { get; set; }
 	}
 }

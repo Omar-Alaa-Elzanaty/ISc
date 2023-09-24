@@ -1,11 +1,13 @@
 ﻿using CodeforceApiServices;
 using ISC.API.APIDtos;
+using ISC.API.Helpers;
 using ISC.API.ISerivces;
 using ISC.Core.Interfaces;
 using ISC.Core.Models;
 using ISC.EF;
 using ISC.EF.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using System.Runtime.CompilerServices;
 using System.Security.Principal;
 using static ISC.API.APIDtos.CodeForcesDtos;
@@ -17,11 +19,13 @@ namespace ISC.API.Services
 		private readonly IUnitOfWork _UnitOfWork;
 		private readonly IOnlineJudgeServices _OnlineJudge;
 		private readonly UserManager<UserAccount> _UserManager;
-		public ScheduleSerives(IUnitOfWork unitofwork, IOnlineJudgeServices onlinejudge, UserManager<UserAccount> usermanger)
+		private readonly CodeForceConnection _CFConnection;
+		public ScheduleSerives(IUnitOfWork unitofwork, IOnlineJudgeServices onlinejudge, UserManager<UserAccount> usermanger,IOptions<CodeForceConnection>cfconnection)
 		{
 			_UnitOfWork = unitofwork;
 			_OnlineJudge = onlinejudge;
 			_UserManager = usermanger;
+			_CFConnection = cfconnection.Value;
 		}
 		public async Task<int> updateTraineeSolveCurrentAccessAsync()
 		{
@@ -38,7 +42,9 @@ namespace ISC.API.Services
 				var SheetInfo = await _UnitOfWork.Sheets.getByIdAsync(sid);
 				if (!SheetsSubmissions.ContainsKey(sid))
 				{
-					SheetsSubmissions[sid] =await _OnlineJudge.getContestStatusAsync(SheetInfo.SheetCfId, "");
+					SheetsSubmissions[sid] =await _OnlineJudge.getContestStatusAsync(SheetInfo.SheetCfId, "",
+						SheetInfo.IsSohag?_CFConnection.SohagKey:_CFConnection.AssuitKey
+						,SheetInfo.IsSohag?_CFConnection.SohagSecret:_CFConnection.AssuitSecret);
 				}
 			}
 			

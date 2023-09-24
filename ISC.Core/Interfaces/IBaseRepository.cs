@@ -21,6 +21,6 @@ namespace ISC.Core.Interfaces
 		Task<List<T>> getAllwithNavigationsAsync(string[] includes = null);
 		Task<List<T>> findManyWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null);
 		Task<T> findWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null);
-		//Task<T> findAsync(Expression<Func<T, bool>> match);
+		Task<T> findAsync(Expression<Func<T, bool>> match);
 	}
 }
