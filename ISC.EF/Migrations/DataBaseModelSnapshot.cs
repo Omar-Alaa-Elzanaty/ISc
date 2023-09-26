@@ -17,7 +17,7 @@ namespace ISC.EF.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.10")
+                .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -45,7 +45,7 @@ namespace ISC.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Camps", (string)null);
+                    b.ToTable("Camps");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.HeadOfTraining", b =>
@@ -70,7 +70,7 @@ namespace ISC.EF.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("HeadsOfTraining", (string)null);
+                    b.ToTable("HeadsOfTraining");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Material", b =>
@@ -96,7 +96,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SheetId");
 
-                    b.ToTable("Materials", (string)null);
+                    b.ToTable("Materials");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Mentor", b =>
@@ -107,6 +107,9 @@ namespace ISC.EF.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("AccessSessionId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -116,7 +119,7 @@ namespace ISC.EF.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Mentors", (string)null);
+                    b.ToTable("Mentors");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.NewRegistration", b =>
@@ -187,7 +190,7 @@ namespace ISC.EF.Migrations
                     b.HasIndex("CodeForceHandle")
                         .IsUnique();
 
-                    b.ToTable("NewRegistration", (string)null);
+                    b.ToTable("NewRegistration");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Session", b =>
@@ -222,7 +225,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("CampId");
 
-                    b.ToTable("Sessions", (string)null);
+                    b.ToTable("Sessions");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Sheet", b =>
@@ -235,6 +238,9 @@ namespace ISC.EF.Migrations
 
                     b.Property<int>("CampId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsSohag")
+                        .HasColumnType("bit");
 
                     b.Property<int>("MinimumPrecent")
                         .HasColumnType("int");
@@ -258,7 +264,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("CampId");
 
-                    b.ToTable("Sheets", (string)null);
+                    b.ToTable("Sheets");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.StuffArchive", b =>
@@ -311,7 +317,7 @@ namespace ISC.EF.Migrations
 
                     b.HasKey("NationalID");
 
-                    b.ToTable("StuffArchives", (string)null);
+                    b.ToTable("StuffArchives");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Trainee", b =>
@@ -341,7 +347,7 @@ namespace ISC.EF.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Trainees", (string)null);
+                    b.ToTable("Trainees");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.TraineeArchive", b =>
@@ -400,7 +406,7 @@ namespace ISC.EF.Migrations
 
                     b.HasKey("NationalID", "CampName");
 
-                    b.ToTable("TraineesArchives", (string)null);
+                    b.ToTable("TraineesArchives");
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.MentorAttendence", b =>
@@ -415,7 +421,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("MentorsAttendences", (string)null);
+                    b.ToTable("MentorsAttendences");
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.MentorOfCamp", b =>
@@ -430,7 +436,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("CampId");
 
-                    b.ToTable("MentorsOfCamps", (string)null);
+                    b.ToTable("MentorsOfCamps");
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.SessionFeedback", b =>
@@ -457,7 +463,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("SessionsFeedbacks", (string)null);
+                    b.ToTable("SessionsFeedbacks");
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.TraineeAttendence", b =>
@@ -472,7 +478,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("TraineesAttednces", (string)null);
+                    b.ToTable("TraineesAttednces");
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.TraineeSheetAccess", b =>
@@ -492,7 +498,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SheetId");
 
-                    b.ToTable("TraineesSheetsAccess", (string)null);
+                    b.ToTable("TraineesSheetsAccess");
                 });
 
             modelBuilder.Entity("ISC.EF.UserAccount", b =>
@@ -533,8 +539,8 @@ namespace ISC.EF.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("Gender")
                         .IsRequired()
@@ -554,8 +560,8 @@ namespace ISC.EF.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -565,7 +571,8 @@ namespace ISC.EF.Migrations
 
                     b.Property<string>("MiddleName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("NationalId")
                         .IsRequired()
