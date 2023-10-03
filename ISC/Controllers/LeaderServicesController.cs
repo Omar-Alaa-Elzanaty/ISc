@@ -71,8 +71,7 @@ namespace ISC.API.Controllers
 		public async Task<IActionResult> displayStuffWithoutHoc()
 		{
 			var HocUserId = _UnitOfWork.HeadofCamp.getAllAsync().Result.Select(hoc=>hoc.UserId).ToList();
-			var StuffWithoutHoc = _UserManager.Users.ToListAsync()
-				.Result.Where(user=>HocUserId.Contains(user.Id)==false);
+			var StuffWithoutHoc = _UserManager.Users.Where(user=>HocUserId.Contains(user.Id)==false).ToList();
 			return Ok(StuffWithoutHoc);
 		}
 		[HttpGet("DisplayNewRegister")]
