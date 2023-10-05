@@ -8,17 +8,10 @@
     ".NETCoreApp,Version=v7.0": {
       "ISC.API/1.0.0": {
         "dependencies": {
-          "ISC.EF": "1.0.0",
-          "MailKit": "4.2.0",
+          "ISC.Services": "1.0.0",
           "Microsoft.AspNet.WebApi.Client": "5.2.9",
-          "Microsoft.AspNetCore.Authentication.JwtBearer": "7.0.11",
           "Microsoft.AspNetCore.OpenApi": "7.0.11",
-          "Microsoft.EntityFrameworkCore.Tools": "7.0.11",
-          "MimeKit": "4.2.0",
-          "Newtonsoft.Json": "13.0.3",
-          "Quartz.Extensions.Hosting": "3.7.0",
-          "RestSharp": "110.2.0",
-          "Swashbuckle.AspNetCore": "6.5.0"
+          "Microsoft.EntityFrameworkCore.Tools": "7.0.11"
         },
         "runtime": {
           "ISC.API.dll": {}
@@ -1469,6 +1462,23 @@
         "runtime": {
           "ISC.EF.dll": {}
         }
+      },
+      "ISC.Services/1.0.0": {
+        "dependencies": {
+          "ISC.EF": "1.0.0",
+          "MailKit": "4.2.0",
+          "Microsoft.AspNet.WebApi.Client": "5.2.9",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "7.0.11",
+          "Microsoft.AspNetCore.OpenApi": "7.0.11",
+          "MimeKit": "4.2.0",
+          "Newtonsoft.Json": "13.0.3",
+          "Quartz.Extensions.Hosting": "3.7.0",
+          "RestSharp": "110.2.0",
+          "Swashbuckle.AspNetCore": "6.5.0"
+        },
+        "runtime": {
+          "ISC.Services.dll": {}
+        }
       }
     }
   },
@@ -2548,6 +2558,11 @@
       "sha512": ""
     },
     "ISC.EF/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ISC.Services/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

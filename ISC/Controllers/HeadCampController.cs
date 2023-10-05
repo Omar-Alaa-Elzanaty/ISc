@@ -1,9 +1,9 @@
-﻿using ISC.API.APIDtos;
-using ISC.API.Helpers;
-using ISC.API.ISerivces;
-using ISC.Core.Interfaces;
+﻿using ISC.Core.Interfaces;
 using ISC.Core.Models;
 using ISC.EF;
+using ISC.Services.APIDtos;
+using ISC.Services.Helpers;
+using ISC.Services.ISerivces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

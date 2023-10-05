@@ -384,12 +384,10 @@
       "Microsoft.Extensions.ApiDescription.Server/6.0.5": {
         "type": "package",
         "build": {
-          "build/Microsoft.Extensions.ApiDescription.Server.props": {},
-          "build/Microsoft.Extensions.ApiDescription.Server.targets": {}
+          "build/_._": {}
         },
         "buildMultiTargeting": {
-          "buildMultiTargeting/Microsoft.Extensions.ApiDescription.Server.props": {},
-          "buildMultiTargeting/Microsoft.Extensions.ApiDescription.Server.targets": {}
+          "buildMultiTargeting/_._": {}
         }
       },
       "Microsoft.Extensions.Caching.Abstractions/7.0.0": {
@@ -1225,7 +1223,7 @@
           "Swashbuckle.AspNetCore.SwaggerUI": "6.5.0"
         },
         "build": {
-          "build/Swashbuckle.AspNetCore.props": {}
+          "build/_._": {}
         }
       },
       "Swashbuckle.AspNetCore.Swagger/6.5.0": {
@@ -2683,6 +2681,28 @@
         },
         "runtime": {
           "bin/placeholder/ISC.EF.dll": {}
+        }
+      },
+      "ISC.Services/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "ISC.EF": "1.0.0",
+          "MailKit": "4.2.0",
+          "Microsoft.AspNet.WebApi.Client": "5.2.9",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "7.0.11",
+          "Microsoft.AspNetCore.OpenApi": "7.0.11",
+          "MimeKit": "4.2.0",
+          "Newtonsoft.Json": "13.0.3",
+          "Quartz.Extensions.Hosting": "3.7.0",
+          "RestSharp": "110.2.0",
+          "Swashbuckle.AspNetCore": "6.5.0"
+        },
+        "compile": {
+          "bin/placeholder/ISC.Services.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ISC.Services.dll": {}
         }
       }
     }
@@ -8301,21 +8321,19 @@
       "type": "project",
       "path": "../ISC.EF/ISC.EF.csproj",
       "msbuildProject": "../ISC.EF/ISC.EF.csproj"
+    },
+    "ISC.Services/1.0.0": {
+      "type": "project",
+      "path": "../ISC.Services/ISC.Services.csproj",
+      "msbuildProject": "../ISC.Services/ISC.Services.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net7.0": [
-      "ISC.EF >= 1.0.0",
-      "MailKit >= 4.2.0",
+      "ISC.Services >= 1.0.0",
       "Microsoft.AspNet.WebApi.Client >= 5.2.9",
-      "Microsoft.AspNetCore.Authentication.JwtBearer >= 7.0.11",
       "Microsoft.AspNetCore.OpenApi >= 7.0.11",
-      "Microsoft.EntityFrameworkCore.Tools >= 7.0.11",
-      "MimeKit >= 4.2.0",
-      "Newtonsoft.Json >= 13.0.3",
-      "Quartz.Extensions.Hosting >= 3.7.0",
-      "RestSharp >= 110.2.0",
-      "Swashbuckle.AspNetCore >= 6.5.0"
+      "Microsoft.EntityFrameworkCore.Tools >= 7.0.11"
     ]
   },
   "packageFolders": {
@@ -8345,8 +8363,8 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "D:\\ISC\\ISC.EF\\ISC.EF.csproj": {
-              "projectPath": "D:\\ISC\\ISC.EF\\ISC.EF.csproj"
+            "D:\\ISC\\ISC.Services\\ISC.Services.csproj": {
+              "projectPath": "D:\\ISC\\ISC.Services\\ISC.Services.csproj"
             }
           }
         }
@@ -8361,17 +8379,9 @@
       "net7.0": {
         "targetAlias": "net7.0",
         "dependencies": {
-          "MailKit": {
-            "target": "Package",
-            "version": "[4.2.0, )"
-          },
           "Microsoft.AspNet.WebApi.Client": {
             "target": "Package",
             "version": "[5.2.9, )"
-          },
-          "Microsoft.AspNetCore.Authentication.JwtBearer": {
-            "target": "Package",
-            "version": "[7.0.11, )"
           },
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",
@@ -8382,26 +8392,6 @@
             "suppressParent": "All",
             "target": "Package",
             "version": "[7.0.11, )"
-          },
-          "MimeKit": {
-            "target": "Package",
-            "version": "[4.2.0, )"
-          },
-          "Newtonsoft.Json": {
-            "target": "Package",
-            "version": "[13.0.3, )"
-          },
-          "Quartz.Extensions.Hosting": {
-            "target": "Package",
-            "version": "[3.7.0, )"
-          },
-          "RestSharp": {
-            "target": "Package",
-            "version": "[110.2.0, )"
-          },
-          "Swashbuckle.AspNetCore": {
-            "target": "Package",
-            "version": "[6.5.0, )"
           }
         },
         "imports": [

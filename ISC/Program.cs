@@ -1,10 +1,6 @@
-using CodeforceApiServices;
-using ISC.API.Helpers;
-using ISC.API.ISerivces;
-using ISC.API.Services;
-using ISC.Core.Interfaces;
 using ISC.EF;
-using ISC.EF.Repositories;
+using ISC.Services.Helpers;
+using ISC.Services.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -19,11 +15,8 @@ namespace ISC
 		public static void Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);
-
 			// Add services to the container.
-			builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
-			builder.Services.AddScoped<IMentorRepository,MentorRepository>();
-			builder.Services.AddScoped<IAuthanticationServices, AuthanticationServices>();
+			builder.Services.addServices();
 			//builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 			builder.Services.AddDbContext<DataBase>(option =>
 				option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -34,9 +27,6 @@ namespace ISC
 				.AddDefaultTokenProviders();
 			builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 			builder.Services.Configure<CodeForceConnection>(builder.Configuration.GetSection("CodeForceConnection"));
-			builder.Services.AddScoped<IMailServices, MailServices>();
-			builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-			builder.Services.AddScoped<IOnlineJudgeServices, CodeforceApiService>();
 			builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 			builder.Services.AddAuthentication(options =>
 			{

@@ -1,10 +1,5 @@
-﻿using ISC.API.APIDtos;
-using ISC.API.ISerivces;
-using ISC.Core.Models;
-using MailKit.Security;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using ISC.Services.APIDtos;
+using ISC.Services.ISerivces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ISC.API.Controllers

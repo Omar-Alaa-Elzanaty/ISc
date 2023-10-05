@@ -1,8 +1,7 @@
-﻿using ISC.API.ISerivces;
-using ISC.API.Services;
-using ISC.Core.Interfaces;
+﻿using ISC.Core.Interfaces;
 using ISC.Core.Models;
 using ISC.EF;
+using ISC.Services.ISerivces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
