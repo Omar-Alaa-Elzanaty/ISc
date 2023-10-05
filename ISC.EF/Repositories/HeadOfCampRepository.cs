@@ -23,7 +23,7 @@ namespace ISC.EF.Repositories
 			var head=await _Context.HeadsOfTraining.Where(head=>head.UserId == userid).FirstOrDefaultAsync();
 			if (head == null) return false;
 
-			return await delete(head);
+			return await deleteAsync(head);
 		}
 	}
 }

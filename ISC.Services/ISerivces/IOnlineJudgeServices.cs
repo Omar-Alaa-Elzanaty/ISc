@@ -1,4 +1,4 @@
-﻿using static ISC.Services.APIDtos.CodeForcesDtos;
+﻿using static ISC.Core.APIDtos.CodeForcesDtos;
 
 namespace ISC.Services.ISerivces
 {

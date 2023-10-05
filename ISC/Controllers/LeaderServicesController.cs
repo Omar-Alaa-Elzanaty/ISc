@@ -80,7 +80,7 @@ namespace ISC.API.Controllers
 			foreach(var newmember in await _UnitOfWork.NewRegitseration.getAllAsync())
 			{
 				if (await _UnitOfWork.TraineesArchive
-			   .findAsync(TA => (TA.NationalID == newmember.NationalID
+			   .findByAsync(TA => (TA.NationalID == newmember.NationalID
 							   || TA.CodeForceHandle == newmember.CodeForceHandle
 							   || TA.Email == newmember.Email
 							   ||(newmember.FacebookLink!=null&&newmember.FacebookLink==TA.FacebookLink)

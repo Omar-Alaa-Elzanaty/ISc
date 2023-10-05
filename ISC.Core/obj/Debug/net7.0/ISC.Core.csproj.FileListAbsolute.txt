@@ -9,3 +9,4 @@ D:\ISC\ISC.Core\obj\Debug\net7.0\ISC.Core.dll
 D:\ISC\ISC.Core\obj\Debug\net7.0\refint\ISC.Core.dll
 D:\ISC\ISC.Core\obj\Debug\net7.0\ISC.Core.pdb
 D:\ISC\ISC.Core\obj\Debug\net7.0\ref\ISC.Core.dll
+D:\ISC\ISC.Core\obj\Debug\net7.0\ISC.Core.csproj.AssemblyReference.cache

@@ -6,7 +6,7 @@ using ISC.Services.Helpers;
 using ISC.Services.ISerivces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using static ISC.Services.APIDtos.CodeForcesDtos;
+using static ISC.Core.APIDtos.CodeForcesDtos;
 
 namespace ISC.Services.Services
 {

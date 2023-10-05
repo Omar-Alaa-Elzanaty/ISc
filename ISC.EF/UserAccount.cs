@@ -1,11 +1,7 @@
 ﻿using ISC.Core.Models;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ISC.EF
 {
@@ -23,7 +19,7 @@ namespace ISC.EF
 		public DateTime JoinDate { get; set; }= DateTime.Now;
 		public string Gender { get; set; }
 		public DateTime LastLoginDate { get; set; }=DateTime.Now;
-		public byte[]? ProfilePicture { get; set; }
+		public string PhotoUrl { get; set; }
 		public string CodeForceHandle { get; set; }
 		public string? FacebookLink { get; set; }
 		public string? VjudgeHandle { get; set; }

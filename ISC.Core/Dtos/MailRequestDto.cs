@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace ISC.Services.APIDtos
+namespace ISC.Core.APIDtos
 {
 	public class MailRequestDto
 	{

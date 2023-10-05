@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace ISC.Services.APIDtos
+namespace ISC.Core.APIDtos
 {
 	public class CodeForcesDtos
 	{

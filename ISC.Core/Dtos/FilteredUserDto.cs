@@ -1,5 +1,5 @@
 ﻿
-namespace ISC.Services.APIDtos
+namespace ISC.Core.APIDtos
 {
 	public class FilteredUserDto
 	{

@@ -1,7 +1,7 @@
-﻿using ISC.Core.Interfaces;
+﻿using ISC.Core.APIDtos;
+using ISC.Core.Interfaces;
 using ISC.Core.Models;
 using ISC.EF;
-using ISC.Services.APIDtos;
 using ISC.Services.Helpers;
 using ISC.Services.ISerivces;
 using Microsoft.AspNetCore.Identity;
@@ -73,7 +73,7 @@ namespace ISC.Services.Services
 				CodeForceHandle = user.CodeForceHandle,
 				FacebookLink = user.FacebookLink,
 				VjudgeHandle = user.VjudgeHandle,
-				ProfilePicture = await new Converters().photoconverterasync(user.ProfilePicture),
+				PhotoUrl=await _UnitOfWork.getMediaAsync(user.ProfilePicture)??string.Empty,
 				JoinDate=DateTime.Now,
 				LastLoginDate=DateTime.Now
 			};

@@ -28,7 +28,7 @@ namespace ISC.EF.Repositories
                    where mentor.UserId==account.Id
                    select new {account, mentor}).ToList();
         }
-        public override async Task<bool> deleteEntityAsync(Mentor mentor)
+        public  async Task<bool> deleteAsync(Mentor mentor)
         {
 			if (mentor == null) return false;
 			int Trainees = await _Context.Trainees.Where(t=>t.MentorId==mentor.Id).CountAsync();
@@ -44,11 +44,11 @@ namespace ISC.EF.Repositories
 				return false;
 			}
 		}
-        public async Task<bool> deleteEntityAsync(string userid)
+        public async Task<bool> deleteAsync(string userid)
         {
             var Mentor = await _Context.Mentors.Where(mentor => mentor.UserId == userid).FirstOrDefaultAsync();
             if(Mentor == null) return false;
-            bool Result =await deleteEntityAsync(Mentor);
+            bool Result =await base.deleteAsync(Mentor);
             return Result;
 		}
 	}

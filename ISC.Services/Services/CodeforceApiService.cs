@@ -3,7 +3,7 @@ using ISC.Services.ISerivces;
 using Microsoft.Extensions.Options;
 using System.Security.Cryptography;
 using System.Text;
-using static ISC.Services.APIDtos.CodeForcesDtos;
+using static ISC.Core.APIDtos.CodeForcesDtos;
 
 namespace ISC.Services.Services
 {

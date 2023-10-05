@@ -1,5 +1,6 @@
 ﻿using ISC.Core.Models;
 using ISC.Core.ModelsDtos;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,7 @@ namespace ISC.Core.Interfaces
 		IBaseRepository<NewRegistration> NewRegitseration { get; }
 
 		Task<bool> addToRoleAsync<T>(T account, string role,int?CampId,int?MentorId);
+		Task<string?> getMediaAsync(IFormFile media);
 		Task<int> comleteAsync();
 	}
 }

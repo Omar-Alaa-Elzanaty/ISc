@@ -9,7 +9,5 @@ namespace ISC.Core.Interfaces
 {
 	public interface ICampRepository:IBaseRepository<Camp>
 	{
-		Task<string> GetNameByIdAsync(int id);
-		Task<Camp> getCampByUserIdAsync(string userid);
 	}
 }

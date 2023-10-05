@@ -11,6 +11,6 @@ namespace ISC.Core.Models
 		public int Id { get; set; }
 		public string UserId { get; set; }
 		public int? CampId { get; set; }
-		public Camp? camp { get; set; }
+		public Camp? Camp { get; set; }
 	}
 }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ISC.Services.APIDtos
+namespace ISC.Core.APIDtos
 {
 	public class LoginDto
 	{

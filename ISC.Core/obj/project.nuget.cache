@@ -1,8 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "0WShXVtpCE9l6cuYafr6OVqWvHjqLpU6GCvXLCP+WE5z5GwbPYrbxW8G9kA81h/OxkxcBlbe09oyM8winqJlPg==",
+  "dgSpecHash": "EJTkxIkUz7qWIa1NOVD0IqAki7/lRyNpysCN8xvC/xFkE76YEfadESG5i9A6g9DGrSiqfwYoiuhvojQ0DHYadA==",
   "success": true,
   "projectFilePath": "D:\\ISC\\ISC.Core\\ISC.Core.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\d\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.1.1\\microsoft.aspnetcore.http.features.2.1.1.nupkg.sha512",
+    "C:\\Users\\d\\.nuget\\packages\\microsoft.extensions.primitives\\2.1.1\\microsoft.extensions.primitives.2.1.1.nupkg.sha512",
+    "C:\\Users\\d\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\d\\.nuget\\packages\\system.memory\\4.5.1\\system.memory.4.5.1.nupkg.sha512",
+    "C:\\Users\\d\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.1\\system.runtime.compilerservices.unsafe.4.5.1.nupkg.sha512"
+  ],
   "logs": []
 }

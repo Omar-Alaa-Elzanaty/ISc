@@ -1,7 +1,7 @@
 ﻿using ISC.Core.Interfaces;
 using ISC.Core.Models;
 using ISC.EF;
-using ISC.Services.APIDtos;
+using ISC.Core.APIDtos;
 using ISC.Services.ISerivces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -84,7 +84,7 @@ namespace ISC.API.Controllers
 		}
 
 		[HttpDelete("DeleteFromStuff")]
-		public async Task<IActionResult> deleteFromStuff(List<string> stuffusersid)
+		public async Task<IActionResult> deleteFromStuff(List<string> stuffusersid) 
 		{
 			List<UserAccount>ErrorsList=new List<UserAccount>();
 			foreach(string UserId in stuffusersid)
@@ -94,7 +94,7 @@ namespace ISC.API.Controllers
 				bool result = true;
 				if (UserRoles.Contains(Roles.MENTOR))
 				{
-					result =await _UnitOfWork.Mentors.deleteEntityAsync(UserId);
+					result =await _UnitOfWork.Mentors.deleteAsync(UserId);
 				}
 				if(UserRoles.Contains(Roles.HOC)&&result==true)
 				{

@@ -16,17 +16,5 @@ namespace ISC.EF.Repositories
 		{
 			_Context= context;
 		}
-		public async Task<Camp> getCampByUserIdAsync(string userid)
-		{
-			var CampId = _Context.HeadsOfTraining
-				.Where(hoc => hoc.UserId == userid)
-				.FirstOrDefaultAsync()
-				.Result.CampId;
-			return await _Context.Camps.FindAsync((int)CampId);
-		}
-		public async Task<string> GetNameByIdAsync(int id)
-		{
-			return _Context.Camps.FindAsync(id).Result.Name;
-		}
 	}
 }

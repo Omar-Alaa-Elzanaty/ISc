@@ -1,7 +1,7 @@
 ﻿using ISC.Core.Interfaces;
 using ISC.Core.Models;
 using ISC.EF;
-using ISC.Services.APIDtos;
+using ISC.Core.APIDtos;
 using ISC.Services.Helpers;
 using ISC.Services.ISerivces;
 using Microsoft.AspNetCore.Authorization;
@@ -80,7 +80,8 @@ namespace ISC.API.Controllers
 		public async Task<IActionResult> weeklyFilter([FromQuery]List<int> traineesid)
 		{
 			string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			Camp Camp=await _UnitOfWork.Camps.getCampByUserIdAsync(userId);
+			Camp? Camp = _UnitOfWork.HeadofCamp.findWithChildAsync(t => t.UserId == userId,
+																new[] { "Camp", }).Result?.Camp ?? null;
 			bool[]? IsFound;
 			if (traineesid.Count() > 0)
 			{
@@ -174,7 +175,9 @@ namespace ISC.API.Controllers
 		public async Task<IActionResult> submitWeeklyFilter(List<string> usersid)
 		{
 			string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			Camp Camp = await _UnitOfWork.Camps.getCampByUserIdAsync(userId);
+			//Camp Camp = await _UnitOfWork.Camps.getCampByUserIdAsync(userId);
+			Camp? Camp = _UnitOfWork.HeadofCamp.findWithChildAsync(t => t.UserId == userId,
+																new[] { "Camp", }).Result?.Camp ?? null; 
 			List<UserAccount>Fail = new List<UserAccount>();
 			foreach (var Id in usersid)
 			{

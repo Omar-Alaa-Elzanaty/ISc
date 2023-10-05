@@ -1,4 +1,6 @@
 ﻿using ISC.Core.Interfaces;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,8 +13,8 @@ namespace ISC.EF.Repositories
 {
 	public class BaseRepository<T> : IBaseRepository<T> where T : class
 	{
-		private DataBase _Context;
-		public BaseRepository(DataBase context)
+		private readonly DataBase _Context;
+        public BaseRepository(DataBase context)
 		{
 			_Context = context;
 		}
@@ -21,11 +23,10 @@ namespace ISC.EF.Repositories
 			return await _Context.Set<T>().FindAsync(id);
 		}
 
-		public async Task<T> findAsync(Expression<Func<T, bool>> match)
+		public async Task<T> findByAsync(Expression<Func<T, bool>> match)
 		{
 			return await _Context.Set<T>().SingleOrDefaultAsync(match);
 		}
-
 		public async Task<List<T>> findManyWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null)
 		{
 			IQueryable<T> query = _Context.Set<T>();
@@ -38,7 +39,7 @@ namespace ISC.EF.Repositories
 			}
 			return await query.Where(match).ToListAsync();
 		}
-		public async Task<T> findWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null)
+		public async Task<T?> findWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null)
 		{
 			IQueryable<T> query = _Context.Set<T>();
 			if (includes != null)
@@ -48,15 +49,13 @@ namespace ISC.EF.Repositories
 					query = query.Include(item);
 				}
 			}
-			return await query?.SingleOrDefaultAsync(match)??null;
+			return await query.SingleOrDefaultAsync(match)??null;
 		}
-
 		public async void addAsync(T entity)
 		{ 
 			await _Context.Set<T>().AddAsync(entity);
 		}
-
-		public async Task<bool> delete(T entity)
+		private async Task<bool> deleteEntityAsync(T entity)
 		{
 			try
 			{
@@ -85,19 +84,9 @@ namespace ISC.EF.Repositories
 			}
 			return await Query.ToListAsync();
 		}
-		public List<T> getAll()
+		public virtual Task<bool> deleteAsync(T entity)
 		{
-			return _Context.Set<T>().ToList();
-		}
-
-		public T getById(int id)
-		{
-			return  _Context.Set<T>().Find(id);
-		}
-
-		public virtual Task<bool> deleteEntityAsync(T entity)
-		{
-			return delete(entity);
+			return deleteEntityAsync(entity);
 		}
 	}
 }
