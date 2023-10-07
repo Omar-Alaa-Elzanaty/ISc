@@ -12,30 +12,31 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
+using ISC.Services.ISerivces.IModelServices;
+using ISC.Core.ModelsDtos;
 
 namespace ISC.API.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	[Authorize(Roles =$"{Roles.LEADER},{Roles.HOC}")]
 	public class HeadCampController : ControllerBase
 	{
 		private readonly RoleManager<IdentityRole> _RoleManager;
 		private readonly UserManager<UserAccount> _UserManager;
-		private readonly IAuthanticationServices _Auth;
 		private readonly IUnitOfWork _UnitOfWork;
 		private readonly IMailServices _MailService;
-		private readonly IOnlineJudgeServices _OnlineJudgeSrvices;
-		private readonly CodeForceConnection _CFConnect;
-		public HeadCampController(RoleManager<IdentityRole> roleManager, UserManager<UserAccount> userManager, IAuthanticationServices auth, IUnitOfWork unitofwork,IOnlineJudgeServices onlinejudgeservices, IMailServices mailService,IOptions<CodeForceConnection>cfconnect)
+		private readonly IOnlineJudgeServices _onlineJudgeSrvices;
+		private readonly ISheetServices _sheetServices;
+		private readonly ISessionsServices _sessionsSrvices;
+		public HeadCampController(RoleManager<IdentityRole> roleManager, UserManager<UserAccount> userManager,  , IUnitOfWork unitofwork,IOnlineJudgeServices onlinejudgeservices, IMailServices mailService,ISheetServices sheetServices)
 		{
 			_RoleManager = roleManager;
 			_UserManager = userManager;
-			_Auth = auth;
 			_UnitOfWork = unitofwork;
-			_OnlineJudgeSrvices = onlinejudgeservices;
+			_onlineJudgeSrvices = onlinejudgeservices;
 			_MailService = mailService;
-			_CFConnect = cfconnect.Value;
+			_sheetServices = sheetServices;
 		}
 		[HttpGet("DisplayTrainees")]
 		public async Task<IActionResult> displayTrainee()
@@ -79,68 +80,29 @@ namespace ISC.API.Controllers
 		[HttpGet("WeeklyFilteration")]
 		public async Task<IActionResult> weeklyFilter([FromQuery]List<int> traineesid)
 		{
-			string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			Camp? Camp = _UnitOfWork.HeadofCamp.findWithChildAsync(t => t.UserId == userId,
-																new[] { "Camp", }).Result?.Camp ?? null;
-			bool[]? IsFound;
-			if (traineesid.Count() > 0)
-			{
-				IsFound = new bool[traineesid.Max() + 1];
-				int size = traineesid.Count();
-				for (int i = 0; i < size; i++)
-				{
-					IsFound[traineesid[i]] = true;
-				}
-			}
-			else IsFound = null;
+			string? headOfCampUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			Camp? camp = _UnitOfWork.HeadofCamp.findWithChildAsync(t => t.UserId == headOfCampUserId,
+																new[] { "Camp", })?.Result?.Camp??null;
 
-			var TraineeSheetAcess = _UnitOfWork.TraineesSheetsAccess
-				.findManyWithChildAsync(ts => ts.Sheet.CampId == Camp.Id && (IsFound != null ? !IsFound[ts.TraineeId] : true)
-				, new[] { "Sheet", "Trainee" }).Result.OrderBy(ts=>ts.TraineeId).ToList();
-			
-			Dictionary<int, int> ProblemSheetCount = TraineeSheetAcess
-				.DistinctBy(tsa => tsa.SheetId)
-				.Select( i => new { i.SheetId,
-					Count = _OnlineJudgeSrvices.getContestStandingAsync(i.Sheet.SheetCfId, 1, true,
-							i.Sheet.IsSohag?_CFConnect.SohagKey:_CFConnect.AssuitKey
-							,i.Sheet.IsSohag?_CFConnect.SohagSecret:_CFConnect.AssuitSecret)
-				.Result.result.problems.Count() })
-				.ToDictionary(i => i.SheetId, i => i.Count);
-			HashSet<int>FilteredOnSheets = new HashSet<int>();
-			int TSA_Size = TraineeSheetAcess.Count();
-			for (int Trainee = 0; Trainee < TSA_Size; ++Trainee)
+			var result =await _sheetServices.TraineeSheetAccesWithout(traineesid, camp?.Id ?? 0);
+			if (result.State == false)
 			{
-				double precent = TraineeSheetAcess[Trainee].NumberOfProblems / (double)ProblemSheetCount[TraineeSheetAcess[Trainee].SheetId];
-				int TraineePrecent = ((int)Math.Ceiling(precent * 100.0));
-				if (TraineePrecent < TraineeSheetAcess[Trainee].Sheet.MinimumPrecent)
-				{
-					FilteredOnSheets.Add(TraineeSheetAcess[Trainee].TraineeId);
-					int CurrentTrainee = TraineeSheetAcess[Trainee].TraineeId;
-					while (Trainee < TSA_Size && TraineeSheetAcess[Trainee].TraineeId == CurrentTrainee) ++Trainee;
-					--Trainee;
-				}
+				return BadRequest(result.Comment);
 			}
-			var TraineesIds = TraineeSheetAcess.Select(i => i.TraineeId).ToList();
-			var TraineeAttendence = _UnitOfWork.TraineesAttendence
-					.getInListAsync(tr => TraineesIds.Contains(tr.TraineeId))
-								.Result.GroupBy(attend => attend.TraineeId)
-								.Select(g => new { TraineeId = g.Key, NumberOfAttendence = g.Count() }).ToList();
-			HashSet<int> FilteredOnSessions = new HashSet<int>();
-			if (TraineeAttendence.Count > 0)
-			{
-				int MaxAttendence = TraineeAttendence.Max(ta => ta.NumberOfAttendence);
-				FilteredOnSessions = TraineeAttendence
-								.Where(i => MaxAttendence - i.NumberOfAttendence > 2)
-								.Select(ta => ta.TraineeId).ToHashSet();
-			}
+			List<TraineeSheetAccess> traineesAccess = result.Entity;
+			var ProblemSheetCount = _onlineJudgeSrvices.SheetsProblemsCount(traineesAccess).Result.Entity;
+			var FilteredOnSheets = _sheetServices.TraineesFilter(traineesAccess,ProblemSheetCount).Result.Entity;
+			var traineesIds = traineesAccess.Select(i => i.TraineeId).ToList();
+			var FilteredOnSessions = _sessionsSrvices.SessionFilter(traineesIds).Result.Entity;
 			List<KeyValuePair<FilteredUserDto, string>> Filtered = new List<KeyValuePair<FilteredUserDto, string>>();
-			for(int Trainee = 0; Trainee < TSA_Size; Trainee++)
+			int tsaSize=traineesAccess.Count();
+			for(int Trainee = 0; Trainee < tsaSize; Trainee++)
 			{
-				bool FoundInSheetFilter = FilteredOnSheets.Contains(TraineeSheetAcess[Trainee].TraineeId);
-				bool FoundInSessionFilter = FilteredOnSessions.Contains(TraineeSheetAcess[Trainee].TraineeId);
+				bool FoundInSheetFilter = FilteredOnSheets?.Contains(traineesAccess[Trainee].TraineeId) ?? false;
+				bool FoundInSessionFilter = FilteredOnSessions?.Contains(traineesAccess[Trainee].TraineeId) ?? false;
 				if( FoundInSheetFilter || FoundInSessionFilter)
 				{
-					UserAccount TraineeAccount = await _UserManager?.FindByIdAsync(TraineeSheetAcess[Trainee]?.Trainee.UserId)??null;
+					UserAccount TraineeAccount = await _UserManager.FindByIdAsync(traineesAccess[Trainee].Trainee.UserId);
 					if (TraineeAccount != null)
 					{
 						var FilteredUser = new FilteredUserDto()

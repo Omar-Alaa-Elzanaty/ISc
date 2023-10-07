@@ -38,7 +38,7 @@ namespace ISC.Services.Services
 				var SheetInfo = await _UnitOfWork.Sheets.getByIdAsync(sid);
 				if (!SheetsSubmissions.ContainsKey(sid))
 				{
-					SheetsSubmissions[sid] =await _OnlineJudge.getContestStatusAsync(SheetInfo.SheetCfId, "",
+					SheetsSubmissions[sid] =await _OnlineJudge.GetContestStatusAsync(SheetInfo.SheetCfId, "",
 						SheetInfo.IsSohag?_CFConnection.SohagKey:_CFConnection.AssuitKey
 						,SheetInfo.IsSohag?_CFConnection.SohagSecret:_CFConnection.AssuitSecret);
 				}

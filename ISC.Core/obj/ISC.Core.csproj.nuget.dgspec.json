@@ -11,7 +11,7 @@
         "projectName": "ISC.Core",
         "projectPath": "D:\\ISC\\ISC.Core\\ISC.Core.csproj",
         "packagesPath": "C:\\Users\\d\\.nuget\\packages\\",
-        "outputPath": "D:\\ISC\\ISC.Core\\obj\\",
+        "outputPath": "D:\\ISc\\ISC.Core\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\d\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -1,4 +1,7 @@
-﻿using ISC.Services.Helpers;
+﻿using Azure;
+using ISC.Core.Models;
+using ISC.Core.ModelsDtos;
+using ISC.Services.Helpers;
 using ISC.Services.ISerivces;
 using Microsoft.Extensions.Options;
 using System.Security.Cryptography;
@@ -7,20 +10,20 @@ using static ISC.Core.APIDtos.CodeForcesDtos;
 
 namespace ISC.Services.Services
 {
-	public class CodeforceApiService:IOnlineJudgeServices
+	public class CodeforceApiService : IOnlineJudgeServices
 	{
-		private readonly CodeForceConnection _CFConnection;
-		private readonly ApiRequestServices _ApiRequest;
+		private readonly CodeForceConnection _cfConnection;
+		private readonly ApiRequestServices _apiRequest;
 		public CodeforceApiService(IOptions<CodeForceConnection>cfconnection)
 		{
-			_CFConnection = cfconnection.Value;
-			_ApiRequest = new ApiRequestServices("https://codeforces.com/api/");
+			_cfConnection = cfconnection.Value;
+			_apiRequest = new ApiRequestServices("https://codeforces.com/api/");
 		}
 		public async Task<bool> checkHandleValidationAsync(string handle)
 		{
 			try
 			{
-				var Response = await _ApiRequest
+				var Response = await _apiRequest
 					.getRequestAsync<CodeforcesApiResponseDto<List<CodeforcesUserDto>>>($"user.info?handles={handle}");
 				if (Response == null) return false;
 				var ResponseContent =(CodeforcesApiResponseDto<List<CodeforcesUserDto>>) Response;
@@ -31,13 +34,13 @@ namespace ISC.Services.Services
 				return false;
 			}
 		}
-		public async Task<CodeforcesApiResponseDto<CodeforceStandingResultDto>> getContestStandingAsync(string contestid,int numberofrows,bool unofficial,string apikey,string apisecret)
+		public async Task<CodeforcesApiResponseDto<CodeforceStandingResultDto>> GetContestStandingAsync(string contestid,int numberofrows,bool unofficial,string apikey,string apisecret)
 		{
 			try//377686
 			{
 
 				string request = "contest.standings?"+generatecontestStandingRequest(contestid, numberofrows,unofficial,apikey,apisecret);
-				var Response = await _ApiRequest.getRequestAsync<CodeforcesApiResponseDto<CodeforceStandingResultDto>>(request);
+				var Response = await _apiRequest.getRequestAsync<CodeforcesApiResponseDto<CodeforceStandingResultDto>>(request);
 				var Standing= (CodeforcesApiResponseDto<CodeforceStandingResultDto>)Response;
 				if (Standing == null) return null;
 				else return Standing;
@@ -47,13 +50,13 @@ namespace ISC.Services.Services
 				return null;
 			}
 		}
-		public async Task<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>> getUserStatusAsync(string apikey,string apisecret)
+		public async Task<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>> GetUserStatusAsync(string apikey,string apisecret)
 		{
 			try//377686
 			{
 
 				string request = "user.status?" + generateUserStatusRequest(apikey,apisecret);
-				var Response = await _ApiRequest.getRequestAsync<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>>(request);
+				var Response = await _apiRequest.getRequestAsync<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>>(request);
 				var UserStatus = (CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>)Response;
 				if (UserStatus == null) return null;
 				else return UserStatus;
@@ -63,13 +66,13 @@ namespace ISC.Services.Services
 				return null;
 			}
 		}
-		public async Task<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>> getContestStatusAsync(string contestid,string handle,string apikey,string apisecret)
+		public async Task<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>> GetContestStatusAsync(string contestid,string handle,string apikey,string apisecret)
 		{
 			try//377686
 			{
 				Console.WriteLine("test okay ");
 				string request = "contest.status?"+generateContestStatusRequest(contestid,handle,apikey,apisecret);
-				var Response = await _ApiRequest.getRequestAsync<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>>(request);
+				var Response = await _apiRequest.getRequestAsync<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>>(request);
 				var ContestStatus = (CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>)Response;
 				if (ContestStatus == null) return null;
 				else return ContestStatus;
@@ -78,6 +81,30 @@ namespace ISC.Services.Services
 			{
 				return null;
 			}
+		}
+
+		public async Task<ResponseModel<Dictionary<int, int>>> SheetsProblemsCount(List<TraineeSheetAccess>traineesAcces)
+		{
+			ResponseModel<Dictionary<int, int>> response = new ResponseModel<Dictionary<int, int>>();
+			Dictionary<int, int> ProblemSheetCount = traineesAcces
+				.DistinctBy(tsa => tsa.SheetId)
+				.Select(i => new {
+					i.SheetId,
+					Count = GetContestStandingAsync(i.Sheet.SheetCfId, 1, true,
+							i.Sheet.IsSohag ? _cfConnection.SohagKey : _cfConnection.AssuitKey
+							, i.Sheet.IsSohag ? _cfConnection.SohagSecret : _cfConnection.AssuitSecret)
+				.Result.result.problems.Count()
+				})
+				.ToDictionary(i => i.SheetId, i => i.Count);
+			if(ProblemSheetCount.Count > 0)
+			{
+				response.State = true;
+				response.Entity=ProblemSheetCount;
+				return response;
+			}
+			response.State = false;
+			response.Comment = "Coudn't find sheets or problems of sheets";
+			return response;
 		}
 		private string generatecontestStandingRequest(string contestid,int numberofrows,bool unofficial,string apikey,string apisecret)
 		{

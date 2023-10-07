@@ -4478,7 +4478,7 @@
       "projectName": "ISC.EF",
       "projectPath": "D:\\ISC\\ISC.EF\\ISC.EF.csproj",
       "packagesPath": "C:\\Users\\d\\.nuget\\packages\\",
-      "outputPath": "D:\\ISC\\ISC.EF\\obj\\",
+      "outputPath": "D:\\ISc\\ISC.EF\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\d\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "D:\\ISc\\ISC.Services\\ISC.Services.csproj": {}
+    "D:\\ISC\\ISC.Services\\ISC.Services.csproj": {}
   },
   "projects": {
     "D:\\ISC\\ISC.Core\\ISC.Core.csproj": {
@@ -11,7 +11,7 @@
         "projectName": "ISC.Core",
         "projectPath": "D:\\ISC\\ISC.Core\\ISC.Core.csproj",
         "packagesPath": "C:\\Users\\d\\.nuget\\packages\\",
-        "outputPath": "D:\\ISC\\ISC.Core\\obj\\",
+        "outputPath": "D:\\ISc\\ISC.Core\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\d\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -76,7 +76,7 @@
         "projectName": "ISC.EF",
         "projectPath": "D:\\ISC\\ISC.EF\\ISC.EF.csproj",
         "packagesPath": "C:\\Users\\d\\.nuget\\packages\\",
-        "outputPath": "D:\\ISC\\ISC.EF\\obj\\",
+        "outputPath": "D:\\ISc\\ISC.EF\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\d\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -163,14 +163,14 @@
         }
       }
     },
-    "D:\\ISc\\ISC.Services\\ISC.Services.csproj": {
+    "D:\\ISC\\ISC.Services\\ISC.Services.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ISc\\ISC.Services\\ISC.Services.csproj",
+        "projectUniqueName": "D:\\ISC\\ISC.Services\\ISC.Services.csproj",
         "projectName": "ISC.Services",
-        "projectPath": "D:\\ISc\\ISC.Services\\ISC.Services.csproj",
+        "projectPath": "D:\\ISC\\ISC.Services\\ISC.Services.csproj",
         "packagesPath": "C:\\Users\\d\\.nuget\\packages\\",
-        "outputPath": "D:\\ISc\\ISC.Services\\obj\\",
+        "outputPath": "D:\\ISC\\ISC.Services\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\d\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -187,8 +187,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "D:\\ISc\\ISC.EF\\ISC.EF.csproj": {
-                "projectPath": "D:\\ISc\\ISC.EF\\ISC.EF.csproj"
+              "D:\\ISC\\ISC.EF\\ISC.EF.csproj": {
+                "projectPath": "D:\\ISC\\ISC.EF\\ISC.EF.csproj"
               }
             }
           }
