@@ -16,9 +16,9 @@ namespace ISC.EF.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    MiddleName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     NationalId = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Grade = table.Column<int>(type: "int", nullable: false),
@@ -26,7 +26,7 @@ namespace ISC.EF.Migrations
                     JoinDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     Gender = table.Column<string>(type: "nvarchar(7)", maxLength: 7, nullable: false),
                     LastLoginDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ProfilePicture = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    PhotoUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CodeForceHandle = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FacebookLink = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     VjudgeHandle = table.Column<string>(type: "nvarchar(450)", nullable: true),
@@ -68,7 +68,7 @@ namespace ISC.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "NewRegitserations",
+                name: "NewRegistration",
                 columns: table => new
                 {
                     NationalID = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
@@ -86,11 +86,12 @@ namespace ISC.EF.Migrations
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProfilePictrue = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     CampName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: true)
+                    HasLaptop = table.Column<bool>(type: "bit", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_NewRegitserations", x => x.NationalID);
+                    table.PrimaryKey("PK_NewRegistration", x => x.NationalID);
                 });
 
             migrationBuilder.CreateTable(
@@ -135,7 +136,7 @@ namespace ISC.EF.Migrations
                 columns: table => new
                 {
                     NationalID = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
-                    CampName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CampName = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IsCompleted = table.Column<bool>(type: "bit", nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -152,7 +153,7 @@ namespace ISC.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TraineesArchives", x => x.NationalID);
+                    table.PrimaryKey("PK_TraineesArchives", x => new { x.NationalID, x.CampName });
                 });
 
             migrationBuilder.CreateTable(
@@ -161,7 +162,8 @@ namespace ISC.EF.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AccessSessionId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -293,6 +295,7 @@ namespace ISC.EF.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SheetLink = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SheetCfId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsSohag = table.Column<bool>(type: "bit", nullable: false),
                     SheetOrder = table.Column<int>(type: "int", nullable: false),
                     MinimumPrecent = table.Column<int>(type: "int", nullable: false),
                     CampId = table.Column<int>(type: "int", nullable: false)
@@ -383,6 +386,7 @@ namespace ISC.EF.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    points = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MentorId = table.Column<int>(type: "int", nullable: true),
                     CampId = table.Column<int>(type: "int", nullable: false)
@@ -406,8 +410,7 @@ namespace ISC.EF.Migrations
                         name: "FK_Trainees_Mentors_MentorId",
                         column: x => x.MentorId,
                         principalTable: "Mentors",
-                        principalColumn: "Id",
-                        onDelete:ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -608,8 +611,8 @@ namespace ISC.EF.Migrations
                 column: "CampId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NewRegitserations_CodeForceHandle",
-                table: "NewRegitserations",
+                name: "IX_NewRegistration_CodeForceHandle",
+                table: "NewRegistration",
                 column: "CodeForceHandle",
                 unique: true);
 
@@ -698,7 +701,7 @@ namespace ISC.EF.Migrations
                 name: "MentorsOfCamps");
 
             migrationBuilder.DropTable(
-                name: "NewRegitserations");
+                name: "NewRegistration");
 
             migrationBuilder.DropTable(
                 name: "RoleClaims");

@@ -50,7 +50,7 @@ namespace ISC.Services.Services
 					};
 				}
 			}
-			if (user.Roles.Contains(Roles.TRAINEE) == true && (user.CampId == null))
+			if (user.Roles.Contains(Role.TRAINEE) == true && (user.CampId == null))
 			{
 				return new AuthModel()
 				{

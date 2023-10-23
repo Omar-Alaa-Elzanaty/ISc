@@ -9,12 +9,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Reflection.Metadata.Ecma335;
+using ISC.Services.ISerivces.IModelServices;
+using ISC.Core.Dtos;
 
 namespace ISC.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize(Roles = Roles.LEADER)]
+	[Authorize(Roles = Role.LEADER)]
 	public class LeaderController : ControllerBase
 	{
 		private readonly RoleManager<IdentityRole> _RoleManager;
@@ -22,81 +24,71 @@ namespace ISC.API.Controllers
 		private readonly IAuthanticationServices _Auth;
 		private readonly IUnitOfWork _UnitOfWork;
 		private readonly IMailServices _MailServices;
-		public LeaderController(RoleManager<IdentityRole> roleManager, UserManager<UserAccount> userManager,IAuthanticationServices auth,IUnitOfWork unitofwork,IMailServices mailServices)
+		private readonly ILeaderServices _LeaderServices;
+		public LeaderController(RoleManager<IdentityRole> roleManager, UserManager<UserAccount> userManager, IAuthanticationServices auth, IUnitOfWork unitofwork, IMailServices mailServices, ILeaderServices leaderServices)
 		{
 			_RoleManager = roleManager;
 			_UserManager = userManager;
 			_UnitOfWork = unitofwork;
 			_MailServices = mailServices;
 			_Auth = auth;
+			_LeaderServices = leaderServices;
 		}
-		[HttpPost("RegisterNewUser")]
-		public async Task<IActionResult> registerAsync([FromForm] RegisterDto newuser)
+		[HttpPost("Register")]
+		public async Task<IActionResult> Register([FromForm] RegisterDto newUser)
 		{
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
 			}
-			var model = await _Auth.RegisterAsync(newuser);
+			var model = await _Auth.RegisterAsync(newUser);
 			if (!model.IsAuthenticated)
 			{
 				return BadRequest(model);
 			}
 			return Ok(model);
 		}
-		[HttpPost("AddRole")]
-		public async Task<IActionResult> addRole(string role)
-		{
-			var newRole = new IdentityRole(role);
-			if (await _RoleManager.RoleExistsAsync(role))
-			{
-				return BadRequest("Role is already exist!");
-			}
-			var result = await _RoleManager.CreateAsync(newRole);
-			await _UnitOfWork.comleteAsync();
-			return Ok(result.Succeeded);
-		}
-		[HttpPost("AddMissions")]
-		public async Task<IActionResult> assignToStuffRoles(StuffNewRolesDto model)
+		[HttpPost("AssignToStuffRoles")]
+		public async Task<IActionResult> AssignToStuffRoles([FromBody] StuffNewRolesDto model)
 		{
 			if (!ModelState.IsValid)
 			{
 				return BadRequest("some data is required");
 			}
-			var Account=await _UserManager.FindByIdAsync(model.UserId);
+			var Account = await _UserManager.FindByIdAsync(model.UserId);
 			if (Account == null)
 			{
 				return BadRequest("there is no Account with these properities!");
 			}
-			List<string>ErrorList = new List<string>();
-			foreach(var Role in model.UserRoles)
+			List<string> ErrorList = new List<string>();
+			foreach (var Role in model.UserRoles)
 			{
 				bool Result = await _UnitOfWork.addToRoleAsync(Account, Role.Role, Role.CampId, Role.MentorId);
 				if (Result == false)
-					ErrorList.Append(Role.Role+',');
+					ErrorList.Append(Role.Role + ',');
 			}
 			await _UnitOfWork.comleteAsync();
-			if(ErrorList.Count != 0) {
+			if (ErrorList.Count != 0) {
 				return BadRequest($"Can't save user to these roles{ErrorList}");
 			}
 			return Ok("Changes have been successfully");
-			
+
 		}
 
 		[HttpDelete("DeleteFromStuff")]
-		public async Task<IActionResult> deleteFromStuff(List<string> stuffusersid) 
+		public async Task<IActionResult> DeleteFromStuff(List<string> stuffusersId)
 		{
-			List<UserAccount>ErrorsList=new List<UserAccount>();
-			foreach(string UserId in stuffusersid)
+			List<UserAccount> ErrorsList = new List<UserAccount>();
+			foreach (string UserId in stuffusersId)
 			{
 				var Account = await _UserManager.FindByIdAsync(UserId);
 				var UserRoles = _UserManager.GetRolesAsync(Account).Result.ToList();
 				bool result = true;
-				if (UserRoles.Contains(Roles.MENTOR))
+				if (UserRoles.Contains(Role.MENTOR))
 				{
-					result =await _UnitOfWork.Mentors.deleteAsync(UserId);
+					result = await _UnitOfWork.Mentors.deleteAsync(UserId);
 				}
-				if(UserRoles.Contains(Roles.HOC)&&result==true)
+				if (UserRoles.Contains(Role.HOC) && result == true)
 				{
 					result = await _UnitOfWork.HeadofCamp.deleteEntityAsync(UserId);
 				}
@@ -126,6 +118,78 @@ namespace ISC.API.Controllers
 			}
 			await _UnitOfWork.comleteAsync();
 			return Ok(ErrorsList);
+		}
+		[HttpDelete("DeleteFromTrainees")]
+		public async Task<IActionResult> DeleteFromTrainees([FromBody] List<string> traineesIds)
+		{
+			var response = await _LeaderServices.DeleteTraineesAsync(traineesIds);
+			if (!response.Success)
+			{
+				return Ok(new
+				{
+					response.Success,
+					response.Comment
+				});
+			}
+			return Ok(response);
+		}
+		[HttpPost("AddCamp")]
+		public async Task<IActionResult> AddCamp(CampDto camp)
+		{
+			var response = await _LeaderServices.AddCampAsync(camp);
+			if (!response.Success)
+			{
+				return BadRequest(new
+				{
+					response.Success,
+					response.Comment
+				});
+			}
+			return Ok(response);
+		}
+
+		[HttpGet("RoleUserDisplay")]
+		public async Task<IActionResult> RoleUserDisplay()
+		{
+			var accounts = _UserManager.Users.Select(i => new
+			{
+				i.Id,
+				FullName = i.FirstName + ' ' + i.MiddleName + " " + i.LastName,
+				i.CodeForceHandle,
+				i.Email,
+				i.College,
+				i.Gender
+
+			});
+			return Ok(accounts);
+		}
+
+		[HttpPost("AddToRole")]
+		public async Task<IActionResult> AddToRole([FromBody] UserRoleDto users)
+		{
+			var response = await _LeaderServices.AddToRoleAsync(users);
+			if (!response.Success)
+			{
+				return Ok(response);
+			}
+			return Ok(response.Success);
+		}
+		[HttpPost("AddRole")]
+		public async Task<IActionResult> AddRole([FromBody]string role)
+		{
+			var result=await _RoleManager.FindByNameAsync(role);
+			if(result != null)
+			{
+				return BadRequest($"Role {role} is already exist!");
+			}
+			result = new IdentityRole() { Name = role };
+			var response= await _RoleManager.CreateAsync(result);
+			if (!response.Succeeded)
+			{
+				return BadRequest(response.Errors);
+			}
+
+			return Ok("Add successful");
 		}
 	}
 }

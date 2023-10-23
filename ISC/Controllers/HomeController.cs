@@ -26,7 +26,7 @@ namespace ISC.API.Controllers
 		public async Task<IActionResult> displayFeedbacksAsync()
 		{
 			var Feedbacks =await _UnitOfWork.SessionsFeedbacks.getTopRateAsync(3);
-			var Trainees = await _UnitOfWork.Trainees.getAllAsync();
+			var Trainees = await _UnitOfWork.Trainees.getAllAsync(tr=>Feedbacks.Exists(i=>i.TraineeId==tr.Id));
 
 			var Result = (from Trainee in Trainees
 						 join user in _UserManager.Users

@@ -10,7 +10,7 @@ namespace ISC.Services.ISerivces.IModelServices
 {
     public interface ISheetServices
     {
-        Task<ResponseModel<List<TraineeSheetAccess>>> TraineeSheetAccesWithout(List<int> traineesId, int campId);
-        Task<ResponseModel<HashSet<int>>> TraineesFilter(List<TraineeSheetAccess> traineeAccess, Dictionary<int, int> ProblemSheetCount);
+        Task<ServiceResponse<List<TraineeSheetAccess>>> TraineeSheetAccesWithout(List<int> traineesId, int campId);
+        Task<ServiceResponse<HashSet<int>>> TraineesFilter(List<TraineeSheetAccess> traineeAccess, Dictionary<int, int> ProblemSheetCount);
     }
 }

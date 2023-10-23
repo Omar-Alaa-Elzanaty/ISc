@@ -1223,11 +1223,11 @@ will be filter</panel_attributes>
     <id>UMLGeneric</id>
     <coordinates>
       <x>198</x>
-      <y>2211</y>
+      <y>2783</y>
       <w>1331</w>
-      <h>539</h>
+      <h>616</h>
     </coordinates>
-    <panel_attributes>Mentor Pages
+    <panel_attributes>Trainee Page
 -
 halign=center</panel_attributes>
     <additional_attributes/>
@@ -1235,7 +1235,7 @@ halign=center</panel_attributes>
   <element>
     <id>UMLActor</id>
     <coordinates>
-      <x>99</x>
+      <x>77</x>
       <y>2431</y>
       <w>66</w>
       <h>121</h>
@@ -1246,7 +1246,7 @@ halign=center</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>341</x>
+      <x>319</x>
       <y>2255</y>
       <w>154</w>
       <h>99</h>
@@ -1258,7 +1258,7 @@ halign=center</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>154</x>
+      <x>132</x>
       <y>2288</y>
       <w>209</w>
       <h>198</h>
@@ -1269,7 +1269,7 @@ halign=center</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>286</x>
+      <x>264</x>
       <y>2398</y>
       <w>319</w>
       <h>77</h>
@@ -1281,7 +1281,7 @@ for every sheet</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>154</x>
+      <x>132</x>
       <y>2420</y>
       <w>154</w>
       <h>66</h>
@@ -1292,7 +1292,7 @@ for every sheet</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>319</x>
+      <x>297</x>
       <y>2497</y>
       <w>286</w>
       <h>99</h>
@@ -1303,7 +1303,7 @@ for every sheet</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>154</x>
+      <x>132</x>
       <y>2453</y>
       <w>187</w>
       <h>121</h>
@@ -1314,7 +1314,7 @@ for every sheet</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>341</x>
+      <x>319</x>
       <y>2618</y>
       <w>242</w>
       <h>88</h>
@@ -1325,7 +1325,7 @@ for every sheet</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>154</x>
+      <x>132</x>
       <y>2453</y>
       <w>209</w>
       <h>231</h>
@@ -1424,5 +1424,162 @@ Attendence Access</panel_attributes>
     </coordinates>
     <panel_attributes>Select session</panel_attributes>
     <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>198</x>
+      <y>2233</y>
+      <w>1331</w>
+      <h>539</h>
+    </coordinates>
+    <panel_attributes>Mentor Pages
+-
+halign=center</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLActor</id>
+    <coordinates>
+      <x>88</x>
+      <y>2948</y>
+      <w>88</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>Trainee</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>143</x>
+      <y>2838</y>
+      <w>187</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;120.0;150.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>308</x>
+      <y>2827</y>
+      <w>154</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>Show standing
+for his camp</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>308</x>
+      <y>2926</y>
+      <w>176</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>Show Material</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>143</x>
+      <y>2937</y>
+      <w>187</w>
+      <h>55</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;30.0;150.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>319</x>
+      <y>3025</y>
+      <w>198</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>Show Material</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>143</x>
+      <y>2959</y>
+      <w>198</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;160.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>286</x>
+      <y>3113</y>
+      <w>231</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>show Task passing line</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>143</x>
+      <y>2959</y>
+      <w>165</w>
+      <h>209</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;130.0;170.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>297</x>
+      <y>3190</y>
+      <w>231</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>Comment  on last session</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>143</x>
+      <y>2959</y>
+      <w>176</w>
+      <h>286</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;140.0;240.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>308</x>
+      <y>3278</y>
+      <w>231</w>
+      <h>55</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>143</x>
+      <y>2959</y>
+      <w>187</w>
+      <h>363</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;150.0;310.0</additional_attributes>
   </element>
 </diagram>

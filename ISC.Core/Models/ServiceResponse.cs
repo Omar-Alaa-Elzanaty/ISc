@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ISC.Core.Models
 {
-	public class ResponseModel<T>
+	public class ServiceResponse<T>
 	{
-		public bool State { get; set; }
+		public bool Success { get; set; }
 		public T? Entity { get; set; }
 		public string Comment { get; set; }
 	}

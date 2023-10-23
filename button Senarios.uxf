@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="15.1">
   <help_text>// Uncomment the following line to change the fontsize and font:
-fontsize=15
+fontsize=20
 // fontfamily=SansSerif //possible: SansSerif,Serif,Monospaced
 
 
@@ -411,20 +411,20 @@ bg=red</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>949</x>
-      <y>1430</y>
+      <y>1417</y>
       <w>260</w>
-      <h>169</h>
+      <h>182</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 [Trainee]</panel_attributes>
-    <additional_attributes>180.0;110.0;180.0;20.0;10.0;20.0</additional_attributes>
+    <additional_attributes>180.0;120.0;180.0;30.0;10.0;30.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>936</x>
       <y>1469</y>
-      <w>182</w>
+      <w>234</w>
       <h>143</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
@@ -457,14 +457,14 @@ bg=red</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>572</x>
-      <y>1430</y>
-      <w>221</w>
-      <h>195</h>
+      <x>559</x>
+      <y>1417</y>
+      <w>234</w>
+      <h>208</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 [Other]</panel_attributes>
-    <additional_attributes>20.0;130.0;20.0;20.0;150.0;20.0</additional_attributes>
+    <additional_attributes>30.0;140.0;30.0;30.0;160.0;30.0</additional_attributes>
   </element>
   <element>
     <id>UMLState</id>
@@ -1020,20 +1020,20 @@ bg=red</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>923</x>
-      <y>3783</y>
+      <y>3770</y>
       <w>260</w>
-      <h>169</h>
+      <h>182</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 [Trainee]</panel_attributes>
-    <additional_attributes>180.0;110.0;180.0;20.0;10.0;20.0</additional_attributes>
+    <additional_attributes>180.0;120.0;180.0;30.0;10.0;30.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>910</x>
       <y>3822</y>
-      <w>182</w>
+      <w>234</w>
       <h>143</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
@@ -1068,7 +1068,7 @@ bg=red</panel_attributes>
     <coordinates>
       <x>741</x>
       <y>3822</y>
-      <w>91</w>
+      <w>117</w>
       <h>169</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
@@ -1090,13 +1090,13 @@ bg=red</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>481</x>
-      <y>3783</y>
+      <y>3770</y>
       <w>286</w>
-      <h>182</h>
+      <h>195</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 [Mentor]</panel_attributes>
-    <additional_attributes>10.0;120.0;10.0;20.0;200.0;20.0</additional_attributes>
+    <additional_attributes>10.0;130.0;10.0;30.0;200.0;30.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -1669,7 +1669,7 @@ contest ID | passing precentage | Is Sohag Sheet</panel_attributes>
     <coordinates>
       <x>962</x>
       <y>6942</y>
-      <w>143</w>
+      <w>169</w>
       <h>117</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
@@ -1681,7 +1681,7 @@ contest ID | passing precentage | Is Sohag Sheet</panel_attributes>
     <coordinates>
       <x>611</x>
       <y>6942</y>
-      <w>91</w>
+      <w>117</w>
       <h>117</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
@@ -2050,12 +2050,12 @@ valign=top</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>0</x>
-      <y>7306</y>
+      <y>7293</y>
       <w>1651</w>
-      <h>52</h>
+      <h>65</h>
     </coordinates>
     <panel_attributes/>
-    <additional_attributes>10.0;20.0;1250.0;20.0</additional_attributes>
+    <additional_attributes>10.0;30.0;1250.0;30.0</additional_attributes>
   </element>
   <element>
     <id>UMLObject</id>
@@ -3228,12 +3228,12 @@ Mentor Name | Session Name(can choose from drop list)</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>78</x>
-      <y>13468</y>
+      <y>13455</y>
       <w>1651</w>
-      <h>52</h>
+      <h>65</h>
     </coordinates>
     <panel_attributes/>
-    <additional_attributes>10.0;20.0;1250.0;20.0</additional_attributes>
+    <additional_attributes>10.0;30.0;1250.0;30.0</additional_attributes>
   </element>
   <element>
     <id>UMLObject</id>

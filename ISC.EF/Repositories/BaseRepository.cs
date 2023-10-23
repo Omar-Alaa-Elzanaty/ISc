@@ -88,5 +88,10 @@ namespace ISC.EF.Repositories
 		{
 			return deleteEntityAsync(entity);
 		}
+
+		public async Task<List<T>> getAllAsync(Expression<Func<T, bool>> match)
+		{
+			return await _Context.Set<T>().Where(match).ToListAsync();
+		}
 	}
 }

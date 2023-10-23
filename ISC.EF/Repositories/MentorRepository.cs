@@ -21,7 +21,7 @@ namespace ISC.EF.Repositories
         }
         public async Task<object> showMentorsAccountsAsync()
         {
-            var Accounts=await _UserManager.GetUsersInRoleAsync(Roles.MENTOR);
+            var Accounts=await _UserManager.GetUsersInRoleAsync(Role.MENTOR);
 
             return (from account in Accounts
                    from mentor in _Context.Mentors

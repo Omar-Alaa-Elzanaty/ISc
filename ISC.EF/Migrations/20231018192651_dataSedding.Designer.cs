@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ISC.EF.Migrations
 {
     [DbContext(typeof(DataBase))]
-    [Migration("20230907131115_dataSeeding")]
-    partial class dataSeeding
+    [Migration("20231018192651_dataSedding")]
+    partial class dataSedding
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.10")
+                .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -110,6 +110,9 @@ namespace ISC.EF.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("AccessSessionId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -122,7 +125,7 @@ namespace ISC.EF.Migrations
                     b.ToTable("Mentors");
                 });
 
-            modelBuilder.Entity("ISC.Core.Models.NewRegitseration", b =>
+            modelBuilder.Entity("ISC.Core.Models.NewRegistration", b =>
                 {
                     b.Property<string>("NationalID")
                         .HasMaxLength(14)
@@ -140,6 +143,10 @@ namespace ISC.EF.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("College")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Comment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -161,6 +168,9 @@ namespace ISC.EF.Migrations
                     b.Property<int>("Grade")
                         .HasColumnType("int");
 
+                    b.Property<bool>("HasLaptop")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -175,9 +185,6 @@ namespace ISC.EF.Migrations
                     b.Property<byte[]>("ProfilePictrue")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<bool?>("Status")
-                        .HasColumnType("bit");
-
                     b.Property<string>("VjudgeHandle")
                         .HasColumnType("nvarchar(max)");
 
@@ -186,7 +193,7 @@ namespace ISC.EF.Migrations
                     b.HasIndex("CodeForceHandle")
                         .IsUnique();
 
-                    b.ToTable("NewRegitserations");
+                    b.ToTable("NewRegistration");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Session", b =>
@@ -234,6 +241,9 @@ namespace ISC.EF.Migrations
 
                     b.Property<int>("CampId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsSohag")
+                        .HasColumnType("bit");
 
                     b.Property<int>("MinimumPrecent")
                         .HasColumnType("int");
@@ -331,6 +341,9 @@ namespace ISC.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("points")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CampId");
@@ -349,11 +362,11 @@ namespace ISC.EF.Migrations
                         .HasMaxLength(14)
                         .HasColumnType("nvarchar(14)");
 
+                    b.Property<string>("CampName")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("CampName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CodeForceHandle")
                         .HasColumnType("nvarchar(max)");
@@ -397,7 +410,7 @@ namespace ISC.EF.Migrations
                     b.Property<string>("VjudgeHandle")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("NationalID");
+                    b.HasKey("NationalID", "CampName");
 
                     b.ToTable("TraineesArchives");
                 });
@@ -532,8 +545,8 @@ namespace ISC.EF.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("Gender")
                         .IsRequired()
@@ -553,8 +566,8 @@ namespace ISC.EF.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -564,7 +577,8 @@ namespace ISC.EF.Migrations
 
                     b.Property<string>("MiddleName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("NationalId")
                         .IsRequired()
@@ -588,8 +602,9 @@ namespace ISC.EF.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<byte[]>("ProfilePicture")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("PhotoUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -772,7 +787,7 @@ namespace ISC.EF.Migrations
 
             modelBuilder.Entity("ISC.Core.Models.HeadOfTraining", b =>
                 {
-                    b.HasOne("ISC.Core.Models.Camp", "camp")
+                    b.HasOne("ISC.Core.Models.Camp", "Camp")
                         .WithMany("Heads")
                         .HasForeignKey("CampId");
 
@@ -782,7 +797,7 @@ namespace ISC.EF.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("camp");
+                    b.Navigation("Camp");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Material", b =>

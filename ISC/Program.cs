@@ -1,11 +1,13 @@
 using ISC.EF;
 using ISC.Services.Helpers;
+using ISC.Services.ISerivces;
 using ISC.Services.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace ISC
@@ -100,6 +102,7 @@ namespace ISC
 				app.UseSwaggerUI();
 			}
 			app.UseHttpsRedirection();
+			Seed(app);
 			app.UseStaticFiles();
 
 			app.UseRouting();
@@ -107,10 +110,15 @@ namespace ISC
 
 			app.UseAuthentication();
 			app.UseAuthorization();
-
 			app.MapControllers();
 
 			app.Run();
+		}
+		static void Seed(WebApplication app)
+		{
+			using var scope = app.Services.CreateScope();
+			var Initalizer = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
+			Initalizer.Seeding();
 		}
 	}
 }

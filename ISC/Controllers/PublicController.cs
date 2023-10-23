@@ -13,7 +13,7 @@ namespace ISC.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize(Roles = $"{Roles.TRAINEE}")]
+	[Authorize(Roles = $"{Role.TRAINEE}")]
 	public class PublicController : ControllerBase
 	{
 		private readonly RoleManager<IdentityRole> _RoleManager;

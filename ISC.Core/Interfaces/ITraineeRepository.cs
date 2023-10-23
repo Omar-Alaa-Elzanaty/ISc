@@ -11,5 +11,6 @@ namespace ISC.Core.Interfaces
 	{
 		 Task<Trainee> getByUserIdAsync(string userId);
 		Task<Camp> getCampofTrainee(int id);
+		Task<Camp?> getCampofTrainee(string userId);
 	}
 }

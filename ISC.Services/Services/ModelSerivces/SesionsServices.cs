@@ -18,14 +18,14 @@ namespace ISC.Services.Services.ModelSerivces
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<ResponseModel<HashSet<int>>> SessionFilter(List<int> traineesIds)
+        public async Task<ServiceResponse<HashSet<int>>> SessionFilter(List<int> traineesIds)
 		{
 			var traineeAttend = _unitOfWork.TraineesAttendence
 					.getInListAsync(tr => traineesIds.Contains(tr.TraineeId))
 								.Result.GroupBy(attend => attend.TraineeId)
 								.Select(g => new { TraineeId = g.Key, NumberOfAttendence = g.Count() }).ToList();
 			HashSet<int> filteredOnSessions = new HashSet<int>();
-			ResponseModel<HashSet<int>>response=new ResponseModel<HashSet<int>>();
+			ServiceResponse<HashSet<int>>response=new ServiceResponse<HashSet<int>>();
 			if (traineeAttend.Count > 0)
 			{
 				int MaxAttendence = traineeAttend.Max(ta => ta.NumberOfAttendence);
@@ -35,11 +35,11 @@ namespace ISC.Services.Services.ModelSerivces
 			}
 			if (filteredOnSessions.Count == 0)
 			{
-				response.State = false;
+				response.Success = false;
 				response.Comment="Empty filtered list";
 				return response;
 			}
-			response.State = true;
+			response.Success = true;
 			response.Entity = filteredOnSessions;
 			return response;
 		}

@@ -19,9 +19,9 @@ namespace ISC.Services.Services.ModelSerivces
             _unitOfWork=unitOfWork;
         }
 
-		public async Task<ResponseModel<HashSet<int>>> TraineesFilter(List<TraineeSheetAccess> traineeAccess, Dictionary<int, int> ProblemSheetCount)
+		public async Task<ServiceResponse<HashSet<int>>> TraineesFilter(List<TraineeSheetAccess> traineeAccess, Dictionary<int, int> ProblemSheetCount)
 		{
-			ResponseModel<HashSet<int>>response= new ResponseModel<HashSet<int>>();
+			ServiceResponse<HashSet<int>>response= new ServiceResponse<HashSet<int>>();
 			HashSet<int> filteredOnSheets = new HashSet<int>();
 			int TSA_Size = traineeAccess.Count();
 			for (int Trainee = 0; Trainee < TSA_Size; ++Trainee)
@@ -38,18 +38,18 @@ namespace ISC.Services.Services.ModelSerivces
 			}
 			if (filteredOnSheets.Count == 0)
 			{
-				response.State = false;
+				response.Success = false;
 				response.Comment = "Filter sheet is empty";
 				return response;
 			}
-			response.State = true;
+			response.Success = true;
 			response.Entity = filteredOnSheets;
 			return response;
 		}
 
-		public async Task<ResponseModel<List<TraineeSheetAccess>>> TraineeSheetAccesWithout(List<int>traineesId,int campId)
+		public async Task<ServiceResponse<List<TraineeSheetAccess>>> TraineeSheetAccesWithout(List<int>traineesId,int campId)
 		{
-			var response=new ResponseModel<List<TraineeSheetAccess>>();
+			var response=new ServiceResponse<List<TraineeSheetAccess>>();
 			bool[]? IsFound;
 			if (traineesId.Count() > 0)
 			{
@@ -67,11 +67,11 @@ namespace ISC.Services.Services.ModelSerivces
 				, new[] { "Sheet", "Trainee" }).Result.OrderBy(ts => ts.TraineeId).ToList();
 			if (traineeSheetAcess.Count == 0)
 			{
-				response.State = false;
+				response.Success = false;
 				response.Comment = "Couldn't found any Access for trainees";
 				return response;
 			}
-			response.State = true;
+			response.Success = true;
 			response.Entity = traineeSheetAcess;
 			return response;
 		}

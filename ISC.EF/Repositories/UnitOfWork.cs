@@ -4,20 +4,13 @@ using ISC.Core.ModelsDtos;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Query.Internal;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ISC.EF.Repositories
 {
     public class UnitOfWork : IUnitOfWork
 	{
 		private readonly UserManager<UserAccount> _UserManager;
-		private readonly DataBase _DataBase;
+		public readonly DataBase _DataBase;
 		private readonly IWebHostEnvironment _Host;
 		private readonly IHttpContextAccessor _HttpContext;
 		public ITraineeRepository Trainees { get; private set; }
@@ -66,7 +59,7 @@ namespace ISC.EF.Repositories
 			StuffArchive = new BaseRepository<StuffArchive>(_DataBase);
 			NewRegitseration = new BaseRepository<NewRegistration>(_DataBase);
 		}
-		public async Task<bool> addToRoleAsync<T>(T account, string role,int?CampId,int?MentorId)
+		public async Task<bool> addToRoleAsync<T>(T account, string role,int?campId,int?mentorId)
 		{
 			if(account is UserAccount Acc)
 			{
@@ -76,33 +69,33 @@ namespace ISC.EF.Repositories
 					return false;
 				try
 				{
-					if (role == Roles.TRAINEE)
+					if (role == Role.TRAINEE)
 					{
-						if (CampId == null)
+						if (campId == null)
 						{
 							return false;
 						}
 						await _UserManager.AddToRoleAsync(Acc, role);
 						Trainee Trainee;
-						if (MentorId != null)
-							Trainee = new Trainee() { UserId = Acc.Id, CampId = (int)CampId, MentorId = MentorId };
+						if (mentorId != null)
+							Trainee = new Trainee() { UserId = Acc.Id, CampId = (int)campId, MentorId = mentorId };
 						else
-							Trainee = new Trainee() { UserId = Acc.Id, CampId = (int)CampId };
+							Trainee = new Trainee() { UserId = Acc.Id, CampId = (int)campId };
 						Trainees.addAsync(Trainee);
 					}
-					else if (role == Roles.MENTOR)
+					else if (role == Role.MENTOR)
 					{
 						await _UserManager.AddToRoleAsync(Acc, role);
 						Mentor Mentor = new Mentor() { UserId = Acc.Id };
 						Mentors.addAsync(Mentor);
 					}
-					else if (role == Roles.HOC && CampId!=null)
+					else if (role == Role.HOC && campId!=null)
 					{
 						await _UserManager.AddToRoleAsync(Acc, role);
-						HeadOfTraining HeadOfTraining = new HeadOfTraining() { UserId = Acc.Id, CampId = CampId };
+						HeadOfTraining HeadOfTraining = new HeadOfTraining() { UserId = Acc.Id, CampId = campId };
 						HeadofCamp.addAsync(HeadOfTraining);
 					}
-					else if (role == Roles.LEADER || role == Roles.INSTRUCTOR)
+					else if (role == Role.LEADER || role == Role.INSTRUCTOR)
 					{
 						await _UserManager.AddToRoleAsync(Acc, role);
 					}

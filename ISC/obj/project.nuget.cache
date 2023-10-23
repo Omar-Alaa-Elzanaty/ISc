@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "p5tpvQ629zfzFqxJDvYI+OaiR8rzA2UEUMFNqgPLyA02cCunt7fefBusMiTjZazsl8ZI6io1l/jYtd9YvSdMlA==",
+  "dgSpecHash": "tMXS9LBW69v5Z2+L6OWbav+99Ij0QKtxJboZCGQru8gGS3rHxukfnZnDAWrqcjlgHZC2u1qWLHGXN9g6xL12tw==",
   "success": true,
-  "projectFilePath": "D:\\ISC\\ISC\\ISC.API.csproj",
+  "projectFilePath": "D:\\ISc\\ISC\\ISC.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\d\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\d\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

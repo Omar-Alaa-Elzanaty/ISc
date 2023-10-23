@@ -19,7 +19,7 @@ namespace ISC.API.Controllers
 {
     [Route("api/[controller]")]
 	[ApiController]
-	[Authorize(Roles =$"{Roles.LEADER},{Roles.HOC}")]
+	//[Authorize(Roles =$"{Roles.LEADER},{Roles.HOC}")]
 	public class HeadCampController : ControllerBase
 	{
 		private readonly RoleManager<IdentityRole> _RoleManager;
@@ -29,7 +29,7 @@ namespace ISC.API.Controllers
 		private readonly IOnlineJudgeServices _onlineJudgeSrvices;
 		private readonly ISheetServices _sheetServices;
 		private readonly ISessionsServices _sessionsSrvices;
-		public HeadCampController(RoleManager<IdentityRole> roleManager, UserManager<UserAccount> userManager,  , IUnitOfWork unitofwork,IOnlineJudgeServices onlinejudgeservices, IMailServices mailService,ISheetServices sheetServices)
+		public HeadCampController(RoleManager<IdentityRole> roleManager, UserManager<UserAccount> userManager,IUnitOfWork unitofwork,IOnlineJudgeServices onlinejudgeservices, IMailServices mailService,ISheetServices sheetServices)
 		{
 			_RoleManager = roleManager;
 			_UserManager = userManager;
@@ -41,7 +41,7 @@ namespace ISC.API.Controllers
 		[HttpGet("DisplayTrainees")]
 		public async Task<IActionResult> displayTrainee()
 		{
-			return Ok(await _UserManager.GetUsersInRoleAsync(Roles.TRAINEE));
+			return Ok(await _UserManager.GetUsersInRoleAsync(Role.TRAINEE));
 		}
 		[HttpDelete("DeleteFromTrainees")]
 		public async Task<IActionResult> deleteFromTrainees(List<string> traineesusersid)
@@ -85,7 +85,7 @@ namespace ISC.API.Controllers
 																new[] { "Camp", })?.Result?.Camp??null;
 
 			var result =await _sheetServices.TraineeSheetAccesWithout(traineesid, camp?.Id ?? 0);
-			if (result.State == false)
+			if (result.Success == false)
 			{
 				return BadRequest(result.Comment);
 			}
@@ -143,41 +143,41 @@ namespace ISC.API.Controllers
 			List<UserAccount>Fail = new List<UserAccount>();
 			foreach (var Id in usersid)
 			{
-				UserAccount TraineeAccount = await _UserManager.FindByIdAsync(Id);
-				if (TraineeAccount != null)
+				UserAccount traineeAccount = await _UserManager.FindByIdAsync(Id);
+				if (traineeAccount != null)
 				{
 					TraineeArchive ToArchive = new TraineeArchive()
 					{
-						FirstName = TraineeAccount.FirstName,
-						MiddleName = TraineeAccount.MiddleName,
-						LastName = TraineeAccount.LastName,
-						NationalID = TraineeAccount.NationalId,
-						BirthDate = TraineeAccount.BirthDate,
-						Grade = TraineeAccount.Grade,
-						College = TraineeAccount.College,
-						Gender = TraineeAccount.Gender,
-						CodeForceHandle = TraineeAccount.CodeForceHandle,
-						FacebookLink = TraineeAccount.FacebookLink,
-						VjudgeHandle = TraineeAccount.VjudgeHandle,
-						Email = TraineeAccount.Email,
-						PhoneNumber = TraineeAccount.PhoneNumber,
+						FirstName = traineeAccount.FirstName,
+						MiddleName = traineeAccount.MiddleName,
+						LastName = traineeAccount.LastName,
+						NationalID = traineeAccount.NationalId,
+						BirthDate = traineeAccount.BirthDate,
+						Grade = traineeAccount.Grade,
+						College = traineeAccount.College,
+						Gender = traineeAccount.Gender,
+						CodeForceHandle = traineeAccount.CodeForceHandle,
+						FacebookLink = traineeAccount.FacebookLink,
+						VjudgeHandle = traineeAccount.VjudgeHandle,
+						Email = traineeAccount.Email,
+						PhoneNumber = traineeAccount.PhoneNumber,
 						Year = Camp.Year,
 						CampName = Camp.Name,
 						IsCompleted = false
 					};
-					var Result = true; await _MailService.sendEmailAsync(TraineeAccount.Email, "ICPC Sohag Filteration announcement"
-						, $"Dear {TraineeAccount.FirstName + ' ' + TraineeAccount.MiddleName},{@"<\br>"} We regret to inform you that we had to remove you from the {Camp.Name} training program." +
+					var Result = await _MailService.sendEmailAsync(traineeAccount.Email, "ICPC Sohag Filteration announcement"
+						, $"Dear {traineeAccount.FirstName + ' ' + traineeAccount.MiddleName},{@"<\br>"} We regret to inform you that we had to remove you from the {Camp.Name} training program." +
 						$" If you're interested in exploring other training programs, please let us know, and we'll provide you with more information." +
 						$" Thank you for your efforts, and we hope you'll take this as a learning experience to continue your growth and development." +
 						$"{@"<\br>"}{@"<\br>"}Best regards,{@"<\br>"}{@"<\br>"} ISc System{@"<\br>"}{@"<\br>"} Omar Alaa");
 					if (Result == true)
 					{
 						_UnitOfWork.TraineesArchive.addAsync(ToArchive);
-						await _UserManager.DeleteAsync(TraineeAccount);
+						await _UserManager.DeleteAsync(traineeAccount);
 					}
 					else
 					{
-						Fail.Add(TraineeAccount);
+						Fail.Add(traineeAccount);
 					}
 				}
 			}

@@ -83,9 +83,9 @@ namespace ISC.Services.Services
 			}
 		}
 
-		public async Task<ResponseModel<Dictionary<int, int>>> SheetsProblemsCount(List<TraineeSheetAccess>traineesAcces)
+		public async Task<ServiceResponse<Dictionary<int, int>>> SheetsProblemsCount(List<TraineeSheetAccess>traineesAcces)
 		{
-			ResponseModel<Dictionary<int, int>> response = new ResponseModel<Dictionary<int, int>>();
+			ServiceResponse<Dictionary<int, int>> response = new ServiceResponse<Dictionary<int, int>>();
 			Dictionary<int, int> ProblemSheetCount = traineesAcces
 				.DistinctBy(tsa => tsa.SheetId)
 				.Select(i => new {
@@ -98,11 +98,11 @@ namespace ISC.Services.Services
 				.ToDictionary(i => i.SheetId, i => i.Count);
 			if(ProblemSheetCount.Count > 0)
 			{
-				response.State = true;
+				response.Success = true;
 				response.Entity=ProblemSheetCount;
 				return response;
 			}
-			response.State = false;
+			response.Success = false;
 			response.Comment = "Coudn't find sheets or problems of sheets";
 			return response;
 		}

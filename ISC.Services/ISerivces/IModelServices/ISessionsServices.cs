@@ -10,6 +10,6 @@ namespace ISC.Services.ISerivces.IModelServices
 {
 	public interface ISessionsServices
 	{
-		Task<ResponseModel<HashSet<int>>> SessionFilter(List<int> traineeAttend);
+		Task<ServiceResponse<HashSet<int>>> SessionFilter(List<int> traineeAttend);
 	}
 }

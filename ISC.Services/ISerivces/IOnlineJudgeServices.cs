@@ -11,6 +11,6 @@ namespace ISC.Services.ISerivces
 		Task<CodeforcesApiResponseDto<CodeforceStandingResultDto>> GetContestStandingAsync(string contestid, int numberofrows, bool unofficial, string apikey, string apisecret);
 		Task<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>> GetUserStatusAsync(string apikey, string apisecret);
 		Task<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>> GetContestStatusAsync(string contestid,string handle,string apikey, string apisecret);
-		Task<ResponseModel<Dictionary<int, int>>> SheetsProblemsCount(List<TraineeSheetAccess> traineesAcces);
+		Task<ServiceResponse<Dictionary<int, int>>> SheetsProblemsCount(List<TraineeSheetAccess> traineesAcces);
 	}
 }

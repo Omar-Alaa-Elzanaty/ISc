@@ -338,6 +338,9 @@ namespace ISC.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("points")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CampId");
@@ -596,8 +599,9 @@ namespace ISC.EF.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<byte[]>("ProfilePicture")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("PhotoUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -780,7 +784,7 @@ namespace ISC.EF.Migrations
 
             modelBuilder.Entity("ISC.Core.Models.HeadOfTraining", b =>
                 {
-                    b.HasOne("ISC.Core.Models.Camp", "camp")
+                    b.HasOne("ISC.Core.Models.Camp", "Camp")
                         .WithMany("Heads")
                         .HasForeignKey("CampId");
 
@@ -790,7 +794,7 @@ namespace ISC.EF.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("camp");
+                    b.Navigation("Camp");
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Material", b =>

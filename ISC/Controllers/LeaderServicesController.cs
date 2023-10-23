@@ -29,27 +29,41 @@ namespace ISC.API.Controllers
 		
 		
 		[HttpGet("DisplayRoles")]
-		public async Task<IActionResult> displaySystemRoles()
+		public async Task<IActionResult> DisplaySystemRoles()
 		{
 			var roles = await _RoleManager.Roles.ToListAsync();
 			return Ok(roles.Select(role=>role.Name));
 		}
 		[HttpGet("DisplayStuff")]
-		public  async Task<IActionResult> displayStuff()
+		public  async Task<IActionResult> DisplayStuff()
 		{
 			var Accounts = _UserManager.Users.ToList();
-			var TraineeAccounts =await _UserManager.GetUsersInRoleAsync(Roles.TRAINEE);
-			return Ok(Accounts.Except(TraineeAccounts));
+			var TraineeAccounts =await _UserManager.GetUsersInRoleAsync(Role.TRAINEE);
+			var response = Accounts.Except(TraineeAccounts).Select(acc => new
+			{
+				acc.Id,
+				FullName=acc.FirstName+' '+acc.MiddleName+' '+acc.LastName,
+				acc.CodeForceHandle,
+				acc.Email
+			}).ToList();
+			return Ok(response);
 		}
 		[HttpGet("DisplayTrainee")]
-		public async Task<IActionResult> displayTrainee()
+		public async Task<IActionResult> DisplayTrainee()
 		{
-			var Accounts=await _UserManager.Users.Where(i=> 
-			 _UserManager.GetRolesAsync(i).Result.Contains(Roles.TRAINEE)).ToListAsync();
-			return Ok(Accounts);
+			var response =await _UserManager.Users.Where(i =>
+			 _UserManager.GetRolesAsync(i).Result.Contains(Role.TRAINEE)).Select(acc => new
+			 {
+				 acc.Id,
+				 acc.CodeForceHandle,
+				 acc.Email,
+				 acc.College,
+				 CampName = _UnitOfWork.Trainees.getCampofTrainee(acc.Id)
+			 }).ToListAsync();
+			return Ok(response);
 		}
 		[HttpGet("DisplayAccounts")]
-		public async Task<IActionResult> displayAll()
+		public async Task<IActionResult> DisplayAll()
 		{
 
 			var Accounts = await _UserManager.Users.Select(i => new
@@ -67,14 +81,14 @@ namespace ISC.API.Controllers
 			return Ok(Accounts);
 		}
 		[HttpGet("DisplayStuffWithoutHoc")]
-		public async Task<IActionResult> displayStuffWithoutHoc()
+		public async Task<IActionResult> DisplayStuffWithoutHoc()
 		{
 			var HocUserId = _UnitOfWork.HeadofCamp.getAllAsync().Result.Select(hoc=>hoc.UserId).ToList();
 			var StuffWithoutHoc = _UserManager.Users.Where(user=>HocUserId.Contains(user.Id)==false).ToList();
 			return Ok(StuffWithoutHoc);
 		}
 		[HttpGet("DisplayNewRegister")]
-		public async Task<IActionResult> displayNewRegister()
+		public async Task<IActionResult> DisplayNewRegister()
 		{
 			List<KeyValuePair<NewRegistration, string>> Filter=new List<KeyValuePair<NewRegistration, string>>();
 			foreach(var newmember in await _UnitOfWork.NewRegitseration.getAllAsync())
@@ -90,6 +104,11 @@ namespace ISC.API.Controllers
 				else Filter.Add(new(newmember, "New"));
 			}
 			return Ok(Filter);
+		}
+		[HttpGet("DisplayCamp")]
+		public async Task<IActionResult> DisplayCamp()
+		{
+			return Ok( _UnitOfWork.Camps.getAllAsync().Result);
 		}
 	}
 }

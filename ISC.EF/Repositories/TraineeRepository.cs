@@ -30,7 +30,16 @@ namespace ISC.EF.Repositories
 			return await _Context.Trainees
 								 .Include(tr => tr.Camp)
 								 .Where(tr => tr.Id == id)
-								 .Select(tr=>tr.Camp).SingleOrDefaultAsync();
+								 .Select(tr=>tr.Camp)
+								 .SingleOrDefaultAsync();
+		}
+
+		public async Task<Camp?> getCampofTrainee(string userId)
+		{
+			return await _Context.Trainees.Include(tr => tr.Camp)
+								.Where(tr => tr.UserId == userId)
+								.Select(tr => tr.Camp)
+								.SingleOrDefaultAsync() ?? null;
 		}
 	}
 }
