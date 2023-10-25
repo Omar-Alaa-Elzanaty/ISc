@@ -28,6 +28,6 @@ namespace ISC.Core.Interfaces
 		IBaseRepository<NewRegistration> NewRegitseration { get; }
 		Task<bool> addToRoleAsync<T>(T account, string role,int?CampId,int?MentorId);
 		Task<string?> getMediaAsync(IFormFile media);
-		Task<int> comleteAsync();
+		Task<int> completeAsync();
 	}
 }

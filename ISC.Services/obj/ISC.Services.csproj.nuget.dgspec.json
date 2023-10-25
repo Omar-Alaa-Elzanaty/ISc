@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "D:\\ISc\\ISC.Services\\ISC.Services.csproj": {}
+    "D:\\ISC\\ISC.Services\\ISC.Services.csproj": {}
   },
   "projects": {
-    "D:\\ISc\\ISC.Core\\ISC.Core.csproj": {
+    "D:\\ISC\\ISC.Core\\ISC.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ISc\\ISC.Core\\ISC.Core.csproj",
+        "projectUniqueName": "D:\\ISC\\ISC.Core\\ISC.Core.csproj",
         "projectName": "ISC.Core",
-        "projectPath": "D:\\ISc\\ISC.Core\\ISC.Core.csproj",
+        "projectPath": "D:\\ISC\\ISC.Core\\ISC.Core.csproj",
         "packagesPath": "C:\\Users\\d\\.nuget\\packages\\",
         "outputPath": "D:\\ISC\\ISC.Core\\obj\\",
         "projectStyle": "PackageReference",
@@ -69,12 +69,12 @@
         }
       }
     },
-    "D:\\ISc\\ISC.EF\\ISC.EF.csproj": {
+    "D:\\ISC\\ISC.EF\\ISC.EF.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ISc\\ISC.EF\\ISC.EF.csproj",
+        "projectUniqueName": "D:\\ISC\\ISC.EF\\ISC.EF.csproj",
         "projectName": "ISC.EF",
-        "projectPath": "D:\\ISc\\ISC.EF\\ISC.EF.csproj",
+        "projectPath": "D:\\ISC\\ISC.EF\\ISC.EF.csproj",
         "packagesPath": "C:\\Users\\d\\.nuget\\packages\\",
         "outputPath": "D:\\ISC\\ISC.EF\\obj\\",
         "projectStyle": "PackageReference",
@@ -93,8 +93,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "D:\\ISc\\ISC.Core\\ISC.Core.csproj": {
-                "projectPath": "D:\\ISc\\ISC.Core\\ISC.Core.csproj"
+              "D:\\ISC\\ISC.Core\\ISC.Core.csproj": {
+                "projectPath": "D:\\ISC\\ISC.Core\\ISC.Core.csproj"
               }
             }
           }
@@ -163,12 +163,12 @@
         }
       }
     },
-    "D:\\ISc\\ISC.Services\\ISC.Services.csproj": {
+    "D:\\ISC\\ISC.Services\\ISC.Services.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ISc\\ISC.Services\\ISC.Services.csproj",
+        "projectUniqueName": "D:\\ISC\\ISC.Services\\ISC.Services.csproj",
         "projectName": "ISC.Services",
-        "projectPath": "D:\\ISc\\ISC.Services\\ISC.Services.csproj",
+        "projectPath": "D:\\ISC\\ISC.Services\\ISC.Services.csproj",
         "packagesPath": "C:\\Users\\d\\.nuget\\packages\\",
         "outputPath": "D:\\ISC\\ISC.Services\\obj\\",
         "projectStyle": "PackageReference",
@@ -187,8 +187,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "D:\\ISc\\ISC.EF\\ISC.EF.csproj": {
-                "projectPath": "D:\\ISc\\ISC.EF\\ISC.EF.csproj"
+              "D:\\ISC\\ISC.EF\\ISC.EF.csproj": {
+                "projectPath": "D:\\ISC\\ISC.EF\\ISC.EF.csproj"
               }
             }
           }

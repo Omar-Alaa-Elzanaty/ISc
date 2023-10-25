@@ -114,7 +114,7 @@ namespace ISC.Services.Services
 			//	await _UserManager.DeleteAsync(NewAccount);
 			//	return new AuthModel() { Message="Email is not Valid" };
 			//}
-			await _UnitOfWork.comleteAsync();
+			await _UnitOfWork.completeAsync();
 			var JwtSecurityToken = await CreateJwtToken(NewAccount);
 			return new AuthModel()
 			{
@@ -136,7 +136,7 @@ namespace ISC.Services.Services
 				return new AuthModel() { Message = "Email or Passwrod is incorrect!" };
 			}
 			UserAccount.LastLoginDate = DateTime.Now;
-			await _UnitOfWork.comleteAsync();
+			await _UnitOfWork.completeAsync();
 			JwtSecurityToken JwtSecurityToken;
 			if (user.RememberMe!=null)
 			JwtSecurityToken = await CreateJwtToken(UserAccount,(bool)user.RememberMe);

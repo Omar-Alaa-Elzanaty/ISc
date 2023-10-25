@@ -40,7 +40,7 @@ namespace ISC.Services.Services.ModelSerivces
 				return response;
 			}
 			_unitOfWork.Trainees.deleteGroup(trainees);
-			_=await _unitOfWork.comleteAsync();
+			_=await _unitOfWork.completeAsync();
 			response.Entity = trainees.Count;
 			return response;
 		}
@@ -55,7 +55,7 @@ namespace ISC.Services.Services.ModelSerivces
 				DurationInWeeks = camp.DurationInWeeks
 			};
 			_unitOfWork.Camps.addAsync(newCamp);
-			int result =await _unitOfWork.comleteAsync();
+			int result =await _unitOfWork.completeAsync();
 			if(result == 0)
 			{
 				response.Success = false;
@@ -68,7 +68,6 @@ namespace ISC.Services.Services.ModelSerivces
 		public async Task<ServiceResponse<List<string>>> AddToRoleAsync(UserRoleDto model)
 		{
 			ServiceResponse<List<string>> response = new ServiceResponse<List<string>>();
-
 			List<string> faillToAdd = new List<string>();
 			foreach(var  userId in model.Users) {
 				var user = await _userManager.FindByIdAsync(userId);

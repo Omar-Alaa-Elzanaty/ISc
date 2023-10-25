@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,10 +23,17 @@ namespace ISC.EF.Repositories
 		{
 			return await _Context.Set<T>().FindAsync(id);
 		}
-
+		public IQueryable<T> Get()
+		{
+			return  _Context.Set<T>();
+		}
 		public async Task<T> findByAsync(Expression<Func<T, bool>> match)
 		{
 			return await _Context.Set<T>().SingleOrDefaultAsync(match);
+		}
+		public async Task Update(T entity)
+		{
+			_Context.Set<T>().Update(entity);
 		}
 		public async Task<List<T>> findManyWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null)
 		{

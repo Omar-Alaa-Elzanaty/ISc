@@ -74,7 +74,7 @@ namespace ISC.API.Controllers
 					await _UserManager.DeleteAsync(TraineeAccount);
 				}
 			}
-			await _UnitOfWork.comleteAsync();
+			await _UnitOfWork.completeAsync();
 			return Ok();
 		}
 		[HttpGet("WeeklyFilteration")]
@@ -181,7 +181,7 @@ namespace ISC.API.Controllers
 					}
 				}
 			}
-			await _UnitOfWork.comleteAsync();
+			await _UnitOfWork.completeAsync();
 			return Ok(new { Fail, Comment = Fail.IsNullOrEmpty() ? "" : "please back to system Admin to solve this problem" });
 		}
 	}

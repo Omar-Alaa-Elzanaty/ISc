@@ -47,7 +47,7 @@ namespace ISC.API.Controllers
 			if (TraineeAccount != null)
 			{
 				TraineeAccount.LastLoginDate = DateTime.Now;
-				await _UnitOfWork.comleteAsync();
+				await _UnitOfWork.completeAsync();
 			}
 		}
 	}

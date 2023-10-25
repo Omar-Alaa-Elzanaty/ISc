@@ -69,7 +69,7 @@ namespace ISC.API.Controllers
 				if (Result == false)
 					ErrorList.Append(Role.Role + ',');
 			}
-			await _unitOfWork.comleteAsync();
+			await _unitOfWork.completeAsync();
 			if (ErrorList.Count != 0) {
 				return BadRequest($"Can't save user to these roles{ErrorList}");
 			}
@@ -118,7 +118,7 @@ namespace ISC.API.Controllers
 				else
 					ErrorsList.Append(Account);
 			}
-			await _unitOfWork.comleteAsync();
+			await _unitOfWork.completeAsync();
 			return Ok(ErrorsList);
 		}
 		[HttpDelete("DeleteFromTrainees")]
@@ -208,28 +208,72 @@ namespace ISC.API.Controllers
 				return BadRequest("No account to remove");
 			}
 			_unitOfWork.TraineesArchive.deleteGroup(trainees);
-			_= await _unitOfWork.comleteAsync();
+			_= await _unitOfWork.completeAsync();
 			return Ok("Deleted Successfully");
 		}
 		[HttpPut("UpdateTraineeArchive")]
-		public async Task<IActionResult> UpdateTraineeArchive(string id,[FromBody]TraineeArchiveDto archive)
+		public async Task<IActionResult> UpdateTraineeArchive([FromBody]List<TraineeArchiveDto> archives)
 		{
-			var member = _unitOfWork.TraineesArchive.findByAsync(i => i.NationalID == id).Result;
-			var name=archive.FullName.Split(' ');
-			member.FirstName = name[0];
-			member.MiddleName = name[1];
-			member.LastName = name[2];
-			member.College = archive.College;
-			member.CodeForceHandle = archive.CodeforceHandle;
-			member.FacebookLink= archive.FacebookLink;
-			member.Email=archive.Email;
-			member.VjudgeHandle= archive.VjudgeHandle;
-			member.BirthDate = archive.BirthDate;
-			member.Year=archive.Year;
-			member.IsCompleted= archive.IsCompleted;
-			member.PhoneNumber= archive.PhoneNumber;
-			_ = await _unitOfWork.comleteAsync();
+			var nationalIds = archives.Select(a => a.NationalId);
+			var members =await _unitOfWork.TraineesArchive.findManyWithChildAsync(ta => nationalIds.Contains(ta.NationalID));
+			foreach(var archive in archives)
+			{
+				var trainee = members.Single(m => m.NationalID == archive.NationalId);
+				var name = archive.FullName.Split(' ');
+				trainee.FirstName = name[0];
+				trainee.MiddleName = name[1];
+				trainee.LastName = name[2];
+				trainee.College = archive.College;
+				trainee.CodeForceHandle = archive.CodeforceHandle;
+				trainee.FacebookLink = archive.FacebookLink;
+				trainee.Email = archive.Email;
+				trainee.VjudgeHandle = archive.VjudgeHandle;
+				trainee.BirthDate = archive.BirthDate;
+				trainee.Year = archive.Year;
+				trainee.IsCompleted = archive.IsCompleted;
+				trainee.PhoneNumber = archive.PhoneNumber;
+			}
+			_ = await _unitOfWork.completeAsync();
 			return Ok("Success");
+		}
+		[HttpGet("DisplayStuffArchive")]
+		public async Task<IActionResult> DisplayStuffArchive()
+		{
+			return Ok(_unitOfWork.StuffArchive.getAllAsync().Result);
+		}
+		[HttpDelete("DeleteStuffArchive")]
+		public async Task<IActionResult> DeleteStuffArchive(List<string>members)
+		{
+			var archives = await _unitOfWork.StuffArchive.getAllAsync(sa => members.Contains(sa.NationalID));
+			_unitOfWork.StuffArchive.deleteGroup(archives);
+			_= await _unitOfWork.completeAsync();
+			return Ok("Deleted successfully");
+		}
+		[HttpPut("UpdateStuffArchive")]
+		public async Task<IActionResult> UpdateStuffArchive(List<StuffArchiveDto> archives)
+		{
+			var nationalIds=archives.Select(a=>a.NationalID).ToList();
+			var members =await _unitOfWork.StuffArchive.findManyWithChildAsync(sa=>nationalIds.Contains(sa.NationalID));
+			foreach (var stuffMember in archives) {
+				var stuff = members.Single(m => m.NationalID == stuffMember.NationalID);
+				var name = stuffMember.FullName.Split(' ');
+				stuff.FirstName = name[0];
+				stuff.MiddleName = name[1];
+				stuff.LastName = name[2];
+				stuff.NationalID= stuffMember.NationalID;
+				stuff.BirthDate= stuffMember.BirthDate;
+				stuff.Grade=stuffMember.Grade;
+				stuff.College=stuffMember.College;
+				stuff.Gender= stuffMember.Gender;
+				stuff.CodeForceHandle = stuffMember.CodeForceHandle;
+				stuff.FacebookLink= stuffMember.FacebookLink;
+				stuff.VjudgeHandle = stuffMember.VjudgeHandle;
+				stuff.Email = stuffMember.Email;
+				stuff.PhoneNumber= stuffMember.PhoneNumber;
+				stuff.Year=stuffMember.Year;
+			}
+			await _unitOfWork.completeAsync();
+			return Ok("Update Successfully");
 		}
 	}
 }

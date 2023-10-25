@@ -8,6 +8,6 @@ namespace ISC.Services.ISerivces
 {
 	public interface IDataSeeding
 	{
-		void  Seeding();
+		Task  Seeding();
 	}
 }

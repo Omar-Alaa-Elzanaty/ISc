@@ -29,7 +29,7 @@ namespace ISC.Services.Services
             _roleManager = roleManager;
         }
 
-		public async void Seeding()
+		public async Task Seeding()
 		{
 			try
 			{

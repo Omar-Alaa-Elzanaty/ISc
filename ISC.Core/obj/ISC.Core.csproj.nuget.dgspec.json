@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "D:\\ISc\\ISC.Core\\ISC.Core.csproj": {}
+    "D:\\ISC\\ISC.Core\\ISC.Core.csproj": {}
   },
   "projects": {
-    "D:\\ISc\\ISC.Core\\ISC.Core.csproj": {
+    "D:\\ISC\\ISC.Core\\ISC.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ISc\\ISC.Core\\ISC.Core.csproj",
+        "projectUniqueName": "D:\\ISC\\ISC.Core\\ISC.Core.csproj",
         "projectName": "ISC.Core",
-        "projectPath": "D:\\ISc\\ISC.Core\\ISC.Core.csproj",
+        "projectPath": "D:\\ISC\\ISC.Core\\ISC.Core.csproj",
         "packagesPath": "C:\\Users\\d\\.nuget\\packages\\",
         "outputPath": "D:\\ISC\\ISC.Core\\obj\\",
         "projectStyle": "PackageReference",

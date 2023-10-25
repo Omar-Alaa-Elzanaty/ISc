@@ -68,7 +68,7 @@ namespace ISC.Services.Services
 				EffectedRows += Changes == Access.NumberOfProblems ? 0 : 1;
 				Access.NumberOfProblems = Changes;
 			}
-			await _UnitOfWork.comleteAsync();
+			await _UnitOfWork.completeAsync();
 			Console.WriteLine(EffectedRows);
 			return EffectedRows;
 		}

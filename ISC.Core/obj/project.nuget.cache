@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "QAwRLCYKVv4torzwchjIS3SUzd+6VzEcAb4wdrP8yO+WbiHeUrBLs9Ye0XsU/PNZwpSEJa6IbH21Ahx6GhfqRw==",
+  "dgSpecHash": "NGZBNUW29kqHRcnBDUymruKd85a1/6h4VstvhFH3i33ZGc/6FT9aOwqaqKIxA3JCvrazrdJLoSum1eySHyfnig==",
   "success": true,
-  "projectFilePath": "D:\\ISc\\ISC.Core\\ISC.Core.csproj",
+  "projectFilePath": "D:\\ISC\\ISC.Core\\ISC.Core.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\d\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.1.1\\microsoft.aspnetcore.http.features.2.1.1.nupkg.sha512",
     "C:\\Users\\d\\.nuget\\packages\\microsoft.extensions.primitives\\2.1.1\\microsoft.extensions.primitives.2.1.1.nupkg.sha512",

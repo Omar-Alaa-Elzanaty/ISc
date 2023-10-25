@@ -190,7 +190,7 @@ namespace ISC.EF.Repositories
 		{
 			return extension == ".jpg" || extension == ".jpeg" || extension == ".jpe";
 		}
-		public async Task<int> comleteAsync()
+		public async Task<int> completeAsync()
 		{
 			return await _DataBase.SaveChangesAsync();
 		}

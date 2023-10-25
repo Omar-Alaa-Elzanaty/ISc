@@ -1,5 +1,6 @@
 ﻿using ISC.Core.Interfaces;
 using ISC.EF;
+using ISC.EF.Migrations;
 using ISC.EF.Repositories;
 using ISC.Services.ISerivces;
 using ISC.Services.ISerivces.IModelServices;
@@ -19,6 +20,8 @@ namespace ISC.Services.Services
 			services.AddScoped<IOnlineJudgeServices, CodeforceApiService>();
 			services.AddScoped<ISheetServices, SheetServices>();
 			services.AddScoped<ISessionsServices, SesionsServices>();
+			services.AddScoped<IDataSeeding, DataSeeding>();
+			services.AddScoped<ILeaderServices, LeaderServices>();
 		}
 	}
 }

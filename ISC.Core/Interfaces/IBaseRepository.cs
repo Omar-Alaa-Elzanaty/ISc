@@ -13,6 +13,8 @@ namespace ISC.Core.Interfaces
 	{
 		void addAsync(T entity);
 		Task<T> getByIdAsync(int id);
+		IQueryable<T> Get();
+		Task Update(T entity);
 		Task<List<T>> getAllAsync();
 		Task<List<T>>getAllAsync(Expression<Func<T, bool>> match);
 		void deleteGroup(List<T> entities);
