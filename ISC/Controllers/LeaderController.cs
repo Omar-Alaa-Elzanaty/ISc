@@ -101,13 +101,20 @@ namespace ISC.API.Controllers
 				i.Id,
 				i.UserName,
 				FullName = i.FirstName + ' ' + i.MiddleName + ' ' + i.LastName,
-				Role = _userManager.GetRolesAsync(i),
+				Role = new List<string>(),
 				i.CodeForceHandle,
 				i.Email,
 				i.College,
 				i.Gender,
 				i.PhoneNumber
 			}).ToListAsync();
+
+			foreach(var acc in Accounts)
+			{
+				var  userAccount=await _userManager.FindByIdAsync(acc.Id);
+				acc.Role.AddRange(_userManager.GetRolesAsync(userAccount).Result.ToList());
+			}
+
 			return Ok(Accounts);
 		}
 
