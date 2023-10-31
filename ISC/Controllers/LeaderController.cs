@@ -54,6 +54,77 @@ namespace ISC.API.Controllers
 			_sheetServices = sheetServices;
 			_mapper = mapper;
 		}
+
+		[HttpGet]
+		public async Task<IActionResult> DisplaySystemRoles()
+		{
+			var roles = await _roleManager.Roles.ToListAsync();
+			return Ok(roles.Select(role => role.Name));
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> DisplayStuff()
+		{
+			var Accounts = _userManager.Users.ToList();
+			var TraineeAccounts = await _userManager.GetUsersInRoleAsync(Role.TRAINEE);
+			var response = Accounts.Except(TraineeAccounts).Select(acc => new
+			{
+				acc.Id,
+				FullName = acc.FirstName + ' ' + acc.MiddleName + ' ' + acc.LastName,
+				acc.CodeForceHandle,
+				acc.Email
+			}).ToList();
+			return Ok(response);
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> DisplayTrainee()
+		{
+			var response = await _userManager.Users.Where(i =>
+			 _userManager.GetRolesAsync(i).Result.Contains(Role.TRAINEE)).Select(acc => new
+			 {
+				 acc.Id,
+				 acc.CodeForceHandle,
+				 acc.Email,
+				 acc.College,
+				 CampName = _unitOfWork.Trainees.getCampofTrainee(acc.Id).Result.Name
+			 }).ToListAsync();
+			return Ok(response);
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> DisplayAll()
+		{
+
+			var Accounts = await _userManager.Users.Select(i => new
+			{
+				i.Id,
+				i.UserName,
+				FullName = i.FirstName + ' ' + i.MiddleName + ' ' + i.LastName,
+				Role = _userManager.GetRolesAsync(i),
+				i.CodeForceHandle,
+				i.Email,
+				i.College,
+				i.Gender,
+				i.PhoneNumber
+			}).ToListAsync();
+			return Ok(Accounts);
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> DisplayStuffWithoutHoc()
+		{
+			var HocUserId = _unitOfWork.HeadofCamp.getAllAsync().Result.Select(hoc => hoc.UserId).ToList();
+			var StuffWithoutHoc = _userManager.Users.Where(user => HocUserId.Contains(user.Id) == false).ToList();
+			return Ok(StuffWithoutHoc);
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> DisplayCamp()
+		{
+			return Ok(_unitOfWork.Camps.getAllAsync().Result);
+		}
+
 		[HttpPost]
 		public async Task<IActionResult> Register([FromForm] RegisterDto newUser)
 		{
@@ -73,6 +144,7 @@ namespace ISC.API.Controllers
 				model.UserId
 			});
 		}
+
 		[HttpPost]
 		public async Task<IActionResult> AssignToStuffRoles([FromBody] StuffNewRolesDto model)
 		{
@@ -144,6 +216,7 @@ namespace ISC.API.Controllers
 			await _unitOfWork.completeAsync();
 			return Ok(ErrorsList);
 		}
+
 		[HttpDelete]
 		public async Task<IActionResult> DeleteFromTrainees([FromBody] List<string> traineesIds)
 		{
@@ -158,6 +231,7 @@ namespace ISC.API.Controllers
 			}
 			return Ok(response);
 		}
+
 		[HttpPost]
 		public async Task<IActionResult> AddCamp(CampDto camp)
 		{
@@ -351,9 +425,12 @@ namespace ISC.API.Controllers
 			var acceptedMember =await _unitOfWork.NewRegitseration
 				.findManyWithChildAsync(nr => !refused.Contains(nr.CodeForceHandle)
 										&& newRegisters.CandidatesNationalId.Contains(nr.NationalID) == true);
+
 			var camp = _unitOfWork.Camps.getByIdAsync(newRegisters.CampId).Result.Name;
+
 			List<Tuple<NewRegistration, AuthModel>> faillRegisteration = new List<Tuple<NewRegistration, AuthModel>>();
 			List<NewRegistration> confirmedAcceptacne = new List<NewRegistration>();
+
 			foreach (var member in acceptedMember)
 			{
 				var newTrainee = _mapper.Map<RegisterDto>(member);
@@ -371,6 +448,7 @@ namespace ISC.API.Controllers
 						acceptedMember.Add(member);
 				}
 			}
+
 			_unitOfWork.NewRegitseration.deleteGroup(acceptedMember);
 			_ = _unitOfWork.NewRegitseration.DeleteAll();
 
