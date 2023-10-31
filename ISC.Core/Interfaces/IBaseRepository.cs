@@ -19,6 +19,7 @@ namespace ISC.Core.Interfaces
 		Task<List<T>>getAllAsync(Expression<Func<T, bool>> match);
 		void deleteGroup(List<T> entities);
 		Task<bool> deleteAsync(T entity);
+		int DeleteAll();
 		Task<List<T>> getAllwithNavigationsAsync(string[] includes = null);
 		Task<List<T>> findManyWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null);
 		Task<T?> findWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null);

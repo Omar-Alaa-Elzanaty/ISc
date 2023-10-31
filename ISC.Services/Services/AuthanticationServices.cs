@@ -58,7 +58,7 @@ namespace ISC.Services.Services
 					IsAuthenticated = false
 				};
 			}
-			UserAccount NewAccount = new UserAccount()
+			var NewAccount = new UserAccount()
 			{
 				Email = user.Email,
 				PhoneNumber = user.PhoneNumber,

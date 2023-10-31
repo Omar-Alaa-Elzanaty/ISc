@@ -18,10 +18,11 @@ using static ISC.Core.APIDtos.CodeForcesDtos;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Schema;
+using AutoMapper;
 
 namespace ISC.API.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/[controller]/[action]")]
 	[ApiController]
 	//[Authorize(Roles = Role.LEADER)]
 	public class LeaderController : ControllerBase
@@ -33,7 +34,16 @@ namespace ISC.API.Controllers
 		private readonly IMailServices _mailServices;
 		private readonly ILeaderServices _leaderServices;
 		private readonly ISheetServices _sheetServices;
-		public LeaderController(RoleManager<IdentityRole> roleManager, UserManager<UserAccount> userManager, IAuthanticationServices auth, IUnitOfWork unitofwork, IMailServices mailServices, ILeaderServices leaderServices, ISheetServices sheetServices)
+		private readonly IMapper _mapper;
+		public LeaderController(
+			RoleManager<IdentityRole> roleManager,
+			UserManager<UserAccount> userManager,
+			IAuthanticationServices auth,
+			IUnitOfWork unitofwork,
+			IMailServices mailServices,
+			ILeaderServices leaderServices,
+			ISheetServices sheetServices,
+			IMapper mapper)
 		{
 			_roleManager = roleManager;
 			_userManager = userManager;
@@ -42,8 +52,9 @@ namespace ISC.API.Controllers
 			_auth = auth;
 			_leaderServices = leaderServices;
 			_sheetServices = sheetServices;
+			_mapper = mapper;
 		}
-		[HttpPost("Register")]
+		[HttpPost]
 		public async Task<IActionResult> Register([FromForm] RegisterDto newUser)
 		{
 			if (!ModelState.IsValid)
@@ -53,11 +64,16 @@ namespace ISC.API.Controllers
 			var model = await _auth.RegisterAsync(newUser);
 			if (!model.IsAuthenticated)
 			{
-				return BadRequest(model);
+				return BadRequest(model.Message);
 			}
-			return Ok(model);
+			return Ok(new 
+			{ 
+				model.Token,
+				model.ExpireOn,
+				model.UserId
+			});
 		}
-		[HttpPost("AssignToStuffRoles")]
+		[HttpPost]
 		public async Task<IActionResult> AssignToStuffRoles([FromBody] StuffNewRolesDto model)
 		{
 			if (!ModelState.IsValid)
@@ -74,7 +90,7 @@ namespace ISC.API.Controllers
 			{
 				bool Result = await _unitOfWork.addToRoleAsync(Account, Role.Role, Role.CampId, Role.MentorId);
 				if (Result == false)
-					ErrorList.Append(Role.Role + ',');
+					_ = ErrorList.Append(Role.Role + ',');
 			}
 			await _unitOfWork.completeAsync();
 			if (ErrorList.Count != 0) {
@@ -84,7 +100,7 @@ namespace ISC.API.Controllers
 
 		}
 
-		[HttpDelete("DeleteFromStuff")]
+		[HttpDelete]
 		public async Task<IActionResult> DeleteFromStuff(List<string> stuffusersId)
 		{
 			List<UserAccount> ErrorsList = new List<UserAccount>();
@@ -128,7 +144,7 @@ namespace ISC.API.Controllers
 			await _unitOfWork.completeAsync();
 			return Ok(ErrorsList);
 		}
-		[HttpDelete("DeleteFromTrainees")]
+		[HttpDelete]
 		public async Task<IActionResult> DeleteFromTrainees([FromBody] List<string> traineesIds)
 		{
 			var response = await _leaderServices.DeleteTraineesAsync(traineesIds);
@@ -142,7 +158,7 @@ namespace ISC.API.Controllers
 			}
 			return Ok(response);
 		}
-		[HttpPost("AddCamp")]
+		[HttpPost]
 		public async Task<IActionResult> AddCamp(CampDto camp)
 		{
 			var response = await _leaderServices.AddCampAsync(camp);
@@ -157,7 +173,7 @@ namespace ISC.API.Controllers
 			return Ok(response);
 		}
 
-		[HttpGet("RoleUserDisplay")]
+		[HttpGet]
 		public async Task<IActionResult> RoleUserDisplay()
 		{
 			var accounts = _userManager.Users.Select(i => new
@@ -168,12 +184,11 @@ namespace ISC.API.Controllers
 				i.Email,
 				i.College,
 				i.Gender
-
 			});
 			return Ok(accounts);
 		}
 
-		[HttpPost("AddToRole")]
+		[HttpPost]
 		public async Task<IActionResult> AddToRole([FromBody] UserRoleDto users)
 		{
 			var response = await _leaderServices.AddToRoleAsync(users);
@@ -183,7 +198,7 @@ namespace ISC.API.Controllers
 			}
 			return Ok(response.Success);
 		}
-		[HttpPost("AddRole")]
+		[HttpPost]
 		public async Task<IActionResult> AddRole([FromBody]string role)
 		{
 			var result=await _roleManager.FindByNameAsync(role);
@@ -200,13 +215,13 @@ namespace ISC.API.Controllers
 
 			return Ok("Add successful");
 		}
-		[HttpGet("DisplayTraineeArchive")]
+		[HttpGet]
 		public async Task<IActionResult> DisplayTraineeArchive()
 		{
 			var response = await _unitOfWork.TraineesArchive.getAllAsync();
 			return Ok(response);
 		}
-		[HttpDelete("DeleteTraineeArchive")]
+		[HttpDelete]
 		public async Task<IActionResult> DeleteTraineeArchive(List<string>members)
 		{
 			var trainees = await _unitOfWork.TraineesArchive.findManyWithChildAsync(ta => members.Contains(ta.NationalID));
@@ -218,7 +233,7 @@ namespace ISC.API.Controllers
 			_= await _unitOfWork.completeAsync();
 			return Ok("Deleted Successfully");
 		}
-		[HttpPut("UpdateTraineeArchive")]
+		[HttpPut]
 		public async Task<IActionResult> UpdateTraineeArchive([FromBody]List<TraineeArchiveDto> archives)
 		{
 			var nationalIds = archives.Select(a => a.NationalId);
@@ -243,12 +258,12 @@ namespace ISC.API.Controllers
 			_ = await _unitOfWork.completeAsync();
 			return Ok("Success");
 		}
-		[HttpGet("DisplayStuffArchive")]
+		[HttpGet]
 		public async Task<IActionResult> DisplayStuffArchive()
 		{
 			return Ok(_unitOfWork.StuffArchive.getAllAsync().Result);
 		}
-		[HttpDelete("DeleteStuffArchive")]
+		[HttpDelete]
 		public async Task<IActionResult> DeleteStuffArchive(List<string>members)
 		{
 			var archives = await _unitOfWork.StuffArchive.getAllAsync(sa => members.Contains(sa.NationalID));
@@ -256,7 +271,7 @@ namespace ISC.API.Controllers
 			_= await _unitOfWork.completeAsync();
 			return Ok("Deleted successfully");
 		}
-		[HttpPut("UpdateStuffArchive")]
+		[HttpPut]
 		public async Task<IActionResult> UpdateStuffArchive(List<StuffArchiveDto> archives)
 		{
 			var nationalIds=archives.Select(a=>a.NationalID).ToList();
@@ -282,18 +297,17 @@ namespace ISC.API.Controllers
 			await _unitOfWork.completeAsync();
 			return Ok("Update Successfully");
 		}
-		[HttpGet("DisplayNewRegister")]
+		[HttpGet]
 		public async Task<IActionResult> DisplayNewRegister()
 		{
-			var response= await _leaderServices.DisplayNewRegister();
+			var response= await _leaderServices.DisplayNewRegisterAsync();
 			if (!response.Success)
 				return BadRequest("No entity");
 			return Ok(response);
 		}
-		[HttpPost("SubmitNewRegister")]
+		[HttpPost]
 		public async Task<IActionResult> SubmitNewRegisters(SubmitNewRegisterDto newRegisters)
 		{
-			List<Tuple<CodeforceStandingResultDto, float>> sheetsStanding = new List<Tuple<CodeforceStandingResultDto, float>>();
 			HashSet<string> refused = new HashSet<string>();
 			foreach (var contest in newRegisters.ContestsInfo)
 			{
@@ -312,13 +326,13 @@ namespace ISC.API.Controllers
 				var memberPerProblem = statusResponse.Entity.GroupBy(submission =>
 				new
 				{
-					submission.author.members.FirstOrDefault().handle,
-					submission.problem.name
+					Handle = submission.author.members.FirstOrDefault().handle,
+					ProblemName = submission.problem.name
 				}).Where(mps => mps.Any(sub => sub.verdict == "OK")).Select(mps => new
 				{
-					mps.Key.name,
-					mps.Key.handle
-				}).GroupBy(mps => mps.handle).Select(problemSolved => new
+					mps.Key.ProblemName,
+					mps.Key.Handle
+				}).GroupBy(mps => mps.Handle).Select(problemSolved => new
 				{
 					handle=problemSolved.Key,
 					Count= problemSolved.Count()
@@ -335,13 +349,41 @@ namespace ISC.API.Controllers
 			}
 
 			var acceptedMember =await _unitOfWork.NewRegitseration
-				.findManyWithChildAsync(i => !refused.Contains(i.CodeForceHandle)
-										&& newRegisters.CandidatesNationalId.Contains(i.NationalID) == true);
-			foreach(var member in acceptedMember)
+				.findManyWithChildAsync(nr => !refused.Contains(nr.CodeForceHandle)
+										&& newRegisters.CandidatesNationalId.Contains(nr.NationalID) == true);
+			var camp = _unitOfWork.Camps.getByIdAsync(newRegisters.CampId).Result.Name;
+			List<Tuple<NewRegistration, AuthModel>> faillRegisteration = new List<Tuple<NewRegistration, AuthModel>>();
+			List<NewRegistration> confirmedAcceptacne = new List<NewRegistration>();
+			foreach (var member in acceptedMember)
 			{
-				
+				var newTrainee = _mapper.Map<RegisterDto>(member);
+				newTrainee.Roles.Add(Role.TRAINEE);
+				newTrainee.CampId = newRegisters.CampId;
+
+				var response =await _leaderServices.AutoMemberAddAsync(
+					registerDto:newTrainee,
+					campName:camp
+					);
+				if(response.Success) {
+					if (response.Entity is not null)
+						faillRegisteration.Add(new Tuple<NewRegistration, AuthModel>(member, response.Entity));
+					else
+						acceptedMember.Add(member);
+				}
 			}
-			return Ok();
+			_unitOfWork.NewRegitseration.deleteGroup(acceptedMember);
+			_ = _unitOfWork.NewRegitseration.DeleteAll();
+
+			return Ok(faillRegisteration.Select(t => new
+			{
+				t.Item1.FirstName,
+				t.Item1.MiddleName,
+				t.Item1.LastName,
+				t.Item1.Email,
+				t.Item1.CodeForceHandle,
+				t.Item2.UserName,
+				t.Item2.Password
+			}));
 		}
 	}
 }

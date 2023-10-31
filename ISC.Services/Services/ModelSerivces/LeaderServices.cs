@@ -103,7 +103,7 @@ namespace ISC.Services.Services.ModelSerivces
 			response.Success = true;
 			return response;
 		}
-		public async Task<ServiceResponse<List<KeyValuePair<NewRegistration, string>>>> DisplayNewRegister()
+		public async Task<ServiceResponse<List<KeyValuePair<NewRegistration, string>>>> DisplayNewRegisterAsync()
 		{
 			ServiceResponse<List<KeyValuePair<NewRegistration, string>>> response = new ServiceResponse<List<KeyValuePair<NewRegistration, string>>>();
 			List<KeyValuePair<NewRegistration, string>> Filter = new List<KeyValuePair<NewRegistration, string>>();
@@ -131,7 +131,7 @@ namespace ISC.Services.Services.ModelSerivces
 			}
 			return response;
 		}
-		public async Task<ServiceResponse<AuthModel>>AutoMemberAdd(RegisterDto registerDto,string? message)
+		public async Task<ServiceResponse<AuthModel>>AutoMemberAddAsync(RegisterDto registerDto,string? message = null,string?campName = null)
 		{
 			ServiceResponse<AuthModel> response = new ServiceResponse<AuthModel>();
 			AuthModel result=await _authServices.RegisterAsync(registerDto);
@@ -146,7 +146,7 @@ namespace ISC.Services.Services.ModelSerivces
 			}
 			bool mailResult=await _mailServices.sendEmailAsync(
 				mailTo: registerDto.Email,
-				subject: $"ICPC {_unitOfWork.Camps.getByIdAsync((int)registerDto.CampId).Result.Name} Trainee Announce",
+				subject: $"ICPC {campName} Training Announce",
 				body: message is not null ? message : _defaultMessages.DefaultAcceptMessage
 				);
 

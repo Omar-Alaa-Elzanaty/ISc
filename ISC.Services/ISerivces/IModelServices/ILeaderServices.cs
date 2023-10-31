@@ -1,4 +1,5 @@
-﻿using ISC.Core.Dtos;
+﻿using ISC.Core.APIDtos;
+using ISC.Core.Dtos;
 using ISC.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace ISC.Services.ISerivces.IModelServices
 		Task<ServiceResponse<int>> DeleteTraineesAsync(List<string> traineesIds);
 		Task<ServiceResponse<Camp>> AddCampAsync(CampDto camp);
 		Task<ServiceResponse<List<string>>> AddToRoleAsync(UserRoleDto model);
-		Task<ServiceResponse<List<KeyValuePair<NewRegistration, string>>>> DisplayNewRegister();
+		Task<ServiceResponse<List<KeyValuePair<NewRegistration, string>>>> DisplayNewRegisterAsync();
+		Task<ServiceResponse<AuthModel>> AutoMemberAddAsync(RegisterDto registerDto, string? message = null, string? campName = null);
 	}
 }

@@ -1,3 +1,4 @@
+using AutoMapper;
 using ISC.EF;
 using ISC.Services.Helpers;
 using ISC.Services.ISerivces;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.Xml;
 using System.Text;
 
 namespace ISC
@@ -31,6 +33,16 @@ namespace ISC
 			builder.Services.Configure<DefaultMessages>(builder.Configuration.GetSection("DefaultMessages"));
 			builder.Services.Configure<CodeForceConnection>(builder.Configuration.GetSection("CodeForceConnection"));
 			builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
+			
+			// Auto Mapper Configuration
+			var mapperConfig = new MapperConfiguration(mc =>
+			{
+				mc.AddProfile(new AutoMapperProfile());
+			});
+			IMapper mapper = mapperConfig.CreateMapper();
+			builder.Services.AddSingleton(mapper);
+
+
 			builder.Services.AddAuthentication(options =>
 			{
 				options.DefaultAuthenticateScheme=JwtBearerDefaults.AuthenticationScheme;
