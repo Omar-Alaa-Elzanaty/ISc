@@ -119,6 +119,7 @@ namespace ISC.Core.APIDtos
 		public class CodeforceProblemDto
 		{
 			public int? contestId { get; set; }
+			public string index { get; set; }
 			public string name { get; set; }
 
 		}

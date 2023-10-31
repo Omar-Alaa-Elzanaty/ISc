@@ -34,7 +34,7 @@ namespace ISC.Services.Services
         }
 		public async Task<AuthModel> RegisterAsync(RegisterDto user)
 		{
-			AuthModel NotValidData =await registerationValidation(user);
+			AuthModel NotValidData =await RegisterationValidation(user);
 			if (NotValidData.IsAuthenticated==false)
 			{
 				return  NotValidData;
@@ -184,7 +184,7 @@ namespace ISC.Services.Services
 
 			return jwtSecurityToken;
 		}
-		private async Task<AuthModel> registerationValidation(RegisterDto user)
+		private async Task<AuthModel> RegisterationValidation(RegisterDto user)
 		{
 			if (await _UserManager.FindByEmailAsync(user.Email) != null)
 				return new AuthModel() { Message = "Email is already registered!" };

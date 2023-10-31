@@ -87,24 +87,7 @@ namespace ISC.API.Controllers
 			var StuffWithoutHoc = _UserManager.Users.Where(user=>HocUserId.Contains(user.Id)==false).ToList();
 			return Ok(StuffWithoutHoc);
 		}
-		[HttpGet("DisplayNewRegister")]
-		public async Task<IActionResult> DisplayNewRegister()
-		{
-			List<KeyValuePair<NewRegistration, string>> Filter=new List<KeyValuePair<NewRegistration, string>>();
-			foreach(var newmember in await _UnitOfWork.NewRegitseration.getAllAsync())
-			{
-				if (await _UnitOfWork.TraineesArchive
-			   .findByAsync(TA => (TA.NationalID == newmember.NationalID
-							   || TA.CodeForceHandle == newmember.CodeForceHandle
-							   || TA.Email == newmember.Email
-							   ||(newmember.FacebookLink!=null&&newmember.FacebookLink==TA.FacebookLink)
-							   ||(newmember.PhoneNumber!=null&&newmember.PhoneNumber==TA.PhoneNumber))
-			   && TA.CampName.ToLower() == newmember.CampName.ToLower()) != null)
-					Filter.Add(new(newmember, "Archive"));
-				else Filter.Add(new(newmember, "New"));
-			}
-			return Ok(Filter);
-		}
+		
 		[HttpGet("DisplayCamp")]
 		public async Task<IActionResult> DisplayCamp()
 		{

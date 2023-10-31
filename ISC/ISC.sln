@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISC.Core", "..\ISC.Core\ISC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISC.EF", "..\ISC.EF\ISC.EF.csproj", "{B8BB79C2-5506-441E-8566-14C2F459571C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISC.Services", "..\ISC.Services\ISC.Services.csproj", "{950D2895-BF2D-4FD2-9553-FE83CDBD34C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISC.Services", "..\ISC.Services\ISC.Services.csproj", "{950D2895-BF2D-4FD2-9553-FE83CDBD34C4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTest", "UnitTest", "{29E94B8A-31CC-4984-9F99-B5545FE4C4DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

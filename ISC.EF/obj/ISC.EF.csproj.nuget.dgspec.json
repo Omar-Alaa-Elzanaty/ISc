@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "D:\\ISC\\ISC.EF\\ISC.EF.csproj": {}
+    "D:\\ISc\\ISC.EF\\ISC.EF.csproj": {}
   },
   "projects": {
-    "D:\\ISC\\ISC.Core\\ISC.Core.csproj": {
+    "D:\\ISc\\ISC.Core\\ISC.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ISC\\ISC.Core\\ISC.Core.csproj",
+        "projectUniqueName": "D:\\ISc\\ISC.Core\\ISC.Core.csproj",
         "projectName": "ISC.Core",
-        "projectPath": "D:\\ISC\\ISC.Core\\ISC.Core.csproj",
+        "projectPath": "D:\\ISc\\ISC.Core\\ISC.Core.csproj",
         "packagesPath": "C:\\Users\\d\\.nuget\\packages\\",
         "outputPath": "D:\\ISC\\ISC.Core\\obj\\",
         "projectStyle": "PackageReference",
@@ -65,16 +65,16 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\ISC\\ISC.EF\\ISC.EF.csproj": {
+    "D:\\ISc\\ISC.EF\\ISC.EF.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ISC\\ISC.EF\\ISC.EF.csproj",
+        "projectUniqueName": "D:\\ISc\\ISC.EF\\ISC.EF.csproj",
         "projectName": "ISC.EF",
-        "projectPath": "D:\\ISC\\ISC.EF\\ISC.EF.csproj",
+        "projectPath": "D:\\ISc\\ISC.EF\\ISC.EF.csproj",
         "packagesPath": "C:\\Users\\d\\.nuget\\packages\\",
         "outputPath": "D:\\ISC\\ISC.EF\\obj\\",
         "projectStyle": "PackageReference",
@@ -93,8 +93,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "D:\\ISC\\ISC.Core\\ISC.Core.csproj": {
-                "projectPath": "D:\\ISC\\ISC.Core\\ISC.Core.csproj"
+              "D:\\ISc\\ISC.Core\\ISC.Core.csproj": {
+                "projectPath": "D:\\ISc\\ISC.Core\\ISC.Core.csproj"
               }
             }
           }
@@ -159,7 +159,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
         }
       }
     }

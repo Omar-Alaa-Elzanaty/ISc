@@ -10,7 +10,6 @@ namespace ISC.Services.ISerivces
 		Task<bool> checkHandleValidationAsync(string handle);
 		Task<CodeforcesApiResponseDto<CodeforceStandingResultDto>> GetContestStandingAsync(string contestid, int numberofrows, bool unofficial, string apikey, string apisecret);
 		Task<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>> GetUserStatusAsync(string apikey, string apisecret);
-		Task<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>> GetContestStatusAsync(string contestid,string handle,string apikey, string apisecret);
-		Task<ServiceResponse<Dictionary<int, int>>> SheetsProblemsCount(List<TraineeSheetAccess> traineesAcces);
+		Task<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>> GetContestStatusAsync(string contestid, string apikey, string apisecret,int count, string? handle=null);
 	}
 }

@@ -13,6 +13,11 @@ using ISC.Services.ISerivces.IModelServices;
 using ISC.Core.Dtos;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Asn1.X509.Qualified;
+using ISC.EF.Repositories;
+using static ISC.Core.APIDtos.CodeForcesDtos;
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Schema;
 
 namespace ISC.API.Controllers
 {
@@ -27,7 +32,8 @@ namespace ISC.API.Controllers
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMailServices _mailServices;
 		private readonly ILeaderServices _leaderServices;
-		public LeaderController(RoleManager<IdentityRole> roleManager, UserManager<UserAccount> userManager, IAuthanticationServices auth, IUnitOfWork unitofwork, IMailServices mailServices, ILeaderServices leaderServices)
+		private readonly ISheetServices _sheetServices;
+		public LeaderController(RoleManager<IdentityRole> roleManager, UserManager<UserAccount> userManager, IAuthanticationServices auth, IUnitOfWork unitofwork, IMailServices mailServices, ILeaderServices leaderServices, ISheetServices sheetServices)
 		{
 			_roleManager = roleManager;
 			_userManager = userManager;
@@ -35,6 +41,7 @@ namespace ISC.API.Controllers
 			_mailServices = mailServices;
 			_auth = auth;
 			_leaderServices = leaderServices;
+			_sheetServices = sheetServices;
 		}
 		[HttpPost("Register")]
 		public async Task<IActionResult> Register([FromForm] RegisterDto newUser)
@@ -274,6 +281,67 @@ namespace ISC.API.Controllers
 			}
 			await _unitOfWork.completeAsync();
 			return Ok("Update Successfully");
+		}
+		[HttpGet("DisplayNewRegister")]
+		public async Task<IActionResult> DisplayNewRegister()
+		{
+			var response= await _leaderServices.DisplayNewRegister();
+			if (!response.Success)
+				return BadRequest("No entity");
+			return Ok(response);
+		}
+		[HttpPost("SubmitNewRegister")]
+		public async Task<IActionResult> SubmitNewRegisters(SubmitNewRegisterDto newRegisters)
+		{
+			List<Tuple<CodeforceStandingResultDto, float>> sheetsStanding = new List<Tuple<CodeforceStandingResultDto, float>>();
+			HashSet<string> refused = new HashSet<string>();
+			foreach (var contest in newRegisters.ContestsInfo)
+			{
+				var standingResponse = await _sheetServices.SheetStanding(contest.ContestId, contest.IsSohag);
+				if (!standingResponse.Success)
+				{
+					return BadRequest(standingResponse.Comment);
+				}
+				var statusResponse = await _sheetServices.SheetStatus(contest.ContestId, contest.IsSohag);
+				if (!statusResponse.Success)
+				{
+					return BadRequest(statusResponse.Comment);
+				}
+
+
+				var memberPerProblem = statusResponse.Entity.GroupBy(submission =>
+				new
+				{
+					submission.author.members.FirstOrDefault().handle,
+					submission.problem.name
+				}).Where(mps => mps.Any(sub => sub.verdict == "OK")).Select(mps => new
+				{
+					mps.Key.name,
+					mps.Key.handle
+				}).GroupBy(mps => mps.handle).Select(problemSolved => new
+				{
+					handle=problemSolved.Key,
+					Count= problemSolved.Count()
+				});
+
+				float totalproblems = standingResponse.Entity.problems.Count();
+
+				foreach( var member in memberPerProblem) {
+					if (Math.Ceiling(member.Count / totalproblems) * 100.0 < contest.PassingPrecent)
+					{
+						refused.Add(member.handle);
+					}
+				}
+			}
+
+			var acceptedMember =await _unitOfWork.NewRegitseration
+				.findManyWithChildAsync(i => !refused.Contains(i.CodeForceHandle)
+										&& newRegisters.CandidatesNationalId.Contains(i.NationalID) == true);
+			foreach(var member in acceptedMember)
+			{
+				
+			}
+			return Ok();
 		}
 	}
 }

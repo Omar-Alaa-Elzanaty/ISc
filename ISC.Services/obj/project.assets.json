@@ -9565,9 +9565,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\ISC\\ISC.Services\\ISC.Services.csproj",
+      "projectUniqueName": "D:\\ISc\\ISC.Services\\ISC.Services.csproj",
       "projectName": "ISC.Services",
-      "projectPath": "D:\\ISC\\ISC.Services\\ISC.Services.csproj",
+      "projectPath": "D:\\ISc\\ISC.Services\\ISC.Services.csproj",
       "packagesPath": "C:\\Users\\d\\.nuget\\packages\\",
       "outputPath": "D:\\ISC\\ISC.Services\\obj\\",
       "projectStyle": "PackageReference",
@@ -9586,8 +9586,8 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "D:\\ISC\\ISC.EF\\ISC.EF.csproj": {
-              "projectPath": "D:\\ISC\\ISC.EF\\ISC.EF.csproj"
+            "D:\\ISc\\ISC.EF\\ISC.EF.csproj": {
+              "projectPath": "D:\\ISc\\ISC.EF\\ISC.EF.csproj"
             }
           }
         }
@@ -9657,7 +9657,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
       }
     }
   }

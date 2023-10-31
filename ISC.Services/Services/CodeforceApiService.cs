@@ -12,11 +12,9 @@ namespace ISC.Services.Services
 {
 	public class CodeforceApiService : IOnlineJudgeServices
 	{
-		private readonly CodeForceConnection _cfConnection;
 		private readonly ApiRequestServices _apiRequest;
-		public CodeforceApiService(IOptions<CodeForceConnection>cfconnection)
+		public CodeforceApiService()
 		{
-			_cfConnection = cfconnection.Value;
 			_apiRequest = new ApiRequestServices("https://codeforces.com/api/");
 		}
 		public async Task<bool> checkHandleValidationAsync(string handle)
@@ -66,12 +64,11 @@ namespace ISC.Services.Services
 				return null;
 			}
 		}
-		public async Task<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>> GetContestStatusAsync(string contestid,string handle,string apikey,string apisecret)
+		public async Task<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>> GetContestStatusAsync(string contestid,string apikey,string apisecret,int count, string? handle=null)
 		{
 			try//377686
 			{
-				Console.WriteLine("test okay ");
-				string request = "contest.status?"+generateContestStatusRequest(contestid,handle,apikey,apisecret);
+				string request = "contest.status?"+generateContestStatusRequest(contestid,handle,apikey,apisecret,count);
 				var Response = await _apiRequest.getRequestAsync<CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>>(request);
 				var ContestStatus = (CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>)Response;
 				if (ContestStatus == null) return null;
@@ -83,29 +80,6 @@ namespace ISC.Services.Services
 			}
 		}
 
-		public async Task<ServiceResponse<Dictionary<int, int>>> SheetsProblemsCount(List<TraineeSheetAccess>traineesAcces)
-		{
-			ServiceResponse<Dictionary<int, int>> response = new ServiceResponse<Dictionary<int, int>>();
-			Dictionary<int, int> ProblemSheetCount = traineesAcces
-				.DistinctBy(tsa => tsa.SheetId)
-				.Select(i => new {
-					i.SheetId,
-					Count = GetContestStandingAsync(i.Sheet.SheetCfId, 1, true,
-							i.Sheet.IsSohag ? _cfConnection.SohagKey : _cfConnection.AssuitKey
-							, i.Sheet.IsSohag ? _cfConnection.SohagSecret : _cfConnection.AssuitSecret)
-				.Result.result.problems.Count()
-				})
-				.ToDictionary(i => i.SheetId, i => i.Count);
-			if(ProblemSheetCount.Count > 0)
-			{
-				response.Success = true;
-				response.Entity=ProblemSheetCount;
-				return response;
-			}
-			response.Success = false;
-			response.Comment = "Coudn't find sheets or problems of sheets";
-			return response;
-		}
 		private string generatecontestStandingRequest(string contestid,int numberofrows,bool unofficial,string apikey,string apisecret)
 		{
 			string Parameters = "";
@@ -139,15 +113,15 @@ namespace ISC.Services.Services
 			Request = Request.Substring(0, Request.Length - 1);
 			return Request;
 		}
-		private string generateContestStatusRequest(string contestid,string handle, string apikey,string apisecret)
+		private string generateContestStatusRequest(string contestid,string? handle, string apikey,string apisecret,int count)
 		{
 			string Parameters = "";
 			Parameters += addParameter("apiKey", apikey);
 			Parameters += addParameter("asManager", "false");
 			Parameters += addParameter("contestId", contestid);
-			Parameters += addParameter("count", "5");
+			Parameters += addParameter("count", count.ToString());
 			Parameters += addParameter("from", "1");
-			if(handle.Length>0)
+			if(handle is not null)
 			Parameters += addParameter("handle", handle);
 			Parameters += addParameter("time",new Converters().generateTimeInUnix().ToString());
 			Parameters = Parameters.Substring(0, Parameters.Length - 1);

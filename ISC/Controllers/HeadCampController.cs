@@ -90,7 +90,7 @@ namespace ISC.API.Controllers
 				return BadRequest(result.Comment);
 			}
 			List<TraineeSheetAccess> traineesAccess = result.Entity;
-			var ProblemSheetCount = _onlineJudgeSrvices.SheetsProblemsCount(traineesAccess).Result.Entity;
+			var ProblemSheetCount = _sheetServices.TraineeSheetProblemsCount(traineesAccess).Result.Entity;
 			var FilteredOnSheets = _sheetServices.TraineesFilter(traineesAccess,ProblemSheetCount).Result.Entity;
 			var traineesIds = traineesAccess.Select(i => i.TraineeId).ToList();
 			var FilteredOnSessions = _sessionsSrvices.SessionFilter(traineesIds).Result.Entity;
@@ -166,7 +166,7 @@ namespace ISC.API.Controllers
 						IsCompleted = false
 					};
 					var Result = await _MailService.sendEmailAsync(traineeAccount.Email, "ICPC Sohag Filteration announcement"
-						, $"Dear {traineeAccount.FirstName + ' ' + traineeAccount.MiddleName},{@"<\br>"} We regret to inform you that we had to remove you from the {Camp.Name} training program." +
+						, $"Hello {traineeAccount.FirstName + ' ' + traineeAccount.MiddleName},{@"<\br>"} We regret to inform you that we had to remove you from the {Camp.Name} training program." +
 						$" If you're interested in exploring other training programs, please let us know, and we'll provide you with more information." +
 						$" Thank you for your efforts, and we hope you'll take this as a learning experience to continue your growth and development." +
 						$"{@"<\br>"}{@"<\br>"}Best regards,{@"<\br>"}{@"<\br>"} ISc System{@"<\br>"}{@"<\br>"} Omar Alaa");

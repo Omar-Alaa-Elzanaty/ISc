@@ -28,6 +28,7 @@ namespace ISC
 				.AddEntityFrameworkStores<DataBase>()
 				.AddDefaultTokenProviders();
 			builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+			builder.Services.Configure<DefaultMessages>(builder.Configuration.GetSection("DefaultMessages"));
 			builder.Services.Configure<CodeForceConnection>(builder.Configuration.GetSection("CodeForceConnection"));
 			builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 			builder.Services.AddAuthentication(options =>
