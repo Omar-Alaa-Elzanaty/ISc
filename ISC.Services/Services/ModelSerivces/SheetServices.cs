@@ -129,7 +129,7 @@ namespace ISC.Services.Services.ModelSerivces
 			var response= new ServiceResponse<CodeforceStandingResultDto>();
 			var standing = _onlineJudgeServices.GetContestStandingAsync(contestId.ToString(), 1, true,
 				isSohag ? _cfConnection.SohagKey : _cfConnection.AssuitKey,
-				isSohag ? _cfConnection.SohagSecret : _cfConnection.AssuitSecret)?.Result.result;
+				isSohag ? _cfConnection.SohagSecret : _cfConnection.AssuitSecret)?.Result.result ?? null;
 
 			if(standing == null)
 			{

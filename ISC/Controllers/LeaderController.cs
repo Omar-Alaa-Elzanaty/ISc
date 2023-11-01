@@ -80,15 +80,14 @@ namespace ISC.API.Controllers
 		[HttpGet]
 		public async Task<IActionResult> DisplayTrainee()
 		{
-			var response = await _userManager.Users.Where(i =>
-			 _userManager.GetRolesAsync(i).Result.Contains(Role.TRAINEE)).Select(acc => new
+			var response = _userManager.GetUsersInRoleAsync(Role.TRAINEE).Result.Select(acc => new
 			 {
 				 acc.Id,
 				 acc.CodeForceHandle,
 				 acc.Email,
 				 acc.College,
 				 CampName = _unitOfWork.Trainees.getCampofTrainee(acc.Id).Result.Name
-			 }).ToListAsync();
+			 });
 			return Ok(response);
 		}
 

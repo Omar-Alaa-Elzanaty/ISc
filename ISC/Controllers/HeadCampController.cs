@@ -17,29 +17,27 @@ using ISC.Core.ModelsDtos;
 
 namespace ISC.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
 	[ApiController]
 	//[Authorize(Roles =$"{Roles.LEADER},{Roles.HOC}")]
 	public class HeadCampController : ControllerBase
 	{
-		private readonly RoleManager<IdentityRole> _RoleManager;
 		private readonly UserManager<UserAccount> _UserManager;
 		private readonly IUnitOfWork _UnitOfWork;
 		private readonly IMailServices _MailService;
 		private readonly IOnlineJudgeServices _onlineJudgeSrvices;
 		private readonly ISheetServices _sheetServices;
 		private readonly ISessionsServices _sessionsSrvices;
-		public HeadCampController(RoleManager<IdentityRole> roleManager, UserManager<UserAccount> userManager, IUnitOfWork unitofwork, IOnlineJudgeServices onlinejudgeservices, IMailServices mailService, ISheetServices sheetServices)
+		public HeadCampController(UserManager<UserAccount> userManager, IUnitOfWork unitofwork, IOnlineJudgeServices onlinejudgeservices, IMailServices mailService, ISheetServices sheetServices)
 		{
-			_RoleManager = roleManager;
 			_UserManager = userManager;
 			_UnitOfWork = unitofwork;
 			_onlineJudgeSrvices = onlinejudgeservices;
 			_MailService = mailService;
 			_sheetServices = sheetServices;
 		}
-		[HttpGet("DisplayTrainees")]
-		public async Task<IActionResult> displayTrainees()
+		[HttpGet]
+		public async Task<IActionResult> DisplayTrainees()
 		{
 			return Ok(_UserManager.GetUsersInRoleAsync(Role.TRAINEE).Result.Select(tr => new
 			{
@@ -51,8 +49,8 @@ namespace ISC.API.Controllers
 				tr.Grade
 			}));
 		}
-		[HttpDelete("DeleteFromTrainees")]
-		public async Task<IActionResult> deleteFromTrainees(List<string> traineesusersid)
+		[HttpDelete]
+		public async Task<IActionResult> DeleteFromTrainees(List<string> traineesusersid)
 		{
 			foreach (string traineeuserid in traineesusersid)
 			{
@@ -85,8 +83,8 @@ namespace ISC.API.Controllers
 			await _UnitOfWork.completeAsync();
 			return Ok();
 		}
-		[HttpGet("WeeklyFilteration")]
-		public async Task<IActionResult> weeklyFilter([FromQuery]List<int> traineesid)
+		[HttpGet]
+		public async Task<IActionResult> WeeklyFilter([FromQuery]List<int> traineesid)
 		{
 			string? headOfCampUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			Camp? camp = _UnitOfWork.HeadofCamp.findWithChildAsync(t => t.UserId == headOfCampUserId,
@@ -141,8 +139,8 @@ namespace ISC.API.Controllers
 			}
 			return Ok(Filtered);
 		}
-		[HttpDelete("SubmitWeeklyFilteration")]
-		public async Task<IActionResult> submitWeeklyFilter(List<string> usersid)
+		[HttpDelete]
+		public async Task<IActionResult> SubmitWeeklyFilter(List<string> usersid)
 		{
 			string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			//Camp Camp = await _UnitOfWork.Camps.getCampByUserIdAsync(userId);
