@@ -33,7 +33,7 @@ namespace ISC.Services.Services
 		{
 			try
 			{
-				if (_context.Database.GetPendingMigrations().Any())
+				if (_context.Database.GetPendingMigrationsAsync().Result.Any())
 				{
 					_context.Database.Migrate();
 				}

@@ -16,13 +16,13 @@ namespace ISC.Core.Interfaces
 		IQueryable<T> Get();
 		Task Update(T entity);
 		Task<List<T>> getAllAsync();
-		Task<List<T>>getAllAsync(Expression<Func<T, bool>> match);
+		Task<List<T>>getAllAsync(Func<T, bool> match);
 		void deleteGroup(List<T> entities);
 		Task<bool> deleteAsync(T entity);
 		int DeleteAll();
 		Task<List<T>> getAllwithNavigationsAsync(string[] includes = null);
-		Task<List<T>> findManyWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null);
-		Task<T?> findWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null);
-		Task<T> findByAsync(Expression<Func<T, bool>> match);
+		Task<List<T>> findManyWithChildAsync(Func<T, bool> match, string[] includes = null);
+		Task<T?> findWithChildAsync(Func<T, bool> match, string[] includes = null);
+		Task<T> findByAsync(Func<T, bool> match);
 	}
 }

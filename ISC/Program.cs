@@ -115,7 +115,6 @@ namespace ISC
 				app.UseSwaggerUI();
 			}
 			app.UseHttpsRedirection();
-			Seed(app);
 			app.UseStaticFiles();
 
 			app.UseRouting();
@@ -125,6 +124,8 @@ namespace ISC
 			app.UseAuthorization();
 			app.MapControllers();
 
+			Seed(app);
+			
 			app.Run();
 		}
 		static void Seed(WebApplication app)

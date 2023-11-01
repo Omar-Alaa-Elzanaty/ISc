@@ -29,7 +29,7 @@ namespace ISC.API.Controllers
 		private readonly IOnlineJudgeServices _onlineJudgeSrvices;
 		private readonly ISheetServices _sheetServices;
 		private readonly ISessionsServices _sessionsSrvices;
-		public HeadCampController(RoleManager<IdentityRole> roleManager, UserManager<UserAccount> userManager,IUnitOfWork unitofwork,IOnlineJudgeServices onlinejudgeservices, IMailServices mailService,ISheetServices sheetServices)
+		public HeadCampController(RoleManager<IdentityRole> roleManager, UserManager<UserAccount> userManager, IUnitOfWork unitofwork, IOnlineJudgeServices onlinejudgeservices, IMailServices mailService, ISheetServices sheetServices)
 		{
 			_RoleManager = roleManager;
 			_UserManager = userManager;
@@ -39,9 +39,17 @@ namespace ISC.API.Controllers
 			_sheetServices = sheetServices;
 		}
 		[HttpGet("DisplayTrainees")]
-		public async Task<IActionResult> displayTrainee()
+		public async Task<IActionResult> displayTrainees()
 		{
-			return Ok(await _UserManager.GetUsersInRoleAsync(Role.TRAINEE));
+			return Ok(_UserManager.GetUsersInRoleAsync(Role.TRAINEE).Result.Select(tr => new
+			{
+				tr.Id,
+				FullName = tr.FirstName + ' ' + tr.MiddleName + ' ' + tr.LastName,
+				tr.Email,
+				tr.CodeForceHandle,
+				tr.Gender,
+				tr.Grade
+			}));
 		}
 		[HttpDelete("DeleteFromTrainees")]
 		public async Task<IActionResult> deleteFromTrainees(List<string> traineesusersid)

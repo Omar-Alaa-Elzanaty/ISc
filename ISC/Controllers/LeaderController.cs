@@ -119,7 +119,7 @@ namespace ISC.API.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> DisplayStuffWithoutHoc()
+		public async Task<IActionResult> DisplayAllExceptHeadOfTraining()
 		{
 			var HocUserId = _unitOfWork.HeadofCamp.getAllAsync().Result.Select(hoc => hoc.UserId).ToList();
 			var StuffWithoutHoc = _userManager.Users.Where(user => HocUserId.Contains(user.Id) == false).ToList();

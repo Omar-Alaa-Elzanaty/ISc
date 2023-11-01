@@ -10,7 +10,7 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace ISC.API.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/[controller]/[action]")]
 	[ApiController]
 	public class HomeController : ControllerBase
 	{
@@ -22,15 +22,15 @@ namespace ISC.API.Controllers
 			_UserManager = usermanager;
         }
 
-		[HttpGet("DisplayFeedbacks")]
-		public async Task<IActionResult> displayFeedbacksAsync()
+		[HttpGet]
+		public async Task<IActionResult> DisplayFeedbacksAsync()
 		{
 			var Feedbacks =await _UnitOfWork.SessionsFeedbacks.getTopRateAsync(3);
 			if(Feedbacks.Count == 0 )
 			{
 				return BadRequest("NO feedbacks found!");
 			}
-			var Trainees = await _UnitOfWork.Trainees.getAllAsync(tr=>Feedbacks.Exists(i => i.TraineeId == tr.Id));
+			var Trainees = await _UnitOfWork.Trainees.getAllAsync(tr=>Feedbacks.Any(i => i.TraineeId == tr.Id));
 			var Result = (from Trainee in Trainees
 						 join user in _UserManager.Users
 						 on Trainee.UserId equals user.Id

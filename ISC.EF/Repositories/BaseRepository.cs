@@ -27,15 +27,15 @@ namespace ISC.EF.Repositories
 		{
 			return  _Context.Set<T>();
 		}
-		public async Task<T> findByAsync(Expression<Func<T, bool>> match)
+		public async Task<T> findByAsync(Func<T, bool> match)
 		{
-			return await _Context.Set<T>().SingleOrDefaultAsync(match);
+			return  _Context.Set<T>().SingleOrDefault(match);
 		}
 		public async Task Update(T entity)
 		{
 			_Context.Set<T>().Update(entity);
 		}
-		public async Task<List<T>> findManyWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null)
+		public async Task<List<T>> findManyWithChildAsync(Func<T, bool> match, string[] includes = null)
 		{
 			IQueryable<T> query = _Context.Set<T>();
 			if (includes != null)
@@ -45,9 +45,9 @@ namespace ISC.EF.Repositories
 					query = query.Include(item);
 				}
 			}
-			return await query.Where(match).ToListAsync();
+			return  query.Where(match).ToList();
 		}
-		public async Task<T?> findWithChildAsync(Expression<Func<T, bool>> match, string[] includes = null)
+		public async Task<T?> findWithChildAsync(Func<T, bool> match, string[] includes = null)
 		{
 			IQueryable<T> query = _Context.Set<T>();
 			if (includes != null)
@@ -57,7 +57,7 @@ namespace ISC.EF.Repositories
 					query = query.Include(item);
 				}
 			}
-			return await query.SingleOrDefaultAsync(match)??null;
+			return  query.SingleOrDefault(match)??null;
 		}
 		public async void addAsync(T entity)
 		{ 
@@ -101,9 +101,9 @@ namespace ISC.EF.Repositories
 			return deleteEntityAsync(entity);
 		}
 
-		public async Task<List<T>> getAllAsync(Expression<Func<T, bool>> match)
+		public async Task<List<T>> getAllAsync(Func<T, bool> match)
 		{
-			return await _Context.Set<T>().Where(match).ToListAsync();
+			return  _Context.Set<T>().Where(match).ToList();
 		}
 	}
 }
