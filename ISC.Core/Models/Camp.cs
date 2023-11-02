@@ -14,6 +14,7 @@ namespace ISC.Core.Models
 		public int Year { get; set; }
 		public int Term { get; set; }
 		public int DurationInWeeks { get; set; }
+		public bool OpenForRegister { get; set; }
 		public List<Trainee> Trainees { get; set; }
 		public HashSet<MentorOfCamp> MentorsOfCamp { get; set; }
 		public List<Session> Sessions { get; set; }

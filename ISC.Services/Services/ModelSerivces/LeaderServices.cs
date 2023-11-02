@@ -156,5 +156,17 @@ namespace ISC.Services.Services.ModelSerivces
 
 			return response;
 		}
+		public async Task<ServiceResponse<bool>> DeleteFromNewRegister(List<string>Ids)
+		{
+			var response =new ServiceResponse<bool>();
+			var registers =await _unitOfWork.NewRegitseration.findManyWithChildAsync(r => Ids.Contains(r.NationalID));
+			if (registers != null||registers.Count==0) {
+				response.Comment = "No data found";
+				return response;
+			}
+			_unitOfWork.NewRegitseration.deleteGroup(registers);
+			response.Success = true;
+			return response;
+		}
 	}
 }

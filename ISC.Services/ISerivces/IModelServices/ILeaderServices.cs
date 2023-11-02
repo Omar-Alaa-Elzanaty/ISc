@@ -16,5 +16,6 @@ namespace ISC.Services.ISerivces.IModelServices
 		Task<ServiceResponse<List<string>>> AddToRoleAsync(UserRoleDto model);
 		Task<ServiceResponse<List<KeyValuePair<NewRegistration, string>>>> DisplayNewRegisterAsync();
 		Task<ServiceResponse<AuthModel>> AutoMemberAddAsync(RegisterDto registerDto, string? message = null, string? campName = null);
+		Task<ServiceResponse<bool>> DeleteFromNewRegister(List<string> Ids);
 	}
 }

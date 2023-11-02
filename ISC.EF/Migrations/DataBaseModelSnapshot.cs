@@ -37,6 +37,9 @@ namespace ISC.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("OpenForRegister")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Term")
                         .HasColumnType("int");
 
