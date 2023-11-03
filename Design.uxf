@@ -125,6 +125,7 @@ AccessSessionId int
 +Year: int
 +Term: int
 +DurationInWeeks: int
++OpenForRegister: bool
 -
 </panel_attributes>
     <additional_attributes/>

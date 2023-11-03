@@ -9,6 +9,7 @@ using ISC.Services.ISerivces;
 using ISC.Services.ISerivces.IModelServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Org.BouncyCastle.Bcpg;
 using System;
@@ -66,6 +67,13 @@ namespace ISC.Services.Services.ModelSerivces
 		public async Task<ServiceResponse<Camp>>AddCampAsync(CampDto camp)
 		{
 			ServiceResponse<Camp> response = new ServiceResponse<Camp>() { Success = true };
+			var campItem =await _unitOfWork.Camps.findByAsync(c => c.Name == camp.Name);
+			if(campItem is not null)
+			{
+				response.Success = false;
+				response.Comment = "Camp found before";
+				return response;
+			}
 			var newCamp = new Camp()
 			{
 				Name = camp.Name,

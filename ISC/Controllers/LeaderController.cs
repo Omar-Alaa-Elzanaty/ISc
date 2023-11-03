@@ -239,7 +239,7 @@ namespace ISC.API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> AddCamp(CampDto camp)
+		public async Task<IActionResult> AddCamp([FromBody]CampDto camp)
 		{
 			var response = await _leaderServices.AddCampAsync(camp);
 			if (!response.Success)
@@ -250,7 +250,7 @@ namespace ISC.API.Controllers
 					response.Comment
 				});
 			}
-			return Ok(response);
+			return Ok("Success");
 		}
 
 		[HttpGet]
