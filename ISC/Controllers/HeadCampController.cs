@@ -50,7 +50,7 @@ namespace ISC.API.Controllers
 			}));
 		}
 		[HttpDelete]
-		public async Task<IActionResult> DeleteFromTrainees(List<string> traineesusersid)
+		public async Task<IActionResult> DeleteFromTrainees([FromBody]List<string> traineesusersid)
 		{
 			foreach (string traineeuserid in traineesusersid)
 			{
@@ -84,13 +84,17 @@ namespace ISC.API.Controllers
 			return Ok();
 		}
 		[HttpGet]
-		public async Task<IActionResult> WeeklyFilter([FromQuery]List<int> traineesid)
+		public async Task<IActionResult> WeeklyFilter([FromQuery]List<string> selectedTrainee)
 		{
 			string? headOfCampUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			Camp? camp = _UnitOfWork.HeadofCamp.findWithChildAsync(t => t.UserId == headOfCampUserId,
 																new[] { "Camp", })?.Result?.Camp??null;
+			var traineesId =await _UnitOfWork.Trainees
+							.Get()
+							.Where(t => selectedTrainee.Contains(t.UserId)).Select(t => t.Id)
+							.ToListAsync();
 
-			var result =await _sheetServices.TraineeSheetAccesWithout(traineesid, camp?.Id ?? 0);
+			var result =await _sheetServices.TraineeSheetAccesWithout(traineesId, camp?.Id ?? 0);
 			if (result.Success == false)
 			{
 				return BadRequest(result.Comment);
@@ -140,7 +144,7 @@ namespace ISC.API.Controllers
 			return Ok(Filtered);
 		}
 		[HttpDelete]
-		public async Task<IActionResult> SubmitWeeklyFilter(List<string> usersid)
+		public async Task<IActionResult> SubmitWeeklyFilter([FromBody]List<string> usersid)
 		{
 			string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			//Camp Camp = await _UnitOfWork.Camps.getCampByUserIdAsync(userId);
@@ -172,7 +176,7 @@ namespace ISC.API.Controllers
 						IsCompleted = false
 					};
 					var Result = await _MailService.sendEmailAsync(traineeAccount.Email, "ICPC Sohag Filteration announcement"
-						, $"Hello {traineeAccount.FirstName + ' ' + traineeAccount.MiddleName},{@"<\br>"} We regret to inform you that we had to remove you from the {Camp.Name} training program." +
+						, $"Hello {traineeAccount.FirstName} + ' ' + {traineeAccount.MiddleName},{@"<\br>"} We regret to inform you that we had to remove you from the {Camp.Name} training program." +
 						$" If you're interested in exploring other training programs, please let us know, and we'll provide you with more information." +
 						$" Thank you for your efforts, and we hope you'll take this as a learning experience to continue your growth and development." +
 						$"{@"<\br>"}{@"<\br>"}Best regards,{@"<\br>"}{@"<\br>"} ISc System{@"<\br>"}{@"<\br>"} Omar Alaa");
@@ -189,6 +193,29 @@ namespace ISC.API.Controllers
 			}
 			await _UnitOfWork.completeAsync();
 			return Ok(new { Fail, Comment = Fail.IsNullOrEmpty() ? "" : "please back to system Admin to solve this problem" });
+		}
+		[HttpGet]
+		public async Task<IActionResult> DisplayMentors()
+		{
+			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			var camp = await _UnitOfWork.HeadofCamp.findByAsync(h => h.UserId == userId);
+			if (camp == null)
+			{
+				return BadRequest("Invalid Request");
+			}
+			List<object> mentors = new List<object>();
+			var mentorsOfCamp = await _UnitOfWork.MentorsOfCamps.findManyWithChildAsync(m => m.CampId == camp.Id, new[] {"Mentors"});
+			foreach(var member in  mentorsOfCamp)
+			{
+				UserAccount userInfo =await _UserManager.FindByIdAsync(member.Mentor.UserId);
+				mentors.Add(new
+				{
+					member.MentorId,
+					member.Mentor.UserId,
+					FullName = userInfo.FirstName + ' ' + userInfo.MiddleName + " " + userInfo.LastName,
+				});
+			}
+			return Ok(mentors);
 		}
 	}
 }

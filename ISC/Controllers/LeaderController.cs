@@ -24,14 +24,13 @@ namespace ISC.API.Controllers
 {
 	[Route("api/[controller]/[action]")]
 	[ApiController]
-	//[Authorize(Roles = Role.LEADER)]
+	//[Authorize(Roles = $"Admin, {Role.LEADER}")]
 	public class LeaderController : ControllerBase
 	{
 		private readonly RoleManager<IdentityRole> _roleManager;
 		private readonly UserManager<UserAccount> _userManager;
 		private readonly IAuthanticationServices _auth;
 		private readonly IUnitOfWork _unitOfWork;
-		private readonly IMailServices _mailServices;
 		private readonly ILeaderServices _leaderServices;
 		private readonly ISheetServices _sheetServices;
 		private readonly IMapper _mapper;
@@ -48,7 +47,6 @@ namespace ISC.API.Controllers
 			_roleManager = roleManager;
 			_userManager = userManager;
 			_unitOfWork = unitofwork;
-			_mailServices = mailServices;
 			_auth = auth;
 			_leaderServices = leaderServices;
 			_sheetServices = sheetServices;
@@ -504,12 +502,20 @@ namespace ISC.API.Controllers
 			}));
 		}
 		[HttpPut("{id}")]
-		public async Task<IActionResult> ChangeCampState(int id)
+		public async Task<IActionResult> UpdateCampState(int id)
 		{
 			var camp = await _unitOfWork.Camps.getByIdAsync(id);
-			if(camp is not null)camp.OpenForRegister=!camp.OpenForRegister;
-			_=await _unitOfWork.completeAsync();
-			return Ok($"State change to {camp.OpenForRegister}");
+			if (camp != null)
+			{
+				camp.OpenForRegister = !camp.OpenForRegister;
+
+				_ = await _unitOfWork.completeAsync();
+				return Ok($"State change to {camp.OpenForRegister}");
+			}
+			else
+			{
+				return BadRequest("Invalid Id");
+			}
 		}
 	}
 }

@@ -37,6 +37,7 @@ namespace ISC.Services.Services
 				{
 					_context.Database.Migrate();
 				}
+				else return;
 			}
 			catch
 			{
@@ -54,9 +55,11 @@ namespace ISC.Services.Services
 				NationalId = "100000000000000",
 			};
 			var result = await _userManager.CreateAsync(admin, "Admin321!567");
+			_=await _unitOfWork.completeAsync();
 			if (result.Succeeded)
 			{
-				await _userManager.AddToRoleAsync(admin, Role.LEADER);
+				await _userManager.AddToRoleAsync(admin,"Admin");
+				_=await _unitOfWork.completeAsync();
 			}
 			else
 			{
