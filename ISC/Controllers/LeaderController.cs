@@ -33,6 +33,7 @@ namespace ISC.API.Controllers
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly ILeaderServices _leaderServices;
 		private readonly ISheetServices _sheetServices;
+		private readonly ICampServices _campServices;
 		private readonly IMapper _mapper;
 		public LeaderController(
 			RoleManager<IdentityRole> roleManager,
@@ -42,7 +43,8 @@ namespace ISC.API.Controllers
 			IMailServices mailServices,
 			ILeaderServices leaderServices,
 			ISheetServices sheetServices,
-			IMapper mapper)
+			IMapper mapper,
+			ICampServices campServices)
 		{
 			_roleManager = roleManager;
 			_userManager = userManager;
@@ -51,6 +53,7 @@ namespace ISC.API.Controllers
 			_leaderServices = leaderServices;
 			_sheetServices = sheetServices;
 			_mapper = mapper;
+			_campServices = campServices;
 		}
 
 		[HttpGet]
@@ -126,7 +129,7 @@ namespace ISC.API.Controllers
 		[HttpGet]
 		public async Task<IActionResult> DisplayCamp()
 		{
-			return Ok(_unitOfWork.Camps.getAllAsync().Result);
+			return Ok(await _campServices.CampMentors());
 		}
 
 		[HttpPost]

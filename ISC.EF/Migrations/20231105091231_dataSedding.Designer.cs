@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ISC.EF.Migrations
 {
     [DbContext(typeof(DataBase))]
-    [Migration("20231102154551_addopenforRegitser")]
-    partial class addopenforRegitser
+    [Migration("20231105091231_dataSedding")]
+    partial class dataSedding
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace ISC.EF.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CampMentor", b =>
+                {
+                    b.Property<int>("CampsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MentorsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CampsId", "MentorsId");
+
+                    b.HasIndex("MentorsId");
+
+                    b.ToTable("CampMentor");
+                });
 
             modelBuilder.Entity("ISC.Core.Models.Camp", b =>
                 {
@@ -433,21 +448,6 @@ namespace ISC.EF.Migrations
                     b.ToTable("MentorsAttendences");
                 });
 
-            modelBuilder.Entity("ISC.Core.ModelsDtos.MentorOfCamp", b =>
-                {
-                    b.Property<int>("MentorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CampId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MentorId", "CampId");
-
-                    b.HasIndex("CampId");
-
-                    b.ToTable("MentorsOfCamps");
-                });
-
             modelBuilder.Entity("ISC.Core.ModelsDtos.SessionFeedback", b =>
                 {
                     b.Property<int>("TraineeId")
@@ -606,7 +606,6 @@ namespace ISC.EF.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("PhotoUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
@@ -788,6 +787,21 @@ namespace ISC.EF.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("CampMentor", b =>
+                {
+                    b.HasOne("ISC.Core.Models.Camp", null)
+                        .WithMany()
+                        .HasForeignKey("CampsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ISC.Core.Models.Mentor", null)
+                        .WithMany()
+                        .HasForeignKey("MentorsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ISC.Core.Models.HeadOfTraining", b =>
                 {
                     b.HasOne("ISC.Core.Models.Camp", "Camp")
@@ -885,25 +899,6 @@ namespace ISC.EF.Migrations
                     b.Navigation("Mentor");
 
                     b.Navigation("Session");
-                });
-
-            modelBuilder.Entity("ISC.Core.ModelsDtos.MentorOfCamp", b =>
-                {
-                    b.HasOne("ISC.Core.Models.Camp", "Camp")
-                        .WithMany("MentorsOfCamp")
-                        .HasForeignKey("CampId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ISC.Core.Models.Mentor", "Mentor")
-                        .WithMany("Camps")
-                        .HasForeignKey("MentorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Camp");
-
-                    b.Navigation("Mentor");
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.SessionFeedback", b =>
@@ -1018,8 +1013,6 @@ namespace ISC.EF.Migrations
                 {
                     b.Navigation("Heads");
 
-                    b.Navigation("MentorsOfCamp");
-
                     b.Navigation("Sessions");
 
                     b.Navigation("Sheets");
@@ -1030,8 +1023,6 @@ namespace ISC.EF.Migrations
             modelBuilder.Entity("ISC.Core.Models.Mentor", b =>
                 {
                     b.Navigation("Attendence");
-
-                    b.Navigation("Camps");
 
                     b.Navigation("Trainees");
                 });

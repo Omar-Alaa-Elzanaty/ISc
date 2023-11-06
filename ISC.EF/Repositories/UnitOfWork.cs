@@ -31,7 +31,6 @@ namespace ISC.EF.Repositories
 
 		public ISessionFeedbackRepository SessionsFeedbacks { get; private set; }
 
-		public IBaseRepository<MentorOfCamp> MentorsOfCamps { get; private set; }
 
 		public IBaseRepository<Material> Materials { get; private set; }
 
@@ -53,7 +52,6 @@ namespace ISC.EF.Repositories
 			HeadofCamp = new HeadOfCampRepository(_DataBase);
 			Camps = new CampRepository(_DataBase);
 			SessionsFeedbacks = new SessionFeedbackRepository(_DataBase);
-			MentorsOfCamps = new BaseRepository<MentorOfCamp>(_DataBase);
 			Materials = new BaseRepository<Material>(_DataBase);
 			TraineesArchive = new BaseRepository<TraineeArchive>(_DataBase);
 			StuffArchive = new BaseRepository<StuffArchive>(_DataBase);

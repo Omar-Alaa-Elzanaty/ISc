@@ -11,7 +11,7 @@ namespace ISC.Core.APIDtos
 		public string MiddleName { get; set; }
 		[MaxLength(20)]
 		public string LastName { get; set; }
-		[RegularExpression("^[1-9][0-9]*$")]
+		[RegularExpression("^\\d{14}$")]
 		public string NationalId { get; set; }
 		[EmailAddress]
 		public string Email{ get; set; }

@@ -21,7 +21,6 @@ namespace ISC.Core.Interfaces
 		IHeadOfCampRepository HeadofCamp { get; }
 		ICampRepository Camps { get; }
 		ISessionFeedbackRepository SessionsFeedbacks { get; }
-		IBaseRepository<MentorOfCamp> MentorsOfCamps { get; }
 		IBaseRepository<Material> Materials { get; }
 		IBaseRepository<TraineeArchive> TraineesArchive { get; }
 		IBaseRepository<StuffArchive> StuffArchive { get; }

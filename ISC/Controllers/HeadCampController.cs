@@ -198,20 +198,20 @@ namespace ISC.API.Controllers
 		public async Task<IActionResult> DisplayMentors()
 		{
 			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			var camp = await _UnitOfWork.HeadofCamp.findByAsync(h => h.UserId == userId);
-			if (camp == null)
+			if (userId == null)
 			{
 				return BadRequest("Invalid Request");
 			}
+			var camp = _UnitOfWork.HeadofCamp.findByAsync(h => h.UserId == userId).Result.Camp;
 			List<object> mentors = new List<object>();
-			var mentorsOfCamp = await _UnitOfWork.MentorsOfCamps.findManyWithChildAsync(m => m.CampId == camp.Id, new[] {"Mentors"});
-			foreach(var member in  mentorsOfCamp)
+			var mentorsOfCamp = await _UnitOfWork.Camps.findWithChildAsync(c=>c.Id==camp.Id,new[] {"Mentors"} );
+			foreach (var member in mentorsOfCamp?.Mentors)
 			{
-				UserAccount userInfo =await _UserManager.FindByIdAsync(member.Mentor.UserId);
+				UserAccount userInfo = await _UserManager.FindByIdAsync(member.UserId);
 				mentors.Add(new
 				{
-					member.MentorId,
-					member.Mentor.UserId,
+					member.Id,
+					member.UserId,
 					FullName = userInfo.FirstName + ' ' + userInfo.MiddleName + " " + userInfo.LastName,
 				});
 			}

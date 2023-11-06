@@ -26,7 +26,7 @@ namespace ISC.EF.Migrations
                     JoinDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     Gender = table.Column<string>(type: "nvarchar(7)", maxLength: 7, nullable: false),
                     LastLoginDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PhotoUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhotoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CodeForceHandle = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FacebookLink = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     VjudgeHandle = table.Column<string>(type: "nvarchar(450)", nullable: true),
@@ -60,7 +60,8 @@ namespace ISC.EF.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Year = table.Column<int>(type: "int", nullable: false),
                     Term = table.Column<int>(type: "int", nullable: false),
-                    DurationInWeeks = table.Column<int>(type: "int", nullable: false)
+                    DurationInWeeks = table.Column<int>(type: "int", nullable: false),
+                    OpenForRegister = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -357,24 +358,24 @@ namespace ISC.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MentorsOfCamps",
+                name: "CampMentor",
                 columns: table => new
                 {
-                    MentorId = table.Column<int>(type: "int", nullable: false),
-                    CampId = table.Column<int>(type: "int", nullable: false)
+                    CampsId = table.Column<int>(type: "int", nullable: false),
+                    MentorsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MentorsOfCamps", x => new { x.MentorId, x.CampId });
+                    table.PrimaryKey("PK_CampMentor", x => new { x.CampsId, x.MentorsId });
                     table.ForeignKey(
-                        name: "FK_MentorsOfCamps_Camps_CampId",
-                        column: x => x.CampId,
+                        name: "FK_CampMentor_Camps_CampsId",
+                        column: x => x.CampsId,
                         principalTable: "Camps",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MentorsOfCamps_Mentors_MentorId",
-                        column: x => x.MentorId,
+                        name: "FK_CampMentor_Mentors_MentorsId",
+                        column: x => x.MentorsId,
                         principalTable: "Mentors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -579,6 +580,11 @@ namespace ISC.EF.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CampMentor_MentorsId",
+                table: "CampMentor",
+                column: "MentorsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_HeadsOfTraining_CampId",
                 table: "HeadsOfTraining",
                 column: "CampId");
@@ -604,11 +610,6 @@ namespace ISC.EF.Migrations
                 name: "IX_MentorsAttendences_SessionId",
                 table: "MentorsAttendences",
                 column: "SessionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MentorsOfCamps_CampId",
-                table: "MentorsOfCamps",
-                column: "CampId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NewRegistration_CodeForceHandle",
@@ -689,6 +690,9 @@ namespace ISC.EF.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CampMentor");
+
+            migrationBuilder.DropTable(
                 name: "HeadsOfTraining");
 
             migrationBuilder.DropTable(
@@ -696,9 +700,6 @@ namespace ISC.EF.Migrations
 
             migrationBuilder.DropTable(
                 name: "MentorsAttendences");
-
-            migrationBuilder.DropTable(
-                name: "MentorsOfCamps");
 
             migrationBuilder.DropTable(
                 name: "NewRegistration");

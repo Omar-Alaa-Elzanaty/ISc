@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ISC.EF.Migrations
 {
-    /// <inheritdoc />
-    public partial class dataSedding : Migration
-    {
+	/// <inheritdoc />
+	public partial class dataSedding : Migration
+	{
 		/// <inheritdoc />
 		protected override void Up(MigrationBuilder migrationBuilder)
 		{

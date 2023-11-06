@@ -33,7 +33,7 @@ namespace ISC.Services.Services
 		{
 			try
 			{
-				if (_context.Database.GetPendingMigrationsAsync().Result.Any())
+				if (_context.Database.GetPendingMigrations().Any())
 				{
 					_context.Database.Migrate();
 				}
@@ -50,21 +50,30 @@ namespace ISC.Services.Services
 				FirstName = "ICPC",
 				MiddleName = "ICPC",
 				LastName = "ICPC",
+				College="FCI Sohag",
 				BirthDate = DateTime.Now,
 				PhoneNumber = "01123652462",
-				NationalId = "100000000000000",
+				NationalId = "1211111111111",
+				Gender = "Male",
+				Grade=4,
+				CodeForceHandle= "IcpcSohag"
 			};
-			var result = await _userManager.CreateAsync(admin, "Admin321!567");
-			_=await _unitOfWork.completeAsync();
-			if (result.Succeeded)
+			try
 			{
-				await _userManager.AddToRoleAsync(admin,"Admin");
-				_=await _unitOfWork.completeAsync();
+				var result = await _userManager.CreateAsync(admin, "Admin321!567");
+				if (result.Succeeded)
+				{
+					await _userManager.AddToRoleAsync(admin, "Admin");
+				}
+				else
+				{
+					throw new Exception("Invalid Startup");
+				}
 			}
-			else
+			catch
 			{
-				throw new Exception("Invalid Startup");
-			}
+                Console.WriteLine("invalid");
+            }
 		}
 	}
 }

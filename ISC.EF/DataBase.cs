@@ -38,7 +38,6 @@ namespace ISC.EF
 			//new MentorConfiguration().Configure(builder.Entity<Mentor>());
 			//new CampConfiguration().Configure(builder.Entity<Camp>());
 			new MentorAttendenceConfigurations().Configure(builder.Entity<MentorAttendence>());
-			new MentorOfCampConfigurations().Configure(builder.Entity<MentorOfCamp>());
 			new NewRegisterationConfigurations().Configure(builder.Entity<NewRegistration>());
 			new SessionFeedbackConfigurations().Configure(builder.Entity<SessionFeedback>());
 			//new SheetConfigurations().Configure(builder.Entity<Sheet>());
@@ -56,7 +55,6 @@ namespace ISC.EF
 		public DbSet<Mentor> Mentors { get; set; }
 		public DbSet<Camp> Camps { get; set; }
 		public DbSet<SessionFeedback> SessionsFeedbacks { get; set; }
-		public DbSet<MentorOfCamp> MentorsOfCamps { get; set; }
 		public DbSet<MentorAttendence> MentorsAttendences { get; set; }
 		public DbSet<Material> Materials { get; set; }
 		public DbSet<TraineeArchive> TraineesArchives { get; set; }

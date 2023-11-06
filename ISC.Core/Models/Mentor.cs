@@ -13,7 +13,7 @@ namespace ISC.Core.Models
 		public string UserId { get; set; }
 		public int? AccessSessionId {  get; set; }
 		public virtual List<Trainee> Trainees { get; set; }
-		public virtual HashSet<MentorOfCamp> Camps { get; set; }
+		public virtual List<Camp> Camps { get; set; }
 		public virtual HashSet<MentorAttendence> Attendence { get; set; }
 	}
 }

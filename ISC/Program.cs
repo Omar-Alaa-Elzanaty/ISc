@@ -128,11 +128,11 @@ namespace ISC
 			
 			app.Run();
 		}
-		static void Seed(WebApplication app)
+		static  void Seed(WebApplication app)
 		{
 			using var scope = app.Services.CreateScope();
 			var Initalizer = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
-			Initalizer.Seeding();
+			Initalizer.Seeding().Wait();
 		}
 	}
 }

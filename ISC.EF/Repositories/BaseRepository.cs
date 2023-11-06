@@ -59,6 +59,18 @@ namespace ISC.EF.Repositories
 			}
 			return  query.SingleOrDefault(match)??null;
 		}
+		public async Task<List<T>>FindWithMany(string[] includes = null)
+		{
+			IQueryable<T> query = _Context.Set<T>();
+			if (includes != null)
+			{
+				foreach (var item in includes)
+				{
+					query = query.Include(item);
+				}
+			}
+			return query.ToList();
+		}
 		public async void addAsync(T entity)
 		{ 
 			await _Context.Set<T>().AddAsync(entity);

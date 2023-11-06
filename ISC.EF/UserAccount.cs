@@ -19,7 +19,7 @@ namespace ISC.EF
 		public DateTime JoinDate { get; set; }= DateTime.Now;
 		public string Gender { get; set; }
 		public DateTime LastLoginDate { get; set; }=DateTime.Now;
-		public string PhotoUrl { get; set; }
+		public string? PhotoUrl { get; set; }
 		public string CodeForceHandle { get; set; }
 		public string? FacebookLink { get; set; }
 		public string? VjudgeHandle { get; set; }
