@@ -29,20 +29,17 @@ namespace ISC.Services.Services.ModelSerivces
 		private readonly IOnlineJudgeServices _onlineJudgeServices;
 		private readonly IAuthanticationServices _authServices;
 		private readonly IMailServices _mailServices;
-		private readonly DefaultMessages _defaultMessages;
 		public LeaderServices(IUnitOfWork unitOfWork,
 			UserManager<UserAccount> userManager,
 			IOnlineJudgeServices onlineJudgeServices,
 			IAuthanticationServices authanticationServices,
-			IMailServices mailServices,
-			IOptions<DefaultMessages>messages)
+			IMailServices mailServices)
 		{
 			_unitOfWork = unitOfWork;
 			_userManager = userManager;
 			_onlineJudgeServices = onlineJudgeServices;
 			_authServices = authanticationServices;
 			_mailServices = mailServices;
-			_defaultMessages = messages.Value;
 		}
 		public async Task<ServiceResponse<int>> DeleteTraineesAsync(List<string>traineesIds)
 		{
@@ -139,28 +136,25 @@ namespace ISC.Services.Services.ModelSerivces
 			}
 			return response;
 		}
-		public async Task<ServiceResponse<AuthModel>>AutoMemberAddAsync(RegisterDto registerDto,string? message = null,string?campName = null)
+		public async Task<ServiceResponse<AuthModel>>AutoMemberAddAsync(RegisterDto registerInfo,string? message = null,string?campName = null)
 		{
 			ServiceResponse<AuthModel> response = new ServiceResponse<AuthModel>();
-			AuthModel result=await _authServices.RegisterAsync(registerDto);
+			AuthModel result = await _authServices.RegisterAsync(
+				user: registerInfo,
+				message: message,
+				sendEmail: true
+				);
 			if (!result.IsAuthenticated)
 			{
-				if(result.UserName is not null)
-				{
-					response.Success=true;
-					response.Entity = result;
-				}
+				response.Success = false;
+				response.Comment = "Couldn't create account";
+
 				return response;
 			}
-			bool mailResult=await _mailServices.sendEmailAsync(
-				mailTo: registerDto.Email,
-				subject: $"ICPC {campName} Training Announce",
-				body: message is not null ? message : _defaultMessages.DefaultAcceptMessage
-				);
 
 			response.Success=true;
 
-			if (!mailResult) response.Entity = result;
+			response.Entity = result;
 
 			return response;
 		}

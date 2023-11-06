@@ -139,7 +139,7 @@ namespace ISC.API.Controllers
 			{
 				return BadRequest(ModelState);
 			}
-			var model = await _auth.RegisterAsync(newUser);
+			var model = await _auth.RegisterAsync(user: newUser, sendEmail: true);
 			if (!model.IsAuthenticated)
 			{
 				return BadRequest(model.Message);
@@ -402,6 +402,7 @@ namespace ISC.API.Controllers
 		public async Task<IActionResult> SubmitNewRegisters(SubmitNewRegisterDto newRegisters)
 		{
 			HashSet<string> refused = new HashSet<string>();
+
 			foreach (var contest in newRegisters.ContestsInfo)
 			{
 				var standingResponse = await _sheetServices.SheetStanding(contest.ContestId, contest.IsSohag);
@@ -447,7 +448,7 @@ namespace ISC.API.Controllers
 
 			var camp = _unitOfWork.Camps.getByIdAsync(newRegisters.CampId).Result.Name;
 
-			List<Tuple<NewRegistration, AuthModel>> faillRegisteration = new List<Tuple<NewRegistration, AuthModel>>();
+			List<NewRegistration> faillRegisteration = new List<NewRegistration>();
 			List<NewRegistration> confirmedAcceptacne = new List<NewRegistration>();
 
 			foreach (var member in PassedMember)
@@ -460,10 +461,13 @@ namespace ISC.API.Controllers
 					registerDto: newTrainee,
 					campName: camp
 					);
-				if (response.Success) {
-					if (response.Entity is not null)
-						faillRegisteration.Add(new Tuple<NewRegistration, AuthModel>(member, response.Entity));
 
+				if (!response.Success)
+				{
+					faillRegisteration.Add(member);
+				}
+				else
+				{
 					PassedMember.Add(member);
 				}
 			}
@@ -472,13 +476,12 @@ namespace ISC.API.Controllers
 
 			return Ok(faillRegisteration.Select(t => new
 			{
-				t.Item1.FirstName,
-				t.Item1.MiddleName,
-				t.Item1.LastName,
-				t.Item1.Email,
-				t.Item1.CodeForceHandle,
-				t.Item2.UserName,
-				t.Item2.Password
+				t.NationalID,
+				t.FirstName,
+				t.MiddleName,
+				t.LastName,
+				t.Email,
+				t.CodeForceHandle
 			}));
 		}
 		[HttpDelete]

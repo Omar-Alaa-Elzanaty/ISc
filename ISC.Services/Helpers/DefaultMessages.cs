@@ -8,8 +8,8 @@ namespace ISC.Services.Helpers
 {
 	public class DefaultMessages
 	{
+		public string DefaultRegisterMessage { get; }
 		public string DefaultAcceptMessage { get; }
-
-		public string DefaultFilterationMessage { get; }
+		public string DefaultKickedOutMessage { get; }
 	}
 }

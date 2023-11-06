@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
@@ -21,9 +22,18 @@ namespace ISC.Services.Services
 		private readonly JWT _jwt;
 		private readonly RoleManager<IdentityRole> _RoleManager;
 		private readonly IUnitOfWork _UnitOfWork;
+		private readonly DefaultMessages _defaultMessages;
 		private readonly IOnlineJudgeServices _Onlinejudge;
 		private readonly IMailServices _MailServices;
-        public AuthanticationServices(UserManager<UserAccount> usermanger,IOptions<JWT>jwt,IUnitOfWork unitofwork,RoleManager<IdentityRole>rolemanager,IOnlineJudgeServices onlineJudge,IMailServices mailservices)
+        public AuthanticationServices(
+			UserManager<UserAccount> usermanger,
+			IOptions<JWT>jwt,
+			IUnitOfWork unitofwork,
+			RoleManager<IdentityRole>rolemanager,
+			IOnlineJudgeServices onlineJudge,
+			IMailServices mailservices,
+			IOptions<DefaultMessages> messages
+			)
         {
             _UserManager = usermanger;
 			_jwt = jwt.Value;
@@ -31,8 +41,9 @@ namespace ISC.Services.Services
 			_RoleManager = rolemanager;
 			_Onlinejudge = onlineJudge;
 			_MailServices = mailservices;
-        }
-		public async Task<AuthModel> RegisterAsync(RegisterDto user)
+			_defaultMessages = messages.Value;
+		}
+		public async Task<AuthModel> RegisterAsync(RegisterDto user,string? message=null,bool sendEmail=false)
 		{
 			AuthModel NotValidData =await RegisterationValidation(user);
 			if (NotValidData.IsAuthenticated==false)
@@ -58,7 +69,7 @@ namespace ISC.Services.Services
 					IsAuthenticated = false
 				};
 			}
-			var NewAccount = new UserAccount()
+			var newAccount = new UserAccount()
 			{
 				Email = user.Email,
 				PhoneNumber = user.PhoneNumber,
@@ -77,9 +88,9 @@ namespace ISC.Services.Services
 				JoinDate=DateTime.Now,
 				LastLoginDate=DateTime.Now
 			};
-			var Password = NewAccount.generatePassword();
-			NewAccount.UserName = NewAccount.generateUserName();
-			var result = await _UserManager.CreateAsync(NewAccount, Password);
+			var password = newAccount.generatePassword();
+			newAccount.UserName = newAccount.generateUserName();
+			var result = await _UserManager.CreateAsync(newAccount, password);
 			if (result.Succeeded == false)
 			{
 				var errors = string.Empty;
@@ -88,15 +99,15 @@ namespace ISC.Services.Services
 					errors +=$"{error.Description},";
 				}
 				errors.Remove(errors.Length - 1, 1);
-				await _UserManager.DeleteAsync(NewAccount);
+				await _UserManager.DeleteAsync(newAccount);
 				return new AuthModel() { Message = errors};
 			}
 			foreach (var Role in user.Roles)
 			{
-				bool Result = await _UnitOfWork.addToRoleAsync(NewAccount, Role, user.CampId, user.MentorId);
+				bool Result = await _UnitOfWork.addToRoleAsync(newAccount, Role, user.CampId, user.MentorId);
 				if (Result == false) 
 				{
-					await _UserManager.DeleteAsync(NewAccount);
+					await _UserManager.DeleteAsync(newAccount);
 					return new AuthModel()
 					{
 						Message = $"May be some of roles must be add or modify on Role {Role}... please try again.",
@@ -104,27 +115,34 @@ namespace ISC.Services.Services
 					};
 				}
 			}
-			//string body = "We need to inform you that your account on ISc being ready to use\n" +
-			//			"this is your creadntial informations\n" +
-			//			$"Username: {NewAccount.UserName}\n" +
-			//			$"\nPassword: {Password}";
-			//bool EmailResult = await _MailServices.sendEmailAsync(user.Email, "ICPC Sohag account", body);
-			//if (EmailResult == false)
+			//if (!sendEmail)
 			//{
-			//	await _UserManager.DeleteAsync(NewAccount);
-			//	return new AuthModel() { Message="Email is not Valid" };
+			//	bool EmailResult = await _MailServices.sendEmailAsync(
+			//	user.Email,
+			//	"ICPC Sohag",
+			//	(message == null ? _defaultMessages.DefaultRegisterMessage
+			//	: message.Replace("FN",newAccount.FirstName)
+			//			.Replace("LN",newAccount.MiddleName)
+			//			.Replace("CAMP",_UnitOfWork.Camps.getByIdAsync(Convert.ToInt32(user.CampId)).Result.Name)
+			//					.Replace("USERNAME", newAccount.UserName).Replace("PASSWORD", password))
+			//	);
+			//	if (EmailResult == false)
+			//	{
+			//		await _UserManager.DeleteAsync(newAccount);
+			//		return new AuthModel() { Message = "Email is not Valid" };
+			//	}
 			//}
 			await _UnitOfWork.completeAsync();
-			var JwtSecurityToken = await CreateJwtToken(NewAccount);
+			var JwtSecurityToken = await CreateJwtToken(newAccount);
 			return new AuthModel()
 			{
 				ExpireOn = JwtSecurityToken.ValidTo,
 				IsAuthenticated = true,
 				Roles = user.Roles,
 				Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken),
-				UserId = NewAccount.Id,
-				UserName = NewAccount.UserName,
-				Password = Password
+				UserId = newAccount.Id,
+				UserName = newAccount.UserName,
+				Password = password
 			};
 		}
 
