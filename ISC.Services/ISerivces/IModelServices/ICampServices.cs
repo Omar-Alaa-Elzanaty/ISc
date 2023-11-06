@@ -1,4 +1,5 @@
-﻿using ISC.Core.Models;
+﻿using ISC.Core.Dtos;
+using ISC.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace ISC.Services.ISerivces.IModelServices
 {
 	public interface ICampServices
 	{
-		Task<ServiceResponse<object>> CampMentors();
+		Task<ServiceResponse<List<DisplayCampsDto>>> CampMentors();
 	}
 }
