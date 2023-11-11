@@ -1247,9 +1247,9 @@ halign=center</panel_attributes>
     <id>UMLUseCase</id>
     <coordinates>
       <x>319</x>
-      <y>2255</y>
-      <w>154</w>
-      <h>99</h>
+      <y>2277</y>
+      <w>187</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>Display Trainees
  data </panel_attributes>
@@ -1453,19 +1453,19 @@ halign=center</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>143</x>
-      <y>2838</y>
+      <y>2849</y>
       <w>187</w>
-      <h>154</h>
+      <h>143</h>
     </coordinates>
     <panel_attributes/>
-    <additional_attributes>10.0;120.0;150.0;10.0</additional_attributes>
+    <additional_attributes>10.0;110.0;150.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
       <x>308</x>
       <y>2827</y>
-      <w>154</w>
+      <w>187</w>
       <h>66</h>
     </coordinates>
     <panel_attributes>Show standing
@@ -1477,7 +1477,7 @@ for his camp</panel_attributes>
     <coordinates>
       <x>308</x>
       <y>2926</y>
-      <w>176</w>
+      <w>209</w>
       <h>66</h>
     </coordinates>
     <panel_attributes>Show Material</panel_attributes>
@@ -1497,30 +1497,8 @@ for his camp</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>319</x>
-      <y>3025</y>
-      <w>198</w>
-      <h>66</h>
-    </coordinates>
-    <panel_attributes>Show Material</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>143</x>
-      <y>2959</y>
-      <w>198</w>
-      <h>121</h>
-    </coordinates>
-    <panel_attributes/>
-    <additional_attributes>10.0;10.0;160.0;90.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>286</x>
-      <y>3113</y>
+      <x>297</x>
+      <y>3014</y>
       <w>231</w>
       <h>66</h>
     </coordinates>
@@ -1532,21 +1510,21 @@ for his camp</panel_attributes>
     <coordinates>
       <x>143</x>
       <y>2959</y>
-      <w>165</w>
-      <h>209</h>
+      <w>176</w>
+      <h>110</h>
     </coordinates>
     <panel_attributes/>
-    <additional_attributes>10.0;10.0;130.0;170.0</additional_attributes>
+    <additional_attributes>10.0;10.0;140.0;80.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>297</x>
-      <y>3190</y>
+      <x>308</x>
+      <y>3091</y>
       <w>231</w>
       <h>66</h>
     </coordinates>
-    <panel_attributes>Comment  on last session</panel_attributes>
+    <panel_attributes>Comment on last session</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -1554,17 +1532,17 @@ for his camp</panel_attributes>
     <coordinates>
       <x>143</x>
       <y>2959</y>
-      <w>176</w>
-      <h>286</h>
+      <w>187</w>
+      <h>187</h>
     </coordinates>
     <panel_attributes/>
-    <additional_attributes>10.0;10.0;140.0;240.0</additional_attributes>
+    <additional_attributes>10.0;10.0;150.0;150.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
       <x>308</x>
-      <y>3278</y>
+      <y>3179</y>
       <w>231</w>
       <h>55</h>
     </coordinates>
@@ -1577,9 +1555,9 @@ for his camp</panel_attributes>
       <x>143</x>
       <y>2959</y>
       <w>187</w>
-      <h>363</h>
+      <h>264</h>
     </coordinates>
     <panel_attributes/>
-    <additional_attributes>10.0;10.0;150.0;310.0</additional_attributes>
+    <additional_attributes>10.0;10.0;150.0;220.0</additional_attributes>
   </element>
 </diagram>

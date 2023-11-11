@@ -28,18 +28,15 @@ namespace ISC.Services.Services.ModelSerivces
 		private readonly UserManager<UserAccount> _userManager;
 		private readonly IOnlineJudgeServices _onlineJudgeServices;
 		private readonly IAuthanticationServices _authServices;
-		private readonly IMailServices _mailServices;
 		public LeaderServices(IUnitOfWork unitOfWork,
 			UserManager<UserAccount> userManager,
 			IOnlineJudgeServices onlineJudgeServices,
-			IAuthanticationServices authanticationServices,
-			IMailServices mailServices)
+			IAuthanticationServices authanticationServices)
 		{
 			_unitOfWork = unitOfWork;
 			_userManager = userManager;
 			_onlineJudgeServices = onlineJudgeServices;
 			_authServices = authanticationServices;
-			_mailServices = mailServices;
 		}
 		public async Task<ServiceResponse<int>> DeleteTraineesAsync(List<string>traineesIds)
 		{

@@ -10,6 +10,6 @@ namespace ISC.Core.Dtos
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
-		public List<string> Mentors { get; set; }
+		public List<string> Mentors { get; set; } = new List<string>();
 	}
 }

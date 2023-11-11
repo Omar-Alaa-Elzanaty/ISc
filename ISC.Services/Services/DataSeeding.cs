@@ -43,37 +43,40 @@ namespace ISC.Services.Services
 			{
 				throw;
 			}
-			UserAccount admin = new UserAccount()
+			if(!await _roleManager.RoleExistsAsync(Role.LEADER))
 			{
-				UserName = "ICPCAdmin",
-				Email = "icpc.sohag.community@gmail.com",
-				FirstName = "ICPC",
-				MiddleName = "ICPC",
-				LastName = "ICPC",
-				College="FCI Sohag",
-				BirthDate = DateTime.Now,
-				PhoneNumber = "01123652462",
-				NationalId = "1211111111111",
-				Gender = "Male",
-				Grade=4,
-				CodeForceHandle= "IcpcSohag"
-			};
-			try
-			{
-				var result = await _userManager.CreateAsync(admin, "Admin321!567");
-				if (result.Succeeded)
+				UserAccount admin = new UserAccount()
 				{
-					await _userManager.AddToRoleAsync(admin, "Admin");
+					UserName = "ICPCAdmin",
+					Email = "icpc.sohag.community@gmail.com",
+					FirstName = "ICPC",
+					MiddleName = "ICPC",
+					LastName = "ICPC",
+					College = "FCI Sohag",
+					BirthDate = DateTime.Now,
+					PhoneNumber = "01123652462",
+					NationalId = "1211111111111",
+					Gender = "Male",
+					Grade = 4,
+					CodeForceHandle = "IcpcSohag"
+				};
+				try
+				{
+					var result = await _userManager.CreateAsync(admin, "Admin321!567");
+					if (result.Succeeded)
+					{
+						await _userManager.AddToRoleAsync(admin, "Admin");
+					}
+					else
+					{
+						throw new Exception("Invalid Startup");
+					}
 				}
-				else
+				catch
 				{
-					throw new Exception("Invalid Startup");
+					Console.WriteLine("invalid");
 				}
 			}
-			catch
-			{
-                Console.WriteLine("invalid");
-            }
 		}
 	}
 }
