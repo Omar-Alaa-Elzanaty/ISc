@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ISC.Core.APIDtos;
+using ISC.Core.Dtos;
 using ISC.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace ISC.Services.Helpers
         public AutoMapperProfile()
         {
             CreateMap<NewRegistration, RegisterDto>();
+            CreateMap<Camp, DisplayCampsDto>();
         }
     }
 }

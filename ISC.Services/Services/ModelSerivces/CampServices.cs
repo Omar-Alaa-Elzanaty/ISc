@@ -1,4 +1,5 @@
-﻿using Azure;
+﻿using AutoMapper;
+using Azure;
 using ISC.Core.Dtos;
 using ISC.Core.Interfaces;
 using ISC.Core.Models;
@@ -24,22 +25,21 @@ namespace ISC.Services.Services.ModelSerivces
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly UserManager<UserAccount> _userManager;
+		private readonly IMapper _mapper;
 		public CampServices(IUnitOfWork unitOfWork,
-			UserManager<UserAccount> userManager)
+			UserManager<UserAccount> userManager,
+			IMapper mapper)
 		{
 			_unitOfWork = unitOfWork;
 			_userManager = userManager;
+			_mapper = mapper;
 		}
 
 		public async Task<ServiceResponse<List<DisplayCampsDto>>> CampMentors()
 		{
 			ServiceResponse<List<DisplayCampsDto>> response = new ServiceResponse<List<DisplayCampsDto>>();
 
-			var campMentor = _unitOfWork.Camps.getAllAsync().Result.Select(c => new DisplayCampsDto()
-			{
-				Id = c.Id,
-				Name = c.Name
-			}).ToList();
+			var campMentor = _mapper.Map<List<DisplayCampsDto>>(_unitOfWork.Camps.getAllAsync().Result.ToList());
 
 			if (campMentor == null)
 			{
@@ -53,13 +53,14 @@ namespace ISC.Services.Services.ModelSerivces
 				var mentors = _unitOfWork.Mentors.Get()
 					.Include(u => u.Camps)
 					.Where(u => u.Camps.Any(m => m.Id == camp.Id))
-					.Select(i => i.Id).ToListAsync();
+					.Select(u=>u.Id)
+					.ToListAsync();
 
 				if (mentors != null && mentors.Result.Count() > 0) 
 				{
 					camp.Mentors.AddRange(await _userManager.Users
 										.Include(u => u.Mentor)
-										.Where(u => u.Mentor != null && mentors.Result.Any(j=>j==u.Mentor.Id))
+										.Where(u => u.Mentor != null && mentors.Result.Any(j => j == u.Mentor.Id))
 										.Select(u => u.FirstName + ' ' + u.MiddleName + ' ' + u.LastName).ToListAsync());
 				}
 			}
