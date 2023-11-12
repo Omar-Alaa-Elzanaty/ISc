@@ -53,13 +53,13 @@ namespace ISC.Services.Services.ModelSerivces
 				var mentors = _unitOfWork.Mentors.Get()
 					.Include(u => u.Camps)
 					.Where(u => u.Camps.Any(m => m.Id == camp.Id))
-					.Select(i => i.Id);
+					.Select(i => i.Id).ToListAsync();
 
-				if (mentors is not null && mentors.Count() > 0) 
+				if (mentors != null && mentors.Result.Count() > 0) 
 				{
 					camp.Mentors.AddRange(await _userManager.Users
 										.Include(u => u.Mentor)
-										.Where(u => u.Mentor != null && mentors.Any(j=>j==u.Mentor.Id))
+										.Where(u => u.Mentor != null && mentors.Result.Any(j=>j==u.Mentor.Id))
 										.Select(u => u.FirstName + ' ' + u.MiddleName + ' ' + u.LastName).ToListAsync());
 				}
 			}
