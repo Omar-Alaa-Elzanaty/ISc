@@ -3,21 +3,12 @@ using ISC.Core.Models;
 using ISC.EF;
 using ISC.Core.APIDtos;
 using ISC.Services.ISerivces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using System.Reflection.Metadata.Ecma335;
 using ISC.Services.ISerivces.IModelServices;
 using ISC.Core.Dtos;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Asn1.X509.Qualified;
-using ISC.EF.Repositories;
-using static ISC.Core.APIDtos.CodeForcesDtos;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Schema;
 using AutoMapper;
 
 namespace ISC.API.Controllers

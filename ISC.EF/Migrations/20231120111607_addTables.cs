@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ISC.EF.Migrations
 {
     /// <inheritdoc />
-    public partial class addModels : Migration
+    public partial class addTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -88,7 +88,7 @@ namespace ISC.EF.Migrations
                     ProfilePictrue = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     CampName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     HasLaptop = table.Column<bool>(type: "bit", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

@@ -105,31 +105,39 @@ namespace ISC.Services.Services.ModelSerivces
 			response.Success = true;
 			return response;
 		}
-		public async Task<ServiceResponse<List<KeyValuePair<NewRegistration, string>>>> DisplayNewRegisterAsync()
+		public async Task<ServiceResponse<List<NewRegisterationDto>>> DisplayNewRegisterAsync()
 		{
-			ServiceResponse<List<KeyValuePair<NewRegistration, string>>> response = new ServiceResponse<List<KeyValuePair<NewRegistration, string>>>();
-			List<KeyValuePair<NewRegistration, string>> Filter = new List<KeyValuePair<NewRegistration, string>>();
+			ServiceResponse<List<NewRegisterationDto>> response = new ServiceResponse<List<NewRegisterationDto>>();
+			List<NewRegisterationDto> filter = new List<NewRegisterationDto>();
+			var traineeArchive = await _unitOfWork.TraineesArchive.getAllAsync();
 			foreach (var newMember in await _unitOfWork.NewRegitseration.getAllAsync())
 			{
-				if (await _unitOfWork.TraineesArchive
-					.findByAsync(TA => (TA.NationalID == newMember.NationalID
+				var register = new NewRegisterationDto()
+				{
+					Register = newMember
+				};
+
+				if ( traineeArchive!=null && traineeArchive?
+					.Any(TA => (TA.NationalID == newMember.NationalID
 							   || TA.CodeForceHandle == newMember.CodeForceHandle
 							   || TA.Email == newMember.Email
 							   || (newMember.FacebookLink != null && newMember.FacebookLink == TA.FacebookLink)
 							   || (newMember.PhoneNumber != null && newMember.PhoneNumber == TA.PhoneNumber))
-							&& TA.CampName.ToLower() == newMember.CampName.ToLower()) != null)
+							&& TA.CampName.ToLower() == newMember.CampName.ToLower()) == true)
 				{
-					Filter.Add(new(newMember, "Archive"));
+					register.State = "Archive";
 				}
-				else if(await _onlineJudgeServices.checkHandleValidationAsync(newMember.CodeForceHandle))
+				else if(true/*await _onlineJudgeServices.checkHandleValidationAsync(newMember.CodeForceHandle)*/)
 				{
-					Filter.Add(new(newMember, "New"));
+					register.State = "New";
 				}
+
+				filter.Add(register);
 			}
-			if(Filter.Count > 0)
+			if(filter.Count > 0)
 			{
 				response.Success = true;
-				response.Entity = Filter;
+				response.Entity = filter;
 			}
 			return response;
 		}

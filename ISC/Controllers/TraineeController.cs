@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.Esf;
+using Org.BouncyCastle.Bcpg;
 using System.Security.Claims;
 
 namespace ISC.API.Controllers
@@ -30,9 +32,36 @@ namespace ISC.API.Controllers
 			_onlineJudgeServices = onlineJudgeServices;
 		}
 		[HttpGet]
-		public async Task<IActionResult>getcontest(string contestid)
+		public async Task<IActionResult>HaveComment()
 		{
-			return Ok();
+			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+			if(userId is null)
+			{
+				return BadRequest(false);
+			}
+
+			var trainee =_UserManager.Users.Include(x => x.Trainee).FirstOrDefault(i=>i.Id==userId);
+			if (trainee is null||trainee.Trainee is null)
+			{
+				return BadRequest(false);
+			}
+
+			var lastSessionId =  _UnitOfWork.Sessions
+									.Get()
+									.Where(s => s.Date < DateTime.Now)
+									.OrderDescending()
+									.FirstOrDefaultAsync()
+									.Result?.Id;
+
+			var attend = await _UnitOfWork.TraineesAttendence
+									.Get()
+									.AnyAsync(i => i.TraineeId == trainee.Trainee.Id);
+			var hasComment = await _UnitOfWork.SessionsFeedbacks
+									.Get()
+									.AnyAsync(s => s.SessionId == lastSessionId && trainee.Trainee.Id == s.TraineeId);
+
+			return Ok(attend == true && hasComment == false);
 		}
 	}
 }

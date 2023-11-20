@@ -26,6 +26,6 @@ namespace ISC.Core.Models
 		public byte[]? ProfilePictrue { get; set; }
 		public string CampName { get; set; }
 		public bool HasLaptop { get; set; }
-		public string Comment { get; set; }
+		public string? Comment { get; set; }
 	}
 }

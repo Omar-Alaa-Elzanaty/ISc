@@ -1480,7 +1480,8 @@ for his camp</panel_attributes>
       <w>209</w>
       <h>66</h>
     </coordinates>
-    <panel_attributes>Show Material</panel_attributes>
+    <panel_attributes>Show Material
+until training reach or trainee solve</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
