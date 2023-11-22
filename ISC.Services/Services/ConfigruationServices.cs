@@ -22,6 +22,7 @@ namespace ISC.Services.Services
 			services.AddScoped<IDataSeeding, DataSeeding>();
 			services.AddScoped<ILeaderServices, LeaderServices>();
 			services.AddScoped<ICampServices, CampServices>();
+			services.AddScoped<IHeadSerivces, HeadServices>();
 		}
 	}
 }

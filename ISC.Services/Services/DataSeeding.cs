@@ -45,6 +45,12 @@ namespace ISC.Services.Services
 			}
 			if(!await _roleManager.RoleExistsAsync(Role.LEADER))
 			{
+				await _roleManager.CreateAsync(new IdentityRole(Role.LEADER));
+				await _roleManager.CreateAsync(new IdentityRole(Role.MENTOR));
+				await _roleManager.CreateAsync(new IdentityRole(Role.TRAINEE));
+				await _roleManager.CreateAsync(new IdentityRole(Role.HOC));
+				await _roleManager.CreateAsync(new IdentityRole(Role.INSTRUCTOR));
+				await _context.SaveChangesAsync();
 				UserAccount admin = new UserAccount()
 				{
 					UserName = "ICPCAdmin",
@@ -65,7 +71,7 @@ namespace ISC.Services.Services
 					var result = await _userManager.CreateAsync(admin, "Admin321!567");
 					if (result.Succeeded)
 					{
-						await _userManager.AddToRoleAsync(admin, "Admin");
+						await _userManager.AddToRoleAsync(admin, Role.LEADER);
 					}
 					else
 					{

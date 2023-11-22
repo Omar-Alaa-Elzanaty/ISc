@@ -14,6 +14,7 @@ using System.Security.Claims;
 using System.Text;
 using ISC.Services.ISerivces.IModelServices;
 using ISC.Core.ModelsDtos;
+using ISC.Core.Dtos;
 
 namespace ISC.API.Controllers
 {
@@ -28,13 +29,20 @@ namespace ISC.API.Controllers
 		private readonly IOnlineJudgeServices _onlineJudgeSrvices;
 		private readonly ISheetServices _sheetServices;
 		private readonly ISessionsServices _sessionsSrvices;
-		public HeadCampController(UserManager<UserAccount> userManager, IUnitOfWork unitofwork, IOnlineJudgeServices onlinejudgeservices, IMailServices mailService, ISheetServices sheetServices)
+		private readonly IHeadSerivces _headServices;
+		public HeadCampController(UserManager<UserAccount> userManager,
+			IUnitOfWork unitofwork,
+			IOnlineJudgeServices onlinejudgeservices,
+			IMailServices mailService,
+			ISheetServices sheetServices,
+			IHeadSerivces headServices)
 		{
 			_UserManager = userManager;
 			_UnitOfWork = unitofwork;
 			_onlineJudgeSrvices = onlinejudgeservices;
 			_MailService = mailService;
 			_sheetServices = sheetServices;
+			_headServices = headServices;
 		}
 		[HttpGet]
 		public async Task<IActionResult> DisplayTrainees()
@@ -50,9 +58,9 @@ namespace ISC.API.Controllers
 			}));
 		}
 		[HttpDelete]
-		public async Task<IActionResult> DeleteFromTrainees([FromBody]List<string> traineesusersid)
+		public async Task<IActionResult> DeleteFromTrainees([FromBody]List<string> traineesUsersId)
 		{
-			foreach (string traineeuserid in traineesusersid)
+			foreach (string traineeuserid in traineesUsersId)
 			{
 				var TraineeAccount = await _UserManager.Users.Include(i => i.Trainee).Where(user => user.Id == traineeuserid).SingleOrDefaultAsync();
 				if (TraineeAccount != null)
@@ -84,7 +92,7 @@ namespace ISC.API.Controllers
 			return Ok();
 		}
 		[HttpGet]
-		public async Task<IActionResult> WeeklyFilter([FromQuery]List<string> selectedTrainee)
+		public async Task<IActionResult> WeeklyFilter([FromBody]List<string> selectedTrainee)
 		{
 			string? headOfCampUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			Camp? camp = _UnitOfWork.HeadofCamp.findWithChildAsync(t => t.UserId == headOfCampUserId,
@@ -202,9 +210,14 @@ namespace ISC.API.Controllers
 			{
 				return BadRequest("Invalid Request");
 			}
-			var camp = _UnitOfWork.HeadofCamp.findByAsync(h => h.UserId == userId).Result.Camp;
+			var camp = _UnitOfWork.HeadofCamp
+				.Get()
+				.Include(h=>h.Camp)
+				.FirstOrDefaultAsync(h => h.UserId == userId).Result?.Camp;
+
 			List<object> mentors = new List<object>();
 			var mentorsOfCamp = await _UnitOfWork.Camps.findWithChildAsync(c=>c.Id==camp.Id,new[] {"Mentors"} );
+
 			foreach (var member in mentorsOfCamp?.Mentors)
 			{
 				UserAccount userInfo = await _UserManager.FindByIdAsync(member.UserId);
@@ -216,6 +229,24 @@ namespace ISC.API.Controllers
 				});
 			}
 			return Ok(mentors);
+		}
+		[HttpGet]
+		public async Task<IActionResult> DisplayMentorTrainee()
+		{
+			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+			if (userId == null)
+			{
+				return BadRequest("Invalid Request");
+			}
+
+			return Ok(await _headServices.DisplayTraineeMentorAsync(userId));
+		}
+		[HttpPost]
+		public async Task<IActionResult> SubmitTraineesMentors([FromBody] List<AssignTraineeMentorDto> data)
+		{
+			await _headServices.SubmitTraineeMentorAsync(data);
+			return Ok();
 		}
 	}
 }

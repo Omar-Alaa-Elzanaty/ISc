@@ -97,7 +97,7 @@ fontsize=20
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>868</x>
+      <x>875</x>
       <y>119</y>
       <w>182</w>
       <h>91</h>
@@ -409,14 +409,14 @@ Attend</panel_attributes>
     <coordinates>
       <x>693</x>
       <y>140</y>
-      <w>189</w>
+      <w>196</w>
       <h>42</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..n
 m2=0..1
 train</panel_attributes>
-    <additional_attributes>10.0;30.0;250.0;30.0</additional_attributes>
+    <additional_attributes>10.0;30.0;260.0;30.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -477,16 +477,16 @@ contain</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1043</x>
+      <x>1050</x>
       <y>147</y>
-      <w>112</w>
+      <w>105</w>
       <h>462</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..1
 m2=0..m
 </panel_attributes>
-    <additional_attributes>10.0;10.0;140.0;10.0;140.0;630.0;30.0;630.0</additional_attributes>
+    <additional_attributes>10.0;10.0;130.0;10.0;130.0;630.0;20.0;630.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -518,15 +518,15 @@ m2=0..n</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1043</x>
+      <x>1050</x>
       <y>168</y>
-      <w>147</w>
+      <w>140</w>
       <h>399</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..1
 m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;190.0;10.0;190.0;540.0;40.0;540.0</additional_attributes>
+    <additional_attributes>10.0;10.0;180.0;10.0;180.0;540.0;30.0;540.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -547,14 +547,14 @@ has</panel_attributes>
     <coordinates>
       <x>294</x>
       <y>98</y>
-      <w>588</w>
+      <w>595</w>
       <h>133</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..1
 m2=0..1
 has</panel_attributes>
-    <additional_attributes>10.0;160.0;60.0;160.0;60.0;30.0;820.0;30.0</additional_attributes>
+    <additional_attributes>10.0;160.0;60.0;160.0;60.0;30.0;830.0;30.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>

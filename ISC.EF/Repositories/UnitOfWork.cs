@@ -4,6 +4,7 @@ using ISC.Core.ModelsDtos;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace ISC.EF.Repositories
 {
@@ -84,8 +85,16 @@ namespace ISC.EF.Repositories
 					else if (role == Role.MENTOR)
 					{
 						await _UserManager.AddToRoleAsync(Acc, role);
-						Mentor Mentor = new Mentor() { UserId = Acc.Id };
-						Mentors.addAsync(Mentor);
+						Mentor mentor = new Mentor() { UserId = Acc.Id };
+						Mentors.addAsync(mentor);
+						await _DataBase.SaveChangesAsync();
+
+						if(campId is not null)
+						{
+							var camp = await _DataBase.Camps.SingleAsync(c => c.Id == campId);
+							mentor.Camps = new List<Camp>() { camp };
+							_DataBase.Update(mentor);
+						}
 					}
 					else if (role == Role.HOC && campId!=null)
 					{

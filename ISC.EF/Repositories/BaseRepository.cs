@@ -35,7 +35,7 @@ namespace ISC.EF.Repositories
 		{
 			return  _Context.Set<T>().SingleOrDefault(match);
 		}
-		public async Task Update(T entity)
+		public async Task UpdateAsync(T entity)
 		{
 			_Context.Set<T>().Update(entity);
 		}

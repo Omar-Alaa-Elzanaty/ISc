@@ -15,7 +15,7 @@ namespace ISC.Core.Interfaces
 		void AddGroup(List<T> group);
 		Task<T> getByIdAsync(int id);
 		IQueryable<T> Get();
-		Task Update(T entity);
+		Task UpdateAsync(T entity);
 		Task<List<T>> getAllAsync();
 		Task<List<T>>getAllAsync(Func<T, bool> match);
 		void deleteGroup(List<T> entities);
