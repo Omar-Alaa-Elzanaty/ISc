@@ -13,10 +13,10 @@ namespace ISC.Core.Interfaces
 	public interface IUnitOfWork:IDisposable
 	{ 
 		ITraineeRepository Trainees { get; }
-		IBaseRepository<Session> Sessions { get; }
+		ISessionRepository Sessions { get; }
 		IMentorRepository Mentors { get; }
 		ITraineeAttendenceRepository TraineesAttendence { get; }
-		IBaseRepository<Sheet> Sheets { get; }
+		ISheetRepository Sheets { get; }
 		IBaseRepository<TraineeSheetAccess> TraineesSheetsAccess { get; }
 		IHeadOfCampRepository HeadofCamp { get; }
 		ICampRepository Camps { get; }

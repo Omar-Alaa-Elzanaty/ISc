@@ -10,19 +10,19 @@ namespace ISC.EF.Repositories
 {
     public class UnitOfWork : IUnitOfWork
 	{
-		private readonly UserManager<UserAccount> _UserManager;
-		public readonly DataBase _DataBase;
+		private readonly UserManager<UserAccount> _userManager;
+		public readonly DataBase _dataBase;
 		private readonly IWebHostEnvironment _Host;
 		private readonly IHttpContextAccessor _HttpContext;
 		public ITraineeRepository Trainees { get; private set; }
 
-		public IBaseRepository<Session> Sessions { get; private set; }
+		public ISessionRepository Sessions { get; private set; }
 
 		public IMentorRepository Mentors { get; private set; }
 
 		public ITraineeAttendenceRepository TraineesAttendence { get; private set; }
 
-		public IBaseRepository<Sheet> Sheets { get; private set; }
+		public ISheetRepository Sheets { get; private set; }
 
 		public IBaseRepository<TraineeSheetAccess> TraineesSheetsAccess { get; private set; }
 
@@ -42,27 +42,27 @@ namespace ISC.EF.Repositories
 		public IBaseRepository<NewRegistration> NewRegitseration { get; private set; }
         public UnitOfWork(DataBase database,UserManager<UserAccount> usermanager,IWebHostEnvironment host, IHttpContextAccessor httpContext)
         {
-			_DataBase = database;
-			_UserManager = usermanager;
-			Trainees = new TraineeRepository(_DataBase,_UserManager);
-			Sessions= new BaseRepository<Session>(_DataBase);
+			_dataBase = database;
+			_userManager = usermanager;
+			Trainees = new TraineeRepository(_dataBase,_userManager);
+			Sessions= new SessionRepository(_dataBase);
 			Mentors = new MentorRepository(database,usermanager);
-			TraineesAttendence = new TraineeAttendenceRepository(_DataBase);
-			Sheets = new BaseRepository<Sheet>(_DataBase);
-			TraineesSheetsAccess = new BaseRepository<TraineeSheetAccess>(_DataBase);
-			HeadofCamp = new HeadOfCampRepository(_DataBase);
-			Camps = new CampRepository(_DataBase);
-			SessionsFeedbacks = new SessionFeedbackRepository(_DataBase);
-			Materials = new BaseRepository<Material>(_DataBase);
-			TraineesArchive = new BaseRepository<TraineeArchive>(_DataBase);
-			StuffArchive = new BaseRepository<StuffArchive>(_DataBase);
-			NewRegitseration = new BaseRepository<NewRegistration>(_DataBase);
+			TraineesAttendence = new TraineeAttendenceRepository(_dataBase);
+			Sheets = new SheetRepository(_dataBase);
+			TraineesSheetsAccess = new BaseRepository<TraineeSheetAccess>(_dataBase);
+			HeadofCamp = new HeadOfCampRepository(_dataBase);
+			Camps = new CampRepository(_dataBase);
+			SessionsFeedbacks = new SessionFeedbackRepository(_dataBase);
+			Materials = new BaseRepository<Material>(_dataBase);
+			TraineesArchive = new BaseRepository<TraineeArchive>(_dataBase);
+			StuffArchive = new BaseRepository<StuffArchive>(_dataBase);
+			NewRegitseration = new BaseRepository<NewRegistration>(_dataBase);
 		}
 		public async Task<bool> addToRoleAsync<T>(T account, string role,int?campId,int?mentorId)
 		{
 			if(account is UserAccount Acc)
 			{
-				if (Acc != null && _UserManager.GetRolesAsync(Acc).Result.Contains(role) == true)
+				if (Acc != null && _userManager.GetRolesAsync(Acc).Result.Contains(role) == true)
 					return true;
 				else if(Acc==null)
 					return false;
@@ -74,37 +74,37 @@ namespace ISC.EF.Repositories
 						{
 							return false;
 						}
-						await _UserManager.AddToRoleAsync(Acc, role);
+						await _userManager.AddToRoleAsync(Acc, role);
 						Trainee Trainee;
 						if (mentorId != null)
 							Trainee = new Trainee() { UserId = Acc.Id, CampId = (int)campId, MentorId = mentorId };
 						else
 							Trainee = new Trainee() { UserId = Acc.Id, CampId = (int)campId };
-						Trainees.addAsync(Trainee);
+						await Trainees.addAsync(Trainee);
 					}
 					else if (role == Role.MENTOR)
 					{
-						await _UserManager.AddToRoleAsync(Acc, role);
+						await _userManager.AddToRoleAsync(Acc, role);
 						Mentor mentor = new Mentor() { UserId = Acc.Id };
-						Mentors.addAsync(mentor);
-						await _DataBase.SaveChangesAsync();
+						await Mentors.addAsync(mentor);
+						await _dataBase.SaveChangesAsync();
 
 						if(campId is not null)
 						{
-							var camp = await _DataBase.Camps.SingleAsync(c => c.Id == campId);
+							var camp = await _dataBase.Camps.SingleAsync(c => c.Id == campId);
 							mentor.Camps = new List<Camp>() { camp };
-							_DataBase.Update(mentor);
+							_dataBase.Update(mentor);
 						}
 					}
 					else if (role == Role.HOC && campId!=null)
 					{
-						await _UserManager.AddToRoleAsync(Acc, role);
+						await _userManager.AddToRoleAsync(Acc, role);
 						HeadOfTraining HeadOfTraining = new HeadOfTraining() { UserId = Acc.Id, CampId = campId };
-						HeadofCamp.addAsync(HeadOfTraining);
+						await HeadofCamp.addAsync(HeadOfTraining);
 					}
 					else if (role == Role.LEADER || role == Role.INSTRUCTOR)
 					{
-						await _UserManager.AddToRoleAsync(Acc, role);
+						await _userManager.AddToRoleAsync(Acc, role);
 					}
 					else
 					{
@@ -199,11 +199,11 @@ namespace ISC.EF.Repositories
 		}
 		public async Task<int> completeAsync()
 		{
-			return await _DataBase.SaveChangesAsync();
+			return await _dataBase.SaveChangesAsync();
 		}
         public void Dispose()
 		{
-			_DataBase.Dispose();
+			_dataBase.Dispose();
 		}
 	}
 }

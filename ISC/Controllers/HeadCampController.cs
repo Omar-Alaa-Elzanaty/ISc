@@ -15,39 +15,45 @@ using System.Text;
 using ISC.Services.ISerivces.IModelServices;
 using ISC.Core.ModelsDtos;
 using ISC.Core.Dtos;
+using ISC.EF.Repositories;
+using AutoMapper;
+using System.Net;
 
 namespace ISC.API.Controllers
 {
-    [Route("api/[controller]/[action]")]
+	[Route("api/[controller]/[action]")]
 	[ApiController]
 	//[Authorize(Roles =$"{Roles.LEADER},{Roles.HOC}")]
 	public class HeadCampController : ControllerBase
 	{
-		private readonly UserManager<UserAccount> _UserManager;
-		private readonly IUnitOfWork _UnitOfWork;
+		private readonly UserManager<UserAccount> _userManager;
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMailServices _MailService;
 		private readonly IOnlineJudgeServices _onlineJudgeSrvices;
 		private readonly ISheetServices _sheetServices;
 		private readonly ISessionsServices _sessionsSrvices;
 		private readonly IHeadSerivces _headServices;
+		private readonly IMapper _mapper;
 		public HeadCampController(UserManager<UserAccount> userManager,
 			IUnitOfWork unitofwork,
 			IOnlineJudgeServices onlinejudgeservices,
 			IMailServices mailService,
 			ISheetServices sheetServices,
-			IHeadSerivces headServices)
+			IHeadSerivces headServices,
+			IMapper mapper)
 		{
-			_UserManager = userManager;
-			_UnitOfWork = unitofwork;
+			_userManager = userManager;
+			_unitOfWork = unitofwork;
 			_onlineJudgeSrvices = onlinejudgeservices;
 			_MailService = mailService;
 			_sheetServices = sheetServices;
 			_headServices = headServices;
+			_mapper = mapper;
 		}
 		[HttpGet]
 		public async Task<IActionResult> DisplayTrainees()
 		{
-			return Ok(_UserManager.GetUsersInRoleAsync(Role.TRAINEE).Result.Select(tr => new
+			return Ok(_userManager.GetUsersInRoleAsync(Role.TRAINEE).Result.Select(tr => new
 			{
 				tr.Id,
 				FullName = tr.FirstName + ' ' + tr.MiddleName + ' ' + tr.LastName,
@@ -58,14 +64,14 @@ namespace ISC.API.Controllers
 			}));
 		}
 		[HttpDelete]
-		public async Task<IActionResult> DeleteFromTrainees([FromBody]List<string> traineesUsersId)
+		public async Task<IActionResult> DeleteFromTrainees([FromBody] List<string> traineesUsersId)
 		{
 			foreach (string traineeuserid in traineesUsersId)
 			{
-				var TraineeAccount = await _UserManager.Users.Include(i => i.Trainee).Where(user => user.Id == traineeuserid).SingleOrDefaultAsync();
+				var TraineeAccount = await _userManager.Users.Include(i => i.Trainee).Where(user => user.Id == traineeuserid).SingleOrDefaultAsync();
 				if (TraineeAccount != null)
 				{
-					var Camp = await _UnitOfWork.Trainees.getCampofTrainee(TraineeAccount.Trainee.Id);
+					var Camp = await _unitOfWork.Trainees.getCampofTrainee(TraineeAccount.Trainee.Id);
 					TraineeArchive Archive = new TraineeArchive()
 					{
 						FirstName = TraineeAccount.FirstName,
@@ -84,48 +90,48 @@ namespace ISC.API.Controllers
 						CampName = Camp.Name,
 						IsCompleted = false
 					};
-					_UnitOfWork.TraineesArchive.addAsync(Archive);
-					await _UserManager.DeleteAsync(TraineeAccount);
+					await _unitOfWork.TraineesArchive.addAsync(Archive);
+					await _userManager.DeleteAsync(TraineeAccount);
 				}
 			}
-			await _UnitOfWork.completeAsync();
+			await _unitOfWork.completeAsync();
 			return Ok();
 		}
 		[HttpGet]
-		public async Task<IActionResult> WeeklyFilter([FromBody]List<string> selectedTrainee)
+		public async Task<IActionResult> WeeklyFilter([FromBody] List<string> selectedTrainee)
 		{
 			string? headOfCampUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			Camp? camp = _UnitOfWork.HeadofCamp.findWithChildAsync(t => t.UserId == headOfCampUserId,
-																new[] { "Camp", })?.Result?.Camp??null;
-			var traineesId =await _UnitOfWork.Trainees
+			Camp? camp = _unitOfWork.HeadofCamp.findWithChildAsync(t => t.UserId == headOfCampUserId,
+																new[] { "Camp", })?.Result?.Camp ?? null;
+			var traineesId = await _unitOfWork.Trainees
 							.Get()
 							.Where(t => selectedTrainee.Contains(t.UserId)).Select(t => t.Id)
 							.ToListAsync();
 
-			var result =await _sheetServices.TraineeSheetAccesWithout(traineesId, camp?.Id ?? 0);
+			var result = await _sheetServices.TraineeSheetAccesWithout(traineesId, camp?.Id ?? 0);
 			if (result.Success == false)
 			{
 				return BadRequest(result.Comment);
 			}
 			List<TraineeSheetAccess> traineesAccess = result.Entity;
 			var ProblemSheetCount = _sheetServices.TraineeSheetProblemsCount(traineesAccess).Result.Entity;
-			var FilteredOnSheets = _sheetServices.TraineesFilter(traineesAccess,ProblemSheetCount).Result.Entity;
+			var FilteredOnSheets = _sheetServices.TraineesFilter(traineesAccess, ProblemSheetCount).Result.Entity;
 			var traineesIds = traineesAccess.Select(i => i.TraineeId).ToList();
 			var FilteredOnSessions = _sessionsSrvices.SessionFilter(traineesIds).Result.Entity;
 			List<KeyValuePair<FilteredUserDto, string>> Filtered = new List<KeyValuePair<FilteredUserDto, string>>();
-			int tsaSize=traineesAccess.Count();
-			for(int Trainee = 0; Trainee < tsaSize; Trainee++)
+			int tsaSize = traineesAccess.Count();
+			for (int Trainee = 0; Trainee < tsaSize; Trainee++)
 			{
 				bool FoundInSheetFilter = FilteredOnSheets?.Contains(traineesAccess[Trainee].TraineeId) ?? false;
 				bool FoundInSessionFilter = FilteredOnSessions?.Contains(traineesAccess[Trainee].TraineeId) ?? false;
-				if( FoundInSheetFilter || FoundInSessionFilter)
+				if (FoundInSheetFilter || FoundInSessionFilter)
 				{
-					UserAccount TraineeAccount = await _UserManager.FindByIdAsync(traineesAccess[Trainee].Trainee.UserId);
+					UserAccount TraineeAccount = await _userManager.FindByIdAsync(traineesAccess[Trainee].Trainee.UserId);
 					if (TraineeAccount != null)
 					{
 						var FilteredUser = new FilteredUserDto()
 						{
-							UserId=TraineeAccount.Id,
+							UserId = TraineeAccount.Id,
 							FirstName = TraineeAccount.FirstName,
 							MiddleName = TraineeAccount.MiddleName,
 							LastName = TraineeAccount.LastName,
@@ -152,16 +158,16 @@ namespace ISC.API.Controllers
 			return Ok(Filtered);
 		}
 		[HttpDelete]
-		public async Task<IActionResult> SubmitWeeklyFilter([FromBody]List<string> usersid)
+		public async Task<IActionResult> SubmitWeeklyFilter([FromBody] List<string> usersid)
 		{
 			string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			//Camp Camp = await _UnitOfWork.Camps.getCampByUserIdAsync(userId);
-			Camp? Camp = _UnitOfWork.HeadofCamp.findWithChildAsync(t => t.UserId == userId,
-																new[] { "Camp", }).Result?.Camp ?? null; 
-			List<UserAccount>Fail = new List<UserAccount>();
+			Camp? Camp = _unitOfWork.HeadofCamp.findWithChildAsync(t => t.UserId == userId,
+																new[] { "Camp", }).Result?.Camp ?? null;
+			List<UserAccount> Fail = new List<UserAccount>();
 			foreach (var Id in usersid)
 			{
-				UserAccount traineeAccount = await _UserManager.FindByIdAsync(Id);
+				UserAccount traineeAccount = await _userManager.FindByIdAsync(Id);
 				if (traineeAccount != null)
 				{
 					TraineeArchive ToArchive = new TraineeArchive()
@@ -190,8 +196,8 @@ namespace ISC.API.Controllers
 						$"{@"<\br>"}{@"<\br>"}Best regards,{@"<\br>"}{@"<\br>"} ISc System{@"<\br>"}{@"<\br>"} Omar Alaa");
 					if (Result == true)
 					{
-						_UnitOfWork.TraineesArchive.addAsync(ToArchive);
-						await _UserManager.DeleteAsync(traineeAccount);
+						await _unitOfWork.TraineesArchive.addAsync(ToArchive);
+						await _userManager.DeleteAsync(traineeAccount);
 					}
 					else
 					{
@@ -199,7 +205,7 @@ namespace ISC.API.Controllers
 					}
 				}
 			}
-			await _UnitOfWork.completeAsync();
+			await _unitOfWork.completeAsync();
 			return Ok(new { Fail, Comment = Fail.IsNullOrEmpty() ? "" : "please back to system Admin to solve this problem" });
 		}
 		[HttpGet]
@@ -210,17 +216,17 @@ namespace ISC.API.Controllers
 			{
 				return BadRequest("Invalid Request");
 			}
-			var camp = _UnitOfWork.HeadofCamp
+			var camp = _unitOfWork.HeadofCamp
 				.Get()
-				.Include(h=>h.Camp)
+				.Include(h => h.Camp)
 				.FirstOrDefaultAsync(h => h.UserId == userId).Result?.Camp;
 
 			List<object> mentors = new List<object>();
-			var mentorsOfCamp = await _UnitOfWork.Camps.findWithChildAsync(c=>c.Id==camp.Id,new[] {"Mentors"} );
+			var mentorsOfCamp = await _unitOfWork.Camps.findWithChildAsync(c => c.Id == camp.Id, new[] { "Mentors" });
 
 			foreach (var member in mentorsOfCamp?.Mentors)
 			{
-				UserAccount userInfo = await _UserManager.FindByIdAsync(member.UserId);
+				UserAccount userInfo = await _userManager.FindByIdAsync(member.UserId);
 				mentors.Add(new
 				{
 					member.Id,
@@ -247,6 +253,260 @@ namespace ISC.API.Controllers
 		{
 			await _headServices.SubmitTraineeMentorAsync(data);
 			return Ok();
+		}
+		[HttpGet]
+		public async Task<IActionResult> DisplaySessions()
+		{
+			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+			var hoc = await _unitOfWork.HeadofCamp.GetByUserId(userId);
+
+			if (hoc == null)
+			{
+				return BadRequest("Error in account");
+			}
+
+			var sessions = await _unitOfWork.Sessions.findManyWithChildAsync(s => s.CampId == hoc.CampId);
+
+			return Ok(sessions);
+		}
+		[HttpPost]
+		public async Task<IActionResult> AddSession([FromBody] SessionDto model)
+		{
+			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			var campId = _unitOfWork.HeadofCamp.GetByUserId(userId).Result?.CampId;
+
+			if (campId is null)
+			{
+				return BadRequest("no camp found");
+			}
+
+			model.Topic = model.Topic.ToLower();
+			model.InstructorName = model.InstructorName.ToLower();
+
+			var isFound = await _unitOfWork.Sessions
+				.Get()
+				.AnyAsync(s => !((s.Topic == model.Topic && s.CampId == campId) ||
+									(s.Date.Day == model.Date.Day && s.Date.Month == model.Date.Month ||
+										(campId == model.CampId || s.InstructorName == model.InstructorName))));
+
+			if (!isFound)
+			{
+				return BadRequest("this session may record before or Conflict with other session");
+			}
+
+			Session session = _mapper.Map<Session>(model);
+			session.CampId = (int)campId;
+
+			await _unitOfWork.Sessions.addAsync(session);
+			_ = await _unitOfWork.completeAsync();
+
+			return Ok();
+		}
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> RemoveSession(int id)
+		{
+			var session = await _unitOfWork.Sessions.getByIdAsync(id);
+
+			if (session is null)
+			{
+				return BadRequest("no session found");
+			}
+
+			_ = await _unitOfWork.Sessions.deleteAsync(session);
+			_ = await _unitOfWork.completeAsync();
+
+			return Ok();
+		}
+		[HttpGet]
+		public async Task<IActionResult> DisplayInstructor()
+		{
+			return Ok(_userManager.GetUsersInRoleAsync(Role.INSTRUCTOR).Result.Select(i => i.FirstName + ' ' + i.MiddleName));
+		}
+		[HttpPut("{id}")]
+		public async Task<IActionResult> UpdateSessionInfo([FromBody] SessionDto model, int id)
+		{
+			var session = await _unitOfWork.Sessions.getByIdAsync(id);
+
+			if (session is null)
+			{
+				return NotFound("Invalid session");
+			}
+			var validResponse = await _unitOfWork.Sessions.CheckUpdateAbility(session, model, id);
+			if (!validResponse.Success)
+			{
+				return BadRequest(validResponse.Comment);
+			}
+
+			session.Topic = model.Topic;
+			session.InstructorName = model.InstructorName;
+			session.LocationLink = model.LocationLink;
+			session.LocationName = model.LocationName;
+			session.Date = model.Date;
+
+			await _unitOfWork.Sessions.UpdateAsync(session);
+			_ = await _unitOfWork.completeAsync();
+
+			return Ok();
+		}
+		[HttpGet()]
+		public async Task<IActionResult> DisplaySheet()
+		{
+			var userId = "5f00d005-aafb-4bd9-8341-68a4cf2f8a22";// User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			var campId = _unitOfWork.HeadofCamp.GetByUserId(userId).Result?.CampId;
+			if(campId is null)
+			{
+				return NotFound("Invalid account");
+			}
+			var sheets = _unitOfWork.Sheets
+				.Get()
+				.Where(s => s.CampId == campId)
+				.OrderBy(s=>s.SheetOrder)
+				.Select(s => new
+				{
+					s.Id,
+					s.Name,
+					s.SheetLink,
+					s.SheetCfId,
+					s.IsSohag,
+					s.MinimumPrecent,
+					s.SheetOrder,
+				});
+			return Ok(sheets);
+		}
+		[HttpPost]
+		public async Task<IActionResult> AddSheet([FromBody] SheetDto model)
+		{
+			var userId = "5f00d005-aafb-4bd9-8341-68a4cf2f8a22";// User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			var campId = _unitOfWork.HeadofCamp.GetByUserId(userId).Result?.CampId;
+
+			model.Name = model.Name.ToLower();
+
+			var isValidToAdd = await _unitOfWork.Sheets.isValidToAddAsync(model,campId);
+
+			if(!isValidToAdd)
+			{
+				return BadRequest("Conflict found");
+			}
+
+			var sheet=_mapper.Map<Sheet>(model);
+			sheet.CampId = (int)campId;
+
+			await _unitOfWork.Sheets.addAsync(sheet);
+			_= await _unitOfWork.completeAsync();
+
+			return Ok("Success");
+		}
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> RemoveSheet(int id)
+		{
+			var Sheet = await _unitOfWork.Sheets.getByIdAsync(id);
+
+			if(Sheet is null)
+			{
+				return NotFound("Couldn't delete");
+			}
+
+			if(!await _unitOfWork.Sheets.deleteAsync(Sheet))
+			{
+				return BadRequest("Couldn't delete");
+			}
+
+			_unitOfWork.completeAsync().Wait();
+
+			return Ok();
+		}
+		[HttpPut("{id}")]
+		public async Task<IActionResult> UpdateSheets(int id, [FromBody] SheetDto model)
+		{
+			var userId = "5f00d005-aafb-4bd9-8341-68a4cf2f8a22";// User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			var campId = _unitOfWork.HeadofCamp.GetByUserId(userId).Result?.CampId;
+
+			var sheet = await _unitOfWork.Sheets.getByIdAsync(id);
+
+			if (sheet is null||!await _unitOfWork.Sheets.isValidToUpdateAsync(model,campId,id))
+			{
+				return NotFound("Couldn't update");
+			}
+			sheet.Name = model.Name;
+			sheet.SheetLink = model.SheetLink;
+			sheet.IsSohag=model.IsSohag;
+			sheet.SheetCfId=model.SheetCfId;
+			sheet.MinimumPrecent=model.MinimumPrecent;
+			sheet.SheetOrder=model.SheetOrder;
+
+			await _unitOfWork.Sheets.UpdateAsync(sheet);
+			_= await _unitOfWork.completeAsync();
+
+			return Ok("Success");
+		}
+		[HttpGet("{sheetId}")]
+		public async Task<IActionResult> DisplayMaterials(int sheetId)
+		{
+			var materials = await _unitOfWork.Materials.findManyWithChildAsync(m => m.SheetId.Equals(sheetId));
+
+			return Ok(materials.OrderBy(m=>m.CreationDate).Select(m => new
+			{
+				m.Id,
+				m.Name,
+				m.Link
+			}).ToList());
+		}
+		[HttpPost]
+		public async Task<IActionResult>AddMaterial(int sheetId,MaterialDto model)
+		{
+			if(await _unitOfWork.Sheets.getByIdAsync(sheetId) == null)
+			{
+				return BadRequest("Invalid request");
+			}
+
+			if (await _unitOfWork.Materials.Get().AnyAsync(m=>(m.Name==model.Name||m.Link==model.Link)&&m.SheetId==sheetId))
+			{
+				return BadRequest("Data conflict");
+			}
+
+			Material material=_mapper.Map<Material>(model);
+			material.SheetId = sheetId;
+
+			await _unitOfWork.Materials.addAsync(material);
+			_ = await _unitOfWork.completeAsync();
+
+			return Ok("Success");
+		}
+		[HttpDelete("{materialId}")]
+		public async Task<IActionResult>RemoveMaterial(int materialId)
+		{
+			var material = await _unitOfWork.Materials.getByIdAsync(materialId);
+
+			if (material == null)
+			{
+				return NotFound("Invalid Request");
+			}
+
+			await _unitOfWork.Materials.deleteAsync(material);
+			_ = await _unitOfWork.completeAsync();
+
+			return Ok();
+		}
+		[HttpPut("{materialId}")]
+		public async Task<IActionResult>UpdateMaterial(int materialId,MaterialDto model)
+		{
+			var material = await _unitOfWork.Materials.getByIdAsync(materialId);
+
+			var isValidToUpdate = !await _unitOfWork.Materials.Get()
+										.AnyAsync(m => (m.Name == model.Name || m.Link == model.Link) && m.SheetId != material.SheetId);
+			if (!isValidToUpdate)
+			{
+				return BadRequest("Conflict Update");
+			}
+
+			material.Name = model.Name;
+			material.Link = model.Link;
+
+			await _unitOfWork.Materials.UpdateAsync(material);
+			_ = await _unitOfWork.completeAsync();
+
+			return Ok("Success");
 		}
 	}
 }

@@ -205,7 +205,7 @@ namespace ISC.API.Controllers
 						Email = Account.Email,
 						PhoneNumber = Account.PhoneNumber
 					};
-					_unitOfWork.StuffArchive.addAsync(Archive);
+					await _unitOfWork.StuffArchive.addAsync(Archive);
 					await _userManager.DeleteAsync(Account);
 				}
 				else

@@ -75,7 +75,7 @@ namespace ISC.Services.Services.ModelSerivces
 				Year = camp.Year,
 				DurationInWeeks = camp.DurationInWeeks
 			};
-			_unitOfWork.Camps.addAsync(newCamp);
+			await _unitOfWork.Camps.addAsync(newCamp);
 			int result =await _unitOfWork.completeAsync();
 			if(result == 0)
 			{

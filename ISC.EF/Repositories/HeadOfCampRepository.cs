@@ -25,5 +25,9 @@ namespace ISC.EF.Repositories
 
 			return await deleteAsync(head);
 		}
+		public async Task<HeadOfTraining?> GetByUserId(string userId)
+		{
+			return await _Context.HeadsOfTraining.SingleOrDefaultAsync(h => h.UserId == userId);
+		}
 	}
 }

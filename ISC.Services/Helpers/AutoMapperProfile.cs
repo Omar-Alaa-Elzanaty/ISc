@@ -16,6 +16,9 @@ namespace ISC.Services.Helpers
         {
             CreateMap<NewRegistration, RegisterDto>();
             CreateMap<Camp, DisplayCampsDto>();
+            CreateMap<SessionDto, Session>();
+            CreateMap<SheetDto, Sheet>();
+            CreateMap<MaterialDto,Material>();
         }
     }
 }

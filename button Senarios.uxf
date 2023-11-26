@@ -2286,10 +2286,10 @@ valign=top</panel_attributes>
     <coordinates>
       <x>312</x>
       <y>9425</y>
-      <w>182</w>
+      <w>234</w>
       <h>52</h>
     </coordinates>
-    <panel_attributes>Location name</panel_attributes>
+    <panel_attributes>Location name (nullable)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -2306,12 +2306,12 @@ valign=top</panel_attributes>
   <element>
     <id>UMLState</id>
     <coordinates>
-      <x>325</x>
+      <x>312</x>
       <y>9516</y>
-      <w>169</w>
+      <w>247</w>
       <h>52</h>
     </coordinates>
-    <panel_attributes>Location link</panel_attributes>
+    <panel_attributes>Location link (nullable)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -2326,17 +2326,6 @@ valign=top</panel_attributes>
     <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
   </element>
   <element>
-    <id>UMLState</id>
-    <coordinates>
-      <x>299</x>
-      <y>9620</y>
-      <w>247</w>
-      <h>52</h>
-    </coordinates>
-    <panel_attributes>Camp Name ( Drop List )</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
     <id>Relation</id>
     <coordinates>
       <x>390</x>
@@ -2348,21 +2337,10 @@ valign=top</panel_attributes>
     <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
   </element>
   <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>390</x>
-      <y>9659</y>
-      <w>39</w>
-      <h>91</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
     <id>UMLState</id>
     <coordinates>
       <x>312</x>
-      <y>9724</y>
+      <y>9620</y>
       <w>182</w>
       <h>52</h>
     </coordinates>
@@ -2496,30 +2474,8 @@ valign=top</panel_attributes>
   <element>
     <id>UMLState</id>
     <coordinates>
-      <x>988</x>
-      <y>10621</y>
-      <w>208</w>
-      <h>52</h>
-    </coordinates>
-    <panel_attributes>Camp Name (dropList)</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>1105</x>
-      <y>10556</y>
-      <w>39</w>
-      <h>91</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLState</id>
-    <coordinates>
       <x>1027</x>
-      <y>10712</y>
+      <y>10608</y>
       <w>169</w>
       <h>52</h>
     </coordinates>
@@ -2530,7 +2486,7 @@ valign=top</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>1105</x>
-      <y>10660</y>
+      <y>10556</y>
       <w>39</w>
       <h>78</h>
     </coordinates>
@@ -2589,17 +2545,6 @@ valign=top</panel_attributes>
       <w>208</w>
       <h>52</h>
     </coordinates>
-    <panel_attributes>newcomer</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLObject</id>
-    <coordinates>
-      <x>1248</x>
-      <y>10699</y>
-      <w>208</w>
-      <h>52</h>
-    </coordinates>
     <panel_attributes>338354</panel_attributes>
     <additional_attributes/>
   </element>
@@ -2607,7 +2552,7 @@ valign=top</panel_attributes>
     <id>UMLState</id>
     <coordinates>
       <x>1027</x>
-      <y>10920</y>
+      <y>10816</y>
       <w>169</w>
       <h>52</h>
     </coordinates>
@@ -2618,7 +2563,7 @@ valign=top</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>1105</x>
-      <y>10751</y>
+      <y>10647</y>
       <w>39</w>
       <h>91</h>
     </coordinates>
@@ -3106,7 +3051,7 @@ valign=top</panel_attributes>
     <id>UMLState</id>
     <coordinates>
       <x>1027</x>
-      <y>10816</y>
+      <y>10712</y>
       <w>169</w>
       <h>52</h>
     </coordinates>
@@ -3117,7 +3062,7 @@ valign=top</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>1105</x>
-      <y>10855</y>
+      <y>10751</y>
       <w>39</w>
       <h>91</h>
     </coordinates>
@@ -3128,7 +3073,7 @@ valign=top</panel_attributes>
     <id>UMLObject</id>
     <coordinates>
       <x>1248</x>
-      <y>10816</y>
+      <y>10712</y>
       <w>208</w>
       <h>52</h>
     </coordinates>

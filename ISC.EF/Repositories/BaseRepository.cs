@@ -75,7 +75,7 @@ namespace ISC.EF.Repositories
 			}
 			return query.ToList();
 		}
-		public async void addAsync(T entity)
+		public async Task addAsync(T entity)
 		{ 
 			await _Context.Set<T>().AddAsync(entity);
 		}
