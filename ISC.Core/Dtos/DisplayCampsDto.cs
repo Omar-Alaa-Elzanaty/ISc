@@ -8,11 +8,23 @@ namespace ISC.Core.Dtos
 {
 	public class DisplayCampsDto
 	{
-		public int Id { get; set; }
+		public DisplayCampsDto()
+		{
+			Mentors = new List<string>();
+			HeadsInfo = new List<HeadInfo>();
+		}
+        public int Id { get; set; }
 		public string Name { get; set; }
 		public int Term { get; set; }
 		public int Year { get; set; }
 		public int DurationInWeeks { get; set; }
-		public List<string> Mentors { get; set; } = new List<string>();
+		public List<HeadInfo> HeadsInfo { get; set; }
+		public List<string> Mentors { get; set; }
+	}
+	public class HeadInfo
+	{
+		public int Id { get; set; }
+		public string Name { get; set; }
+		public bool State { get; set; }
 	}
 }

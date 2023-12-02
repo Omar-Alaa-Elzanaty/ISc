@@ -10,6 +10,6 @@ namespace ISC.Services.ISerivces.IModelServices
 {
 	public interface ICampServices
 	{
-		Task<ServiceResponse<List<DisplayCampsDto>>> CampMentors();
+		Task<ServiceResponse<List<DisplayCampsDto>>> DisplayCampsDetails();
 	}
 }

@@ -30,9 +30,12 @@ namespace ISC.Services.Services
 			var TraineeSheets = await _UnitOfWork.TraineesSheetsAccess.getAllAsync();
 			var SheetsIds = TraineeSheets.DistinctBy(STA => STA.SheetId).Select(STA=>STA.SheetId);
 			var TraineesIds = TraineeSheets.DistinctBy(STA => STA.TraineeId).Select(STA=>STA.TraineeId);
+
 			Dictionary<int, CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>> SheetsSubmissions =
 				new Dictionary<int, CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>>();
+
 			Dictionary<int, string> AccountsHandles = new Dictionary<int, string>();
+
 			foreach(var sid in SheetsIds)
 			{
 				var SheetInfo = await _UnitOfWork.Sheets.getByIdAsync(sid);

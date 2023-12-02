@@ -12,7 +12,7 @@ namespace ISC.Core.Interfaces
 	public interface IBaseRepository<T>where T : class
 	{
 		Task addAsync(T entity);
-		void AddGroup(List<T> group);
+		Task AddGroup(List<T> group);
 		Task<T> getByIdAsync(int id);
 		IQueryable<T> Get();
 		Task UpdateAsync(T entity);

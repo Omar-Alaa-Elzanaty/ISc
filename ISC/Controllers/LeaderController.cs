@@ -10,6 +10,8 @@ using System.Data;
 using ISC.Services.ISerivces.IModelServices;
 using ISC.Core.Dtos;
 using AutoMapper;
+using Microsoft.Identity.Client;
+using ISC.Services.Services.ModelSerivces;
 
 namespace ISC.API.Controllers
 {
@@ -120,7 +122,7 @@ namespace ISC.API.Controllers
 		[HttpGet]
 		public async Task<IActionResult> DisplayCamp()
 		{
-			return Ok(await _campServices.CampMentors());
+			return Ok(await _campServices.DisplayCampsDetails());
 		}
 
 		[HttpPost]
@@ -231,7 +233,7 @@ namespace ISC.API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> AddCamp([FromBody]CampDto camp)
+		public async Task<IActionResult> AddCamp([FromBody] CampDto camp)
 		{
 			var response = await _leaderServices.AddCampAsync(camp);
 			if (!response.Success)
@@ -381,10 +383,10 @@ namespace ISC.API.Controllers
 			await _unitOfWork.completeAsync();
 			return Ok("Update Successfully");
 		}
-		[HttpGet]
-		public async Task<IActionResult> DisplayNewRegister()
+		[HttpGet("{campId}")]
+		public async Task<IActionResult> DisplayNewRegister(int campId)
 		{
-			var response = await _leaderServices.DisplayNewRegisterAsync();
+			var response = await _leaderServices.DisplayNewRegisterAsync(campId);
 			if (!response.Success)
 				return BadRequest("No entity");
 			return Ok(response);
@@ -513,6 +515,73 @@ namespace ISC.API.Controllers
 			{
 				return BadRequest("Invalid Id");
 			}
+		}
+		[HttpGet]
+		public async Task<IActionResult> DisplayOpenedCamp()
+		{
+			return Ok(_unitOfWork.Camps.findManyWithChildAsync(c => c.OpenForRegister).Result.Select(c => new
+			{
+				c.Id,
+				c.Name
+			}));
+		}
+		[HttpPut]
+		public async Task<IActionResult> UpdateCampHead(int headId, int campId, bool toCamp)
+		{
+			HeadOfTraining hoc = await _unitOfWork.HeadofCamp.getByIdAsync(headId);
+
+			if (toCamp)
+			{
+				hoc.CampId = campId;
+			}
+			else
+			{
+				await _unitOfWork.HeadofCamp.deleteAsync(hoc);
+			}
+			await _unitOfWork.completeAsync();
+
+			return Ok();
+		}
+		[HttpGet]
+		public async Task<IActionResult> AttendenceAccessPage()
+		{
+			var availableMentors = await _userManager.Users.Include(u => u.Mentor)
+									.Where(u => u.Mentor != null).Select(u => new
+									{
+										u.Mentor.Id,
+										FullName = u.FirstName + ' ' + u.MiddleName + ' ' + u.LastName,
+									}).ToListAsync();
+
+			var sessions = await _unitOfWork.Sessions.Get()
+							.Select(s => new
+							{
+								s.Id,
+								s.Topic
+							}).ToListAsync();
+
+			return Ok(new { availableMentors, sessions });
+		}
+		[HttpPut]
+		public async Task<IActionResult> GiveAttendenceAccess(int mentorId,int sessionId)
+		{
+			var mentor = await _unitOfWork.Mentors.getByIdAsync(mentorId);
+			var session= await _unitOfWork.Sessions.getByIdAsync(sessionId);
+
+			if (mentor is null || session is null)
+			{
+				return BadRequest("Invalid request");
+			}
+
+			mentor.AccessSessionId = sessionId;
+
+			_= await _unitOfWork.completeAsync();
+
+			return Ok("Success");
+		}
+		[HttpGet]
+		public async Task<IActionResult> GeneralStanding()
+		{
+			return Ok(await _leaderServices.GeneralStandingsAsync());
 		}
 	}
 }

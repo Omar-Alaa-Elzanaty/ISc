@@ -36,7 +36,7 @@ namespace ISC.Services.Services.ModelSerivces
 			_mapper = mapper;
 		}
 
-		public async Task<ServiceResponse<List<DisplayCampsDto>>> CampMentors()
+		public async Task<ServiceResponse<List<DisplayCampsDto>>> DisplayCampsDetails()
 		{
 			ServiceResponse<List<DisplayCampsDto>> response = new ServiceResponse<List<DisplayCampsDto>>();
 
@@ -63,6 +63,29 @@ namespace ISC.Services.Services.ModelSerivces
 										.Include(u => u.Mentor)
 										.Where(u => u.Mentor != null && mentors.Result.Any(j => j == u.Mentor.Id))
 										.Select(u => u.FirstName + ' ' + u.MiddleName + ' ' + u.LastName).ToListAsync());
+				}
+
+				var heads = await _unitOfWork.HeadofCamp
+									.findManyWithChildAsync(hoc => hoc.CampId == camp.Id || hoc.CampId == null);
+
+				if(heads.IsNullOrEmpty())
+				{
+					heads = new List<HeadOfTraining>();
+				}
+
+				foreach(var head in heads)
+				{
+					var acc = await _userManager.FindByIdAsync(head.UserId);
+
+					if(acc is null) { continue; }
+					
+					var headName = acc.FirstName + ' ' + acc.MiddleName + ' ' + acc.LastName;
+					camp.HeadsInfo.Add(new HeadInfo()
+					{
+						Name = headName,
+						Id = head.Id,
+						State = head.CampId != null
+					});
 				}
 			}
 

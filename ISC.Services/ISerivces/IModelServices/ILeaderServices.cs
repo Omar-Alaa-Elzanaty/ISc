@@ -14,8 +14,11 @@ namespace ISC.Services.ISerivces.IModelServices
 		Task<ServiceResponse<int>> DeleteTraineesAsync(List<string> traineesIds);
 		Task<ServiceResponse<Camp>> AddCampAsync(CampDto camp);
 		Task<ServiceResponse<List<string>>> AddToRoleAsync(UserRoleDto model);
-		Task<ServiceResponse<List<NewRegisterationDto>>> DisplayNewRegisterAsync();
+		Task<ServiceResponse<List<NewRegisterationDto>>> DisplayNewRegisterAsync(int campId);
 		Task<ServiceResponse<AuthModel>> AutoMemberAddAsync(RegisterDto registerDto, string? message = null, string? campName = null);
 		Task<ServiceResponse<bool>> DeleteFromNewRegister(List<string> Ids);
+		Task<List<GeneralStandingDto>> GeneralStandingsAsync();
+
+
 	}
 }

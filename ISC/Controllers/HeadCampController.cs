@@ -508,5 +508,72 @@ namespace ISC.API.Controllers
 
 			return Ok("Success");
 		}
+		[HttpGet]
+		public async Task<IActionResult> DisplaySheetAccess()
+		{
+			var userId = "5f00d005-aafb-4bd9-8341-68a4cf2f8a22";// User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+			var sheets =  _unitOfWork.HeadofCamp.Get().Include(h => h.Camp)?.Include(h => h.Camp.Sheets)
+				.FirstOrDefault(h => h.Camp != null && h.UserId == userId)?.Camp?.Sheets.Select(i => new
+				{
+					i.Id,
+					i.Name
+				}).ToList();
+
+			var sheetAccess = _unitOfWork.TraineesSheetsAccess.findManyWithChildAsync(ac => sheets.Any(s => s.Id == ac.SheetId))
+								.Result.Select(s=>s.SheetId).ToList();
+
+			var access = new List<SheetAccessStatusDto>();
+
+			foreach(var sheet in sheets)
+			{
+				var sheetStatus = new SheetAccessStatusDto()
+				{
+					SheetId = sheet.Id,
+					Name = sheet.Name,
+					IsReachAble = sheetAccess.Contains(sheet.Id)
+				};
+				access.Add(sheetStatus);
+			}
+
+			return Ok(access);
+		}
+		[HttpGet]
+		public async Task<IActionResult> DisplayTraineeSheetAccess()
+		{
+			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			if (userId == null)
+			{
+				return BadRequest("Invalid request");
+			}
+			var campId = _unitOfWork.HeadofCamp.GetByUserId(userId).Result?.CampId;
+
+			return Ok(await _headServices.DisplayTraineeAccess(campId ?? 0));
+			
+		}
+		[HttpPost("{sheetId}")]
+		public async Task<IActionResult> AddNewAccess(int sheetId)
+		{
+			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+			if (userId == null)
+			{
+				return BadRequest("Invalid request");
+			}
+			var campId = _unitOfWork.HeadofCamp.GetByUserId(userId).Result?.CampId;
+
+			await _headServices.AddNewTrainingSheetAccess(sheetId, campId ?? 0);
+
+			return Ok("Success");
+		}
+		[HttpPut("{sheetId}/{traineeId}")]
+		public async Task<IActionResult> UpdateTraineeAccess(int sheetId,int traineeId)
+		{
+			await _unitOfWork.TraineesSheetsAccess.addAsync(new TraineeSheetAccess() { TraineeId= traineeId,SheetId=sheetId });
+			_ = await _unitOfWork.completeAsync();
+			return Ok();
+		}
+
+		  
 	}
 }

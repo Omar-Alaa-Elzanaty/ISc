@@ -23,7 +23,7 @@ namespace ISC.EF.Repositories
 		{
 			return await _Context.Set<T>().FindAsync(id);
 		}
-		public async void AddGroup(List<T>group)
+		public async Task AddGroup(List<T>group)
 		{
 			await _Context.AddRangeAsync(group);
 		}

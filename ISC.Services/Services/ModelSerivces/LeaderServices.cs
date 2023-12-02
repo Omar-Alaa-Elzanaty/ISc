@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Bcpg;
 using System;
 using System.Collections.Generic;
@@ -28,15 +29,18 @@ namespace ISC.Services.Services.ModelSerivces
 		private readonly UserManager<UserAccount> _userManager;
 		private readonly IOnlineJudgeServices _onlineJudgeServices;
 		private readonly IAuthanticationServices _authServices;
+		private readonly CodeForceConnection _codeForceConnection;
 		public LeaderServices(IUnitOfWork unitOfWork,
 			UserManager<UserAccount> userManager,
 			IOnlineJudgeServices onlineJudgeServices,
-			IAuthanticationServices authanticationServices)
+			IAuthanticationServices authanticationServices,
+			IOptions<CodeForceConnection>connection)
 		{
 			_unitOfWork = unitOfWork;
 			_userManager = userManager;
 			_onlineJudgeServices = onlineJudgeServices;
 			_authServices = authanticationServices;
+			_codeForceConnection = connection.Value;
 		}
 		public async Task<ServiceResponse<int>> DeleteTraineesAsync(List<string>traineesIds)
 		{
@@ -105,11 +109,14 @@ namespace ISC.Services.Services.ModelSerivces
 			response.Success = true;
 			return response;
 		}
-		public async Task<ServiceResponse<List<NewRegisterationDto>>> DisplayNewRegisterAsync()
+		public async Task<ServiceResponse<List<NewRegisterationDto>>> DisplayNewRegisterAsync(int campId)
 		{
 			ServiceResponse<List<NewRegisterationDto>> response = new ServiceResponse<List<NewRegisterationDto>>();
 			List<NewRegisterationDto> filter = new List<NewRegisterationDto>();
-			var traineeArchive = await _unitOfWork.TraineesArchive.getAllAsync();
+
+			var campName = _unitOfWork.Camps.getByIdAsync(campId).Result.Name;
+			var traineeArchive = await _unitOfWork.TraineesArchive.findManyWithChildAsync(ta => ta.CampName == campName);
+
 			foreach (var newMember in await _unitOfWork.NewRegitseration.getAllAsync())
 			{
 				var register = new NewRegisterationDto()
@@ -117,7 +124,7 @@ namespace ISC.Services.Services.ModelSerivces
 					Register = newMember
 				};
 
-				if ( traineeArchive!=null && traineeArchive?
+				if (traineeArchive != null && traineeArchive?
 					.Any(TA => (TA.NationalID == newMember.NationalID
 							   || TA.CodeForceHandle == newMember.CodeForceHandle
 							   || TA.Email == newMember.Email
@@ -173,6 +180,70 @@ namespace ISC.Services.Services.ModelSerivces
 			}
 			_unitOfWork.NewRegitseration.deleteGroup(registers);
 			response.Success = true;
+			return response;
+		}
+		public async Task<List<GeneralStandingDto>> GeneralStandingsAsync()
+		{
+			var camps = await _unitOfWork.Camps.Get().Select(c => new {c.Id,c.Name}).ToListAsync();
+
+			if (camps.IsNullOrEmpty())
+			{
+				return new List<GeneralStandingDto>();
+			}
+
+			var response = new List<GeneralStandingDto>();
+
+			//TODO: inhance with storedprocedure
+			foreach (var camp in camps)
+			{
+				var sheets = await _unitOfWork.Sheets.Get()
+							.Where(s => s.CampId == camp.Id)
+							.Select(s => new {
+								s.Id,
+								s.Name,
+								Total= _onlineJudgeServices.GetContestStandingAsync(
+									s.SheetCfId,
+									1,
+									true,
+									s.IsSohag ? _codeForceConnection.SohagKey : _codeForceConnection.AssuitKey,
+									s.IsSohag ? _codeForceConnection.SohagSecret : _codeForceConnection.AssuitSecret).Result
+							}).ToListAsync();
+
+				var Trainees = await _userManager.Users
+							.Include(u => u.Trainee)
+							.Where(u => u.Trainee != null && u.Trainee.CampId == camp.Id)
+							.Select(u => new { u.Trainee.Id, FullName = u.FirstName + ' ' + u.MiddleName + ' ' + u.LastName })
+							.ToListAsync();
+
+				var traineeSheets = await _unitOfWork.TraineesSheetsAccess.Get()
+									.Where(acc =>
+										sheets.Select(i => i.Id).ToList()
+										.Contains(acc.SheetId))
+									.ToListAsync();
+
+				var campStanding=new List<TraineeStanding>();
+				foreach(var trainee in Trainees)
+				{
+					var traineeStanding = new TraineeStanding() { Name = trainee.FullName };
+
+					foreach(var sheet in sheets)
+					{
+						traineeStanding.stand.Add(new SheetInfo()
+						{
+							Id = sheet.Id,
+							Name = sheet.Name,
+							Total = sheet.Total == null?26:sheet.Total.result.problems.Count,
+							Count = traineeSheets.FirstOrDefault(s => s.SheetId == sheet.Id && s.TraineeId == trainee.Id)?
+											.NumberOfProblems ?? 0
+						});
+					}
+					campStanding.Add(traineeStanding);
+				}
+
+				response.Add(new GeneralStandingDto() { Standing = campStanding,CampName= camp.Name});
+
+			}
+
 			return response;
 		}
 	}
