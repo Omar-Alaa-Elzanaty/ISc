@@ -14,5 +14,6 @@ namespace ISC.Services.ISerivces.IModelServices
 		Task SubmitTraineeMentorAsync(List<AssignTraineeMentorDto> data);
 		Task<ServiceResponse<TraineeSheetAcessDto>> DisplayTraineeAccess(int campId);
 		Task AddNewTrainingSheetAccess(int sheetId, int campId);
+		Task<List<TraineeStandingDto>> GeneralStandingsAsync(int? campId);
 	}
 }

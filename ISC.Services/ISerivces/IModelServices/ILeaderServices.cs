@@ -17,7 +17,6 @@ namespace ISC.Services.ISerivces.IModelServices
 		Task<ServiceResponse<List<NewRegisterationDto>>> DisplayNewRegisterAsync(int campId);
 		Task<ServiceResponse<AuthModel>> AutoMemberAddAsync(RegisterDto registerDto, string? message = null, string? campName = null);
 		Task<ServiceResponse<bool>> DeleteFromNewRegister(List<string> Ids);
-		Task<List<GeneralStandingDto>> GeneralStandingsAsync();
 
 
 	}

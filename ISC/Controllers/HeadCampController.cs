@@ -18,6 +18,7 @@ using ISC.Core.Dtos;
 using ISC.EF.Repositories;
 using AutoMapper;
 using System.Net;
+using ISC.Services.Services.ModelSerivces;
 
 namespace ISC.API.Controllers
 {
@@ -573,7 +574,63 @@ namespace ISC.API.Controllers
 			_ = await _unitOfWork.completeAsync();
 			return Ok();
 		}
+		[HttpGet]
+		public async Task<IActionResult> AttendenceAccessPage()
+		{
+			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-		  
+			if (userId == null)
+			{
+				return BadRequest("Invalid request");
+			}
+			var campId = _unitOfWork.HeadofCamp.GetByUserId(userId).Result?.CampId;
+
+			var availableMentors = await _userManager.Users.Include(u => u.Mentor)
+									.Where(u => u.Mentor != null).Select(u => new
+									{
+										u.Mentor.Id,
+										FullName = u.FirstName + ' ' + u.MiddleName + ' ' + u.LastName,
+									}).ToListAsync();
+
+			var sessions = await _unitOfWork.Sessions.Get()
+							.Where(s=>s.CampId==campId)
+							.Select(s => new
+							{
+								s.Id,
+								s.Topic
+							}).ToListAsync();
+
+			return Ok(new { availableMentors, sessions });
+		}
+		[HttpPut]
+		public async Task<IActionResult> GiveAttendenceAccess(int mentorId, int sessionId)
+		{
+			var mentor = await _unitOfWork.Mentors.getByIdAsync(mentorId);
+			var session = await _unitOfWork.Sessions.getByIdAsync(sessionId);
+
+			if (mentor is null || session is null)
+			{
+				return BadRequest("Invalid request");
+			}
+
+			mentor.AccessSessionId = sessionId;
+
+			_ = await _unitOfWork.completeAsync();
+
+			return Ok("Success");
+		}
+		[HttpGet]
+		public async Task<IActionResult> GeneralStanding()
+		{
+			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+			if (userId == null)
+			{
+				return BadRequest("Invalid request");
+			}
+			var campId = _unitOfWork.HeadofCamp.GetByUserId(userId).Result?.CampId;
+			return Ok(await _headServices.GeneralStandingsAsync(campId));
+		}
+
 	}
 }

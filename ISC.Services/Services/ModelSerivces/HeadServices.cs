@@ -3,10 +3,13 @@ using ISC.Core.Interfaces;
 using ISC.Core.Models;
 using ISC.Core.ModelsDtos;
 using ISC.EF;
+using ISC.EF.Repositories;
+using ISC.Services.Helpers;
 using ISC.Services.ISerivces;
 using ISC.Services.ISerivces.IModelServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -16,33 +19,40 @@ using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ISC.Services.Services.ModelSerivces
 {
     public class HeadServices:IHeadSerivces
     {
-		private readonly UserManager<UserAccount> _UserManager;
-		private readonly IUnitOfWork _UnitOfWork;
+		private readonly UserManager<UserAccount> _userManager;
+		private readonly IUnitOfWork _unitOfWork;
+		private readonly IOnlineJudgeServices _onlineJudgeServices;
+		private readonly CodeForceConnection _codeForceConnection;
 
 		public HeadServices(UserManager<UserAccount> userManager,
-			IUnitOfWork unitofwork)
+			IUnitOfWork unitofwork,
+			IOnlineJudgeServices onlineJudgeServices,
+			IOptions<CodeForceConnection> connection)
 		{
-			_UserManager = userManager;
-			_UnitOfWork = unitofwork;
+			_userManager = userManager;
+			_unitOfWork = unitofwork;
+			_onlineJudgeServices = onlineJudgeServices;
+			_codeForceConnection = connection.Value;
 		}
 
 		public async Task<ServiceResponse<List<TraineeMentorDto>>> DisplayTraineeMentorAsync(string userId)
 		{
 			var response = new ServiceResponse<List<TraineeMentorDto>>();
 
-			var campId = _UnitOfWork.HeadofCamp.findWithChildAsync(h => h.UserId == userId, new[] { "Camp" }).Result?.CampId;
+			var campId = _unitOfWork.HeadofCamp.findWithChildAsync(h => h.UserId == userId, new[] { "Camp" }).Result?.CampId;
 
-			var trainees =await _UserManager.Users
+			var trainees =await _userManager.Users
 				.Include(u => u.Trainee)
 				.Where(u => u.Trainee != null && u.Trainee.CampId == campId)
 				.ToListAsync();
 
-			var mentors = await _UserManager.Users
+			var mentors = await _userManager.Users
 				.Include(u => u.Mentor)
 				.Where(u => u.Mentor != null)
 				.ToListAsync();
@@ -70,23 +80,23 @@ namespace ISC.Services.Services.ModelSerivces
 		{
 			foreach(var item in data)
 			{
-				var trainee = await _UnitOfWork.Trainees.getByIdAsync(item.TraineeId);
+				var trainee = await _unitOfWork.Trainees.getByIdAsync(item.TraineeId);
 				if(trainee is null)
 				{
 					continue;
 				}
-				var mentor = await _UnitOfWork.Mentors.getByIdAsync(item.MentorId);
+				var mentor = await _unitOfWork.Mentors.getByIdAsync(item.MentorId);
 				trainee.Mentor= mentor;
 				trainee.MentorId = item.MentorId;
-				await _UnitOfWork.Trainees.UpdateAsync(trainee);
+				await _unitOfWork.Trainees.UpdateAsync(trainee);
 			}
-			await _UnitOfWork.completeAsync();
+			await _unitOfWork.completeAsync();
 		}
 		public async Task<ServiceResponse<TraineeSheetAcessDto>> DisplayTraineeAccess(int campId)
 		{
 			var response=new ServiceResponse<TraineeSheetAcessDto>() { Success = true };
 
-			var trainees = _UserManager.Users
+			var trainees = _userManager.Users
 						.Include(u => u.Trainee)
 						.Where(u => u.Trainee != null && u.Trainee.CampId == campId)
 						.Select(u => new
@@ -95,7 +105,7 @@ namespace ISC.Services.Services.ModelSerivces
 							FullName = u.FirstName + ' ' + u.MiddleName + ' ' + u.LastName
 						});
 
-			var sheets= await _UnitOfWork.Sheets.Get().
+			var sheets= await _unitOfWork.Sheets.Get().
 						Where(s=>s.CampId==campId)
 						.Select(s => new
 						{
@@ -111,7 +121,7 @@ namespace ISC.Services.Services.ModelSerivces
 				return response;
 			}
 
-			dbSheetAccess = await _UnitOfWork.TraineesSheetsAccess
+			dbSheetAccess = await _unitOfWork.TraineesSheetsAccess
 						.Get()
 						.Where(ac => sheets.Any(s => s.Id == ac.SheetId))
 						.ToListAsync();
@@ -148,14 +158,69 @@ namespace ISC.Services.Services.ModelSerivces
 				throw new KeyNotFoundException("Unvalid campid");
 			}
 
-			var accessing = await _UnitOfWork.Trainees.Get()
+			var accessing = await _unitOfWork.Trainees.Get()
 							.Where(t => t.CampId == campId)
 							.Select(t => new TraineeSheetAccess()
 							{
 								TraineeId = t.Id,
 								SheetId = sheetId,
 							}).ToListAsync();
-			await _UnitOfWork.TraineesSheetsAccess.AddGroup(accessing);
+			await _unitOfWork.TraineesSheetsAccess.AddGroup(accessing);
+		}
+		public async Task<List<TraineeStandingDto>> GeneralStandingsAsync(int? campId)
+		{
+
+			if (campId is null)
+			{
+				return new List<TraineeStandingDto>();
+			}
+
+			var response = new List<TraineeStandingDto>();
+
+			var sheets = await _unitOfWork.Sheets.Get()
+							.Where(s => s.CampId == campId)
+							.Select(s => new {
+								s.Id,
+								s.Name,
+								Total = _onlineJudgeServices.GetContestStandingAsync(
+								s.SheetCfId,
+								1,
+								true,
+								s.IsSohag ? _codeForceConnection.SohagKey : _codeForceConnection.AssuitKey,
+								s.IsSohag ? _codeForceConnection.SohagSecret : _codeForceConnection.AssuitSecret).Result
+							}).ToListAsync();
+
+			var Trainees = await _userManager.Users
+						.Include(u => u.Trainee)
+						.Where(u => u.Trainee != null && u.Trainee.CampId == campId)
+						.Select(u => new { u.Trainee.Id, FullName = u.FirstName + ' ' + u.MiddleName + ' ' + u.LastName })
+			.ToListAsync();
+
+			var traineeSheets = await _unitOfWork.TraineesSheetsAccess.Get()
+								.Where(acc =>
+									sheets.Select(i => i.Id).ToList()
+									.Contains(acc.SheetId))
+								.ToListAsync();
+
+			foreach (var trainee in Trainees)
+			{
+				var traineeStanding = new TraineeStandingDto() { Name = trainee.FullName };
+
+				foreach (var sheet in sheets)
+				{
+					traineeStanding.stand.Add(new SheetInfo()
+					{
+						Id = sheet.Id,
+						Name = sheet.Name,
+						Total = sheet.Total == null ? 26 : sheet.Total.result.problems.Count,
+						Count = traineeSheets.FirstOrDefault(s => s.SheetId == sheet.Id && s.TraineeId == trainee.Id)?
+										.NumberOfProblems ?? 0
+					});
+				}
+				response.Add(traineeStanding);
+			}
+
+			return response;
 		}
 	}
 }

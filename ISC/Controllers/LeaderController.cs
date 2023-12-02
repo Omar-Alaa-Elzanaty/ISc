@@ -542,46 +542,5 @@ namespace ISC.API.Controllers
 
 			return Ok();
 		}
-		[HttpGet]
-		public async Task<IActionResult> AttendenceAccessPage()
-		{
-			var availableMentors = await _userManager.Users.Include(u => u.Mentor)
-									.Where(u => u.Mentor != null).Select(u => new
-									{
-										u.Mentor.Id,
-										FullName = u.FirstName + ' ' + u.MiddleName + ' ' + u.LastName,
-									}).ToListAsync();
-
-			var sessions = await _unitOfWork.Sessions.Get()
-							.Select(s => new
-							{
-								s.Id,
-								s.Topic
-							}).ToListAsync();
-
-			return Ok(new { availableMentors, sessions });
-		}
-		[HttpPut]
-		public async Task<IActionResult> GiveAttendenceAccess(int mentorId,int sessionId)
-		{
-			var mentor = await _unitOfWork.Mentors.getByIdAsync(mentorId);
-			var session= await _unitOfWork.Sessions.getByIdAsync(sessionId);
-
-			if (mentor is null || session is null)
-			{
-				return BadRequest("Invalid request");
-			}
-
-			mentor.AccessSessionId = sessionId;
-
-			_= await _unitOfWork.completeAsync();
-
-			return Ok("Success");
-		}
-		[HttpGet]
-		public async Task<IActionResult> GeneralStanding()
-		{
-			return Ok(await _leaderServices.GeneralStandingsAsync());
-		}
 	}
 }

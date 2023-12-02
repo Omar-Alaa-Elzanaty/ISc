@@ -1501,4 +1501,73 @@ until training reach or trainee solve</panel_attributes>
 halign=center</panel_attributes>
     <additional_attributes/>
   </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>88</x>
+      <y>1815</y>
+      <w>198</w>
+      <h>572</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;160.0;500.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>264</x>
+      <y>2332</y>
+      <w>220</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>Attendence
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>770</x>
+      <y>2310</y>
+      <w>220</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>Trainee</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>770</x>
+      <y>2387</y>
+      <w>220</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>Mentor</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>473</x>
+      <y>2321</y>
+      <w>319</w>
+      <h>55</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;includes&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;30.0;270.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>462</x>
+      <y>2365</y>
+      <w>330</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;extends&gt;&gt;</panel_attributes>
+    <additional_attributes>280.0;50.0;10.0;10.0</additional_attributes>
+  </element>
 </diagram>
