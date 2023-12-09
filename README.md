@@ -1,4 +1,4 @@
-# currenlty Working on this project
+# Currenlty working on this project
 ## The readme file will be updated after the project is finished.
 use this in begining any request after adding server/api/{Method-Name} 
 
