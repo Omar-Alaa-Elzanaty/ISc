@@ -21,6 +21,7 @@ namespace ISC.EF.Repositories
 		public IMentorRepository Mentors { get; private set; }
 
 		public ITraineeAttendenceRepository TraineesAttendence { get; private set; }
+		public IBaseRepository<MentorAttendence> MentorAttendence { get;private set; }
 
 		public ISheetRepository Sheets { get; private set; }
 
@@ -48,6 +49,7 @@ namespace ISC.EF.Repositories
 			Sessions= new SessionRepository(_dataBase);
 			Mentors = new MentorRepository(database,usermanager);
 			TraineesAttendence = new TraineeAttendenceRepository(_dataBase);
+			MentorAttendence=new BaseRepository<MentorAttendence>(_dataBase);
 			Sheets = new SheetRepository(_dataBase);
 			TraineesSheetsAccess = new BaseRepository<TraineeSheetAccess>(_dataBase);
 			HeadofCamp = new HeadOfCampRepository(_dataBase);

@@ -15,5 +15,7 @@ namespace ISC.Services.ISerivces.IModelServices
 		Task<ServiceResponse<TraineeSheetAcessDto>> DisplayTraineeAccess(int campId);
 		Task AddNewTrainingSheetAccess(int sheetId, int campId);
 		Task<List<TraineeStandingDto>> GeneralStandingsAsync(int? campId);
+		Task<PersonAttendenceDto> TraineeAttendence(int? campId);
+		Task<PersonAttendenceDto> MentorAttendence(int? campId);
 	}
 }

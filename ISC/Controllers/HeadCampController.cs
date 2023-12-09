@@ -631,6 +631,34 @@ namespace ISC.API.Controllers
 			var campId = _unitOfWork.HeadofCamp.GetByUserId(userId).Result?.CampId;
 			return Ok(await _headServices.GeneralStandingsAsync(campId));
 		}
+		[HttpGet]
+		public async Task<IActionResult> MentorAttendence()
+		{
+			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+			if (userId == null)
+			{
+				return BadRequest("Invalid request");
+			}
+
+			var campId = _unitOfWork.HeadofCamp.GetByUserId(userId).Result?.CampId;
+
+			return Ok(await _headServices.MentorAttendence(campId));
+		}
+		[HttpGet]
+		public async Task<IActionResult> TraineeAttendence()
+		{
+			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+			if (userId == null)
+			{
+				return BadRequest("Invalid request");
+			}
+
+			var campId = _unitOfWork.HeadofCamp.GetByUserId(userId).Result?.CampId;
+
+			
+			return Ok(await _headServices.TraineeAttendence(campId));
+		}
 	}
 }

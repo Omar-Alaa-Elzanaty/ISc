@@ -136,11 +136,11 @@ namespace ISC.API.Controllers
 							s.Id,
 							s.Topic
 						});
-			var attendenceInfo = new TraineeAttendenceDto();
+			var attendenceInfo = new PersonAttendenceDto();
 			attendenceInfo.Sessions.AddRange(sessions.Select(s => s.Topic).ToList());
 			foreach (var trainee in trainees)
 			{
-				var traineeProgress = new TraineeInfoDto() { FullName = trainee.FullName };
+				var traineeProgress = new PersonInfoDto() { FullName = trainee.FullName };
 				foreach (var session in sessions)
 				{
 					traineeProgress.IsAttend.Add(attendences.Any(a => a.TraineeId == trainee.Id && a.SessionId == session.Id));
@@ -227,7 +227,7 @@ namespace ISC.API.Controllers
 				}
 			}
 			_unitOfWork.TraineesAttendence.deleteGroup(absence);
-			_unitOfWork.TraineesAttendence.AddGroup(newAttendnce);
+			await _unitOfWork.TraineesAttendence.AddGroup(newAttendnce);
 			_= await _unitOfWork.completeAsync();
 
 			return Ok("update Attendence");

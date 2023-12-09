@@ -3,27 +3,19 @@ using ISC.Core.Interfaces;
 using ISC.Core.Models;
 using ISC.Core.ModelsDtos;
 using ISC.EF;
-using ISC.EF.Repositories;
 using ISC.Services.Helpers;
 using ISC.Services.ISerivces;
 using ISC.Services.ISerivces.IModelServices;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Formats.Asn1;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
 
 namespace ISC.Services.Services.ModelSerivces
 {
-    public class HeadServices:IHeadSerivces
+	public class HeadServices:IHeadSerivces
     {
 		private readonly UserManager<UserAccount> _userManager;
 		private readonly IUnitOfWork _unitOfWork;
@@ -218,6 +210,87 @@ namespace ISC.Services.Services.ModelSerivces
 					});
 				}
 				response.Add(traineeStanding);
+			}
+
+			return response;
+		}
+		public async Task<PersonAttendenceDto> TraineeAttendence(int? campId)
+		{
+			if(campId is null)
+			{
+				throw new KeyNotFoundException("Invalid reqeust");
+			}
+
+			var trainees = await _userManager.Users.Include(u => u.Trainee).Include(u => u.Trainee.TraineesAttendences)
+						.Where(u => u.Trainee != null).Select(u => new
+						{
+							u.Trainee.Id,
+							FullName=u.FirstName+' '+u.MiddleName+' '+u.LastName,
+							AttendenceHistory=u.Trainee.TraineesAttendences.ToList(),
+
+						}).ToListAsync();
+			var sessions = _unitOfWork.Sessions.findManyWithChildAsync(s => s.CampId == campId).Result.Select(s => new
+			{
+				s.Id,
+				s.Topic
+			});
+
+			var response = new PersonAttendenceDto()
+			{
+				Sessions = sessions.Select(s => s.Topic).ToList()
+			};
+
+			foreach (var trainee in trainees)
+			{
+				var info = new PersonInfoDto() { FullName = trainee.FullName };
+
+				foreach(var session in sessions)
+				{
+					info.IsAttend.Add(trainee.AttendenceHistory.Any(h => h.TraineeId == trainee.Id && h.SessionId == session.Id));
+				}
+				response.Attendances.Add(info);
+			}
+
+			return response;
+		}
+		public async Task<PersonAttendenceDto>MentorAttendence(int? campId)
+		{
+			var response = new PersonAttendenceDto();
+			if(campId is null)
+			{
+				throw new ArgumentNullException("camp id can not be null");
+			}
+			var mentorsId = _unitOfWork.Mentors.findManyWithChildAsync(i => i.Camps.Any(c => c.Id == campId), new[] { "Camps" })
+							.Result.Select(m=>m.Id).ToList();
+
+			if (mentorsId.IsNullOrEmpty())
+			{
+				throw new BadHttpRequestException("no mentors for this camp");
+			}
+			var mentors = await _userManager.Users
+						.Include(u => u.Mentor)
+						.Where(u => u.Mentor != null && mentorsId.Contains(u.Mentor.Id))
+						.Select(ac => new
+						{
+							ac.Mentor.Id,
+							FullName=ac.FirstName+' '+ac.MiddleName+' '+ac.LastName
+						})
+						.ToListAsync();
+
+			var sessions = await _unitOfWork.Sessions.findManyWithChildAsync(s => s.Date <= DateTime.UtcNow);
+			response.Sessions = sessions.Select(i => i.Topic).ToList();
+
+			var attendence = await _unitOfWork.MentorAttendence.findManyWithChildAsync(a => mentorsId.Contains(a.MentorId)
+							&& sessions.Select(s => s.Id).Contains(a.SessionId));
+
+			foreach(var mentor in mentors)
+			{
+				var mentorInfo = new PersonInfoDto();
+				foreach(var session in sessions)
+				{
+					mentorInfo.IsAttend.Add(attendence.Any(a => a.MentorId == mentor.Id && a.SessionId == session.Id));
+				}
+				response.Attendances.Add(mentorInfo);
 			}
 
 			return response;
