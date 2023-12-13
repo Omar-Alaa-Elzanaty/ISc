@@ -420,7 +420,7 @@ namespace ISC.API.Controllers
 		[HttpPut("{id}")]
 		public async Task<IActionResult> UpdateSheets(int id, [FromBody] SheetDto model)
 		{
-			var userId = "5f00d005-aafb-4bd9-8341-68a4cf2f8a22";// User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			var campId = _unitOfWork.HeadofCamp.GetByUserId(userId).Result?.CampId;
 
 			var sheet = await _unitOfWork.Sheets.getByIdAsync(id);

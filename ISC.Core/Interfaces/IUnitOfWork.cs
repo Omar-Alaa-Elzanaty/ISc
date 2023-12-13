@@ -26,6 +26,7 @@ namespace ISC.Core.Interfaces
 		IBaseRepository<TraineeArchive> TraineesArchive { get; }
 		IBaseRepository<StuffArchive> StuffArchive { get; }
 		IBaseRepository<NewRegistration> NewRegitseration { get; }
+		IBaseRepository<TaskList> Tasks { get; }
 		Task<bool> addToRoleAsync<T>(T account, string role,int?CampId,int?MentorId);
 		Task<string?> getMediaAsync(IFormFile media);
 		Task<int> completeAsync();

@@ -41,6 +41,7 @@ namespace ISC.EF.Repositories
 		public IBaseRepository<StuffArchive> StuffArchive { get; private set; }
 
 		public IBaseRepository<NewRegistration> NewRegitseration { get; private set; }
+		public IBaseRepository<TaskList>Tasks { get; private set; }
         public UnitOfWork(DataBase database,UserManager<UserAccount> usermanager,IWebHostEnvironment host, IHttpContextAccessor httpContext)
         {
 			_dataBase = database;
@@ -59,6 +60,7 @@ namespace ISC.EF.Repositories
 			TraineesArchive = new BaseRepository<TraineeArchive>(_dataBase);
 			StuffArchive = new BaseRepository<StuffArchive>(_dataBase);
 			NewRegitseration = new BaseRepository<NewRegistration>(_dataBase);
+			Tasks = new BaseRepository<TaskList>(_dataBase);
 		}
 		public async Task<bool> addToRoleAsync<T>(T account, string role,int?campId,int?mentorId)
 		{

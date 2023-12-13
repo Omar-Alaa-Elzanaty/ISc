@@ -4,6 +4,7 @@ using ISC.Core.Models;
 using ISC.Core.ModelsDtos;
 using ISC.EF;
 using ISC.Services.ISerivces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,7 @@ namespace ISC.API.Controllers
 {
 	[Route("api/[controller]/[action]")]
 	[ApiController]
-	//[Authorize(Roles =$"{Roles.MENTOR}")]
+	[Authorize(Roles = $"{Role.MENTOR}")]
 	public class MentorController : ControllerBase
 	{
 		private readonly RoleManager<IdentityRole> _roleManager;
@@ -152,7 +153,7 @@ namespace ISC.API.Controllers
 		[HttpGet]
 		public async Task<IActionResult> TakeAttendence()
 		{
-			var userId = "0efa3cd8-fa4b-43fa-871a-337ba98dc45c"/*User.FindFirst(ClaimTypes.NameIdentifier)?.Value*/;
+			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			var mentor = await _unitOfWork.Mentors.findByAsync(m => m.UserId == userId);
 
 			if (mentor is null || mentor.AccessSessionId is null)
@@ -193,10 +194,10 @@ namespace ISC.API.Controllers
 
 			return Ok(new { session.Id, attendence });
 		}
-		[HttpPut("{id}")]
-		public async Task<IActionResult> SubmitAttendence(int id,List<SubmitAttendenceDto> attendence)
+		[HttpPut("{sessionId}")]
+		public async Task<IActionResult> SubmitAttendence(int sessionId,List<SubmitAttendenceDto> attendence)
 		{
-			var session = await _unitOfWork.Sessions.getByIdAsync(id);
+			var session = await _unitOfWork.Sessions.getByIdAsync(sessionId);
 			if(session is null)
 			{
 				return BadRequest("Invalid request");
@@ -205,7 +206,7 @@ namespace ISC.API.Controllers
 			var absence = new List<TraineeAttendence>();
 			foreach(var record in attendence)
 			{
-				var attend = await _unitOfWork.TraineesAttendence.findByAsync(a => a.SessionId == id && a.TraineeId == record.TraineeId);
+				var attend = await _unitOfWork.TraineesAttendence.findByAsync(a => a.SessionId == sessionId && a.TraineeId == record.TraineeId);
 				var trainee = await _unitOfWork.Trainees.getByIdAsync(record.TraineeId);
 
 				if (trainee is null)
@@ -220,7 +221,7 @@ namespace ISC.API.Controllers
 					attend = new TraineeAttendence()
 					{
 						TraineeId = record.TraineeId,
-						SessionId = id
+						SessionId = sessionId
 					};
 
 					newAttendnce.Add(attend);
@@ -232,5 +233,27 @@ namespace ISC.API.Controllers
 
 			return Ok("update Attendence");
 		}
+		//TODO: implement
+		//[HttpGet]
+		//public async Task<IActionResult> DisplayTraineeTask(int traineeId)
+		//{
+		//	return Ok();
+		//}
+		//[HttpDelete]
+		//public async Task<IActionResult>DeleteTraineeTask(int taskId)
+		//{
+		//	return Ok();
+		//}
+		//[HttpPost]
+		//public async Task<IActionResult>AddTask(int traineeId,List<string> tasks)
+		//{
+		//	return Ok();
+		//}
+		//[HttpPut]
+		//public async Task<IActionResult>UpdateTask(int taskId, string task)
+		//{
+		//	return Ok();
+		//}
+
 	}
 }

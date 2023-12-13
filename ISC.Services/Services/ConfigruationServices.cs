@@ -5,11 +5,12 @@ using ISC.Services.ISerivces;
 using ISC.Services.ISerivces.IModelServices;
 using ISC.Services.Services.ModelSerivces;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Identity.Client;
 namespace ISC.Services.Services
 {
 	public static class ConfigruationServices
 	{
-		public static void addServices(this IServiceCollection services)
+		public static void AddServices(this IServiceCollection services)
 		{
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
 			services.AddScoped<IMentorRepository, MentorRepository>();
@@ -23,6 +24,7 @@ namespace ISC.Services.Services
 			services.AddScoped<ILeaderServices, LeaderServices>();
 			services.AddScoped<ICampServices, CampServices>();
 			services.AddScoped<IHeadSerivces, HeadServices>();
+			services.AddScoped<ITraineeService, TraineeService>();
 		}
 	}
 }

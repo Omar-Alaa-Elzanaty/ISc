@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ISC.Core.ModelsDtos;
+using System.Reflection.Emit;
 
 namespace ISC.EF
 {
@@ -46,6 +47,7 @@ namespace ISC.EF
 			new TraineeAttendenceConfigurations().Configure(builder.Entity<TraineeAttendence>());
 			//new TraineeConfigurations().Configure(builder.Entity<Trainee>());
 			new TraineeSheetAccessConfigurations().Configure(builder.Entity<TraineeSheetAccess>());
+			new TaskListConfiguration().Configure(builder.Entity<TaskList>());
 		}
 		public DbSet<Trainee> Trainees { get; set; }
 		public DbSet<Session> Sessions { get; set; }
@@ -61,5 +63,6 @@ namespace ISC.EF
 		public DbSet<StuffArchive> StuffArchives { get; set; }
 		public DbSet<NewRegistration> NewRegistration { get; set; }
 		public DbSet<HeadOfTraining> HeadsOfTraining { get; set;}
+		public DbSet<TaskList> Tasks { get; set; }
 	}
 }

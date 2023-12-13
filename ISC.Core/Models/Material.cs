@@ -11,7 +11,7 @@ namespace ISC.Core.Models
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public string Link { get; set; }
-		public DateTime CreationDate { get; set; }=DateTime.Now;
+		public DateTime CreationDate { get; set; } = DateTime.UtcNow;
 		public int SheetId { get; set; }
 		public virtual Sheet Sheet { get; set; }
 	}

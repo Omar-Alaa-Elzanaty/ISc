@@ -16,6 +16,7 @@ namespace ISC.Core.Models
 		public bool IsSohag { get; set; }
 		public int SheetOrder { get; set; }
 		public int MinimumPrecent { get; set; }
+		public int ProblemsCount {  get; set; }
 		public virtual List<Material> Materials { get; set; }
 		public int CampId { get; set; }
 		public virtual Camp Camp { get; set; }

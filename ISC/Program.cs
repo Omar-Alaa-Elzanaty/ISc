@@ -20,7 +20,7 @@ namespace ISC
 		{
 			var builder = WebApplication.CreateBuilder(args);
 			// Add services to the container.
-			builder.Services.addServices();
+			builder.Services.AddServices();
 			//builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 			builder.Services.AddDbContext<DataBase>(option =>
 				option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
