@@ -20,13 +20,17 @@ namespace ISC.Services.Services.ModelSerivces
 		private readonly IAuthanticationServices _authServices;
 		private readonly IMediaServices _mediaServices;
 		private readonly DataBase _context;
+		private readonly ISheetServices _sheetServices;
+		private readonly ILeaderServices _leaderServices;
 
 		public LeaderServices(IUnitOfWork unitOfWork,
 			UserManager<UserAccount> userManager,
 			IAuthanticationServices authanticationServices,
 			IMapper mapper,
 			IMediaServices mediaServices,
-			DataBase context)
+			DataBase context,
+			ISheetServices sheetServices,
+			ILeaderServices leaderServices)
 		{
 			_unitOfWork = unitOfWork;
 			_userManager = userManager;
@@ -35,9 +39,12 @@ namespace ISC.Services.Services.ModelSerivces
 			_mapper = mapper;
 			_mediaServices = mediaServices;
 			_context = context;
+			_sheetServices = sheetServices;
+			_leaderServices = leaderServices;
 		}
-		public async Task DeleteTraineesAsync(List<DeleteTraineeDto> trainees)
+		public async Task<ServiceResponse<bool>> DeleteTraineesAsync(List<DeleteTraineeDto> trainees)
 		{
+			ServiceResponse<bool> resp = new ServiceResponse<bool>() { IsSuccess = true };
 
 			var users = await _userManager.Users
 									.Include(a => a.Trainee)
@@ -61,6 +68,8 @@ namespace ISC.Services.Services.ModelSerivces
 
 			await _unitOfWork.TraineesArchive.AddGroup(archive);
 			await _unitOfWork.completeAsync();
+
+			return resp;
 		}
 
 		public async Task<ServiceResponse<Camp>> AddCampAsync(CampDto camp)
@@ -107,6 +116,7 @@ namespace ISC.Services.Services.ModelSerivces
 				response.Comment = $"some users couldn't add to role {model.Role}";
 				return response;
 			}
+
 			response.IsSuccess = true;
 			return response;
 		}
@@ -296,8 +306,10 @@ namespace ISC.Services.Services.ModelSerivces
 
 			return response;
 		}
-		public async Task UpdateTraineeArchive(HashSet<TraineeArchiveDto> archives)
+		public async Task<ServiceResponse<bool>> UpdateTraineeArchive(HashSet<TraineeArchiveDto> archives)
 		{
+			var response=new ServiceResponse<bool>() { IsSuccess = true };
+
 			var nationalIds = archives.Select(a => a.NationalId).ToHashSet();
 
 			var memebers = await _unitOfWork.TraineesArchive.Get()
@@ -318,9 +330,13 @@ namespace ISC.Services.Services.ModelSerivces
 				trainee.LastName = name[2];
 			}
 			_ = await _unitOfWork.completeAsync();
+
+			return response;
 		}
-		public async Task UpdateStuffArchive(HashSet<StuffArchiveDto> archives)
+		public async Task<ServiceResponse<bool>> UpdateStuffArchive(HashSet<StuffArchiveDto> archives)
 		{
+			var response = new ServiceResponse<bool>() { IsSuccess = true };
+
 			var nationalIds = archives.Select(a => a.NationalID).ToHashSet();
 
 			var members = _unitOfWork.StuffArchive.Get()
@@ -337,6 +353,93 @@ namespace ISC.Services.Services.ModelSerivces
 			}
 
 			await _unitOfWork.completeAsync();
+
+			response.IsSuccess = true;
+			response.Comment = "Update successfully";
+
+			return response;
+		}
+		public async Task<ServiceResponse<AuthModel>>SubmitNewRegister(SubmitNewRegisterDto newRegisters)
+		{
+			var response = new ServiceResponse<AuthModel>();
+
+			HashSet<string> refused = new HashSet<string>();
+
+			foreach (var contest in newRegisters.ContestsInfo)
+			{
+				var standingResponse = await _sheetServices.SheetStanding(contest.ContestId, contest.IsSohag);
+				if (!standingResponse.IsSuccess)
+				{
+					throw new BadRequestException(standingResponse.Comment);
+				}
+
+				var statusResponse = await _sheetServices.SheetStatus(contest.ContestId, contest.IsSohag);
+				if (!statusResponse.IsSuccess)
+				{
+					throw new BadRequestException(statusResponse.Comment);
+				}
+
+
+				var memberPerProblem = statusResponse.Entity?.GroupBy(submission =>
+				new
+				{
+					Handle = submission.author.members.FirstOrDefault()?.handle,
+					ProblemName = submission.problem.name
+				}).Where(mps => mps.Any(sub => sub.verdict == "OK")).Select(mps => new
+				{
+					mps.Key.ProblemName,
+					mps.Key.Handle
+				}).GroupBy(mps => mps.Handle).Select(problemSolved => new
+				{
+					handle = problemSolved.Key,
+					Count = problemSolved.Count()
+				}).ToList();
+				
+				float totalproblems = standingResponse.Entity.problems.Count();
+
+				foreach (var member in memberPerProblem)
+				{
+					if (Math.Ceiling(member.Count / totalproblems) * 100.0 < contest.PassingPrecent)
+					{
+						refused.Add(member.handle);
+					}
+				}
+			}
+
+			var PassedMember = await _unitOfWork.NewRegitseration
+				.findManyWithChildAsync(nr => !refused.Contains(nr.CodeForceHandle)
+										&& newRegisters.CandidatesNationalId.Contains(nr.NationalID) == true);
+
+			var camp = _unitOfWork.Camps.getByIdAsync(newRegisters.CampId).Result.Name;
+
+			List<NewRegistration> faillRegisteration = new List<NewRegistration>();
+			List<NewRegistration> confirmedAcceptacne = new List<NewRegistration>();
+
+			foreach (var member in PassedMember)
+			{
+				var newTrainee = _mapper.Map<RegisterDto>(member);
+				newTrainee.Role = Role.TRAINEE;
+				newTrainee.CampId = newRegisters.CampId;
+
+				response = await _leaderServices.AutoMemberAddAsync(
+					registerDto: newTrainee,
+					campName: camp
+					);
+
+				if (!response.IsSuccess)
+				{
+					faillRegisteration.Add(member);
+				}
+				else
+				{
+					PassedMember.Add(member);
+				}
+			}
+
+			_unitOfWork.NewRegitseration.deleteGroup(PassedMember);
+
+
+			return response;
 		}
 	}
 }

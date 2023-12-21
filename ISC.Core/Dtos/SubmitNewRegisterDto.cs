@@ -18,6 +18,12 @@ namespace ISC.Core.Dtos
 	}
 	public class SubmitNewRegisterDto
 	{
+		public SubmitNewRegisterDto()
+		{
+			ContestsInfo = new();
+			CandidatesNationalId = new();
+		}
+
 		[Required]
 		public List<ContestInfo> ContestsInfo { get; set; }
 		[Required]

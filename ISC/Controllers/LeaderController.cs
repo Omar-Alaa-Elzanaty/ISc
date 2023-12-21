@@ -154,21 +154,23 @@ namespace ISC.API.Controllers
 			{
 				return BadRequest(model.Message);
 			}
-			return Ok(new
+			return Ok(new ServiceResponse<object>()
 			{
-				model.Token,
-				model.ExpireOn,
-				model.UserId
+				IsSuccess = true,
+				Entity = new
+				{
+					model.Token,
+					model.ExpireOn,
+					model.UserId
+				}
 			});
 		}
 
 
 		[HttpPost]
 		public async Task<IActionResult> AssignToStuffRoles([FromBody] StuffNewRolesDto model)
-		{
-			var resp = await _leaderServices.AssignRoleToStuff(model);
-
-			return Ok(resp);
+		{ 
+			return Ok(await _leaderServices.AssignRoleToStuff(model));
 		}
 
 		[HttpDelete]
@@ -180,29 +182,21 @@ namespace ISC.API.Controllers
 		[HttpDelete]
 		public async Task<IActionResult> DeleteFromTrainees([FromBody] List<DeleteTraineeDto> trainees)
 		{
-			 await _leaderServices.DeleteTraineesAsync(trainees);
-			return Ok();
+			return Ok(await _leaderServices.DeleteTraineesAsync(trainees));
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> AddCamp([FromBody] CampDto camp)
 		{
-			var response = await _leaderServices.AddCampAsync(camp);
-			if (!response.IsSuccess)
-			{
-				return BadRequest(new
-				{
-					response.IsSuccess,
-					response.Comment
-				});
-			}
-			return Ok("Success");
+			return Ok(await _leaderServices.AddCampAsync(camp));
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> RoleUserDisplay()
+		public async Task<IActionResult> SystemUserDisplay()
+
 		{
-			var accounts = _userManager.Users.Select(i => new
+			ServiceResponse<object> response = new ServiceResponse<object>();
+			response.Entity = _userManager.Users.Select(i => new
 			{
 				i.Id,
 				FullName = i.FirstName + ' ' + i.MiddleName + " " + i.LastName,
@@ -211,19 +205,19 @@ namespace ISC.API.Controllers
 				i.College,
 				i.Gender
 			});
-			return Ok(accounts);
+
+			return Ok(response);
 		}
 		[HttpPost]
 		public async Task<IActionResult> AddToRole([FromBody] UserRoleDto users)
 		{
-			var response = await _leaderServices.AddToRoleAsync(users);
 
-			return Ok(response.IsSuccess);
+			return Ok(await _leaderServices.AddToRoleAsync(users));
 		}
 		[HttpPost]
 		public async Task<IActionResult> AddRole([FromBody] string role)
 		{
-			var response = new ServiceResponse<bool>();
+			var response = new ServiceResponse<bool>() { IsSuccess = true };
 			
 			var result = await _roleManager.FindByNameAsync(role);
 
@@ -244,7 +238,7 @@ namespace ISC.API.Controllers
 				throw new BadRequestException(errors);
 			}
 
-			return Ok();
+			return Ok(response);
 		}
 		[HttpGet]
 		public async Task<IActionResult> DisplayTraineeArchive()
@@ -263,9 +257,7 @@ namespace ISC.API.Controllers
 		[HttpPut]
 		public async Task<IActionResult> UpdateTraineeArchive([FromBody] HashSet<TraineeArchiveDto> archives)
 		{
-			await _leaderServices.UpdateTraineeArchive(archives);
-
-			return Ok("Success");
+			return Ok(await _leaderServices.UpdateTraineeArchive(archives));
 		}
 		[HttpGet]
 		public async Task<IActionResult> DisplayStuffArchive()
@@ -275,21 +267,24 @@ namespace ISC.API.Controllers
 		[HttpDelete]
 		public async Task<IActionResult> DeleteStuffArchive([FromBody] List<string> members)
 		{
+			var response = new ServiceResponse<string>();
 			var archives = await _unitOfWork.StuffArchive.getAllAsync(sa => members.Contains(sa.NationalID));
 			if (archives.Count == 0)
 			{
-				return Ok("No Archive to delete");
+				throw new BadRequestException("No Archive to delete");
 			}
 			_unitOfWork.StuffArchive.deleteGroup(archives);
 			_ = await _unitOfWork.completeAsync();
-			return Ok("Deleted successfully");
+
+			response.IsSuccess = true;
+			response.Comment= "Deleted successfully";
+
+			return Ok(response);
 		}
 		[HttpPut]
 		public async Task<IActionResult> UpdateStuffArchive(HashSet<StuffArchiveDto> archives)
 		{
-			await _leaderServices.UpdateStuffArchive(archives);
-
-			return Ok("Update Successfully");
+			return Ok(await _leaderServices.UpdateStuffArchive(archives));
 		}
 		[HttpGet("{campId}")]
 		public async Task<IActionResult> DisplayNewRegister(int campId)
