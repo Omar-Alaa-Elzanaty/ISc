@@ -23,8 +23,8 @@ namespace ISC.Core.Models
 		public string? FacebookLink { get; set; }
 		public string? VjudgeHandle { get; set; }
 		public string? PhoneNumber { get; set; }
-		public byte[]? ProfilePictrue { get; set; }
-		public string CampName { get; set; }
+		public string? ImageUrl { get; set; }
+		public int CampId { get; set; }
 		public bool HasLaptop { get; set; }
 		public string? Comment { get; set; }
 	}

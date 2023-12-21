@@ -8,7 +8,7 @@ namespace ISC.Core.Models
 {
 	public class ServiceResponse<T>
 	{
-		public bool Success { get; set; }
+		public bool IsSuccess { get; set; }
 		public T? Entity { get; set; }
 		public string Comment { get; set; }
 	}

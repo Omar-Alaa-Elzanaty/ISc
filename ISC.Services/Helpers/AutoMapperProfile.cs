@@ -2,6 +2,7 @@
 using ISC.Core.APIDtos;
 using ISC.Core.Dtos;
 using ISC.Core.Models;
+using ISC.EF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,12 @@ namespace ISC.Services.Helpers
             CreateMap<SessionDto, Session>();
             CreateMap<SheetDto, Sheet>();
             CreateMap<MaterialDto,Material>();
+            CreateMap<UserAccount, TraineeArchive>().ReverseMap();
+            CreateMap<UserAccount,StuffArchive>().ReverseMap();
+            CreateMap<CampDto, Camp>();
+            CreateMap<TraineeArchiveDto, TraineeArchive>();
+            CreateMap<StuffArchiveDto, StuffArchive>();
+            CreateMap<NewRegisterationDto, NewRegistration>();
         }
     }
 }

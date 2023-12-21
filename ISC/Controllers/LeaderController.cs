@@ -12,6 +12,7 @@ using ISC.Core.Dtos;
 using AutoMapper;
 using Microsoft.Identity.Client;
 using ISC.Services.Services.ModelSerivces;
+using ISC.Services.Services.ExceptionSerivces.Exceptions;
 
 namespace ISC.API.Controllers
 {
@@ -27,6 +28,7 @@ namespace ISC.API.Controllers
 		private readonly ILeaderServices _leaderServices;
 		private readonly ISheetServices _sheetServices;
 		private readonly ICampServices _campServices;
+		private readonly IMediaServices _mediaService;
 		private readonly IMapper _mapper;
 		public LeaderController(
 			RoleManager<IdentityRole> roleManager,
@@ -37,7 +39,8 @@ namespace ISC.API.Controllers
 			ILeaderServices leaderServices,
 			ISheetServices sheetServices,
 			IMapper mapper,
-			ICampServices campServices)
+			ICampServices campServices,
+			IMediaServices mediaService)
 		{
 			_roleManager = roleManager;
 			_userManager = userManager;
@@ -47,6 +50,7 @@ namespace ISC.API.Controllers
 			_sheetServices = sheetServices;
 			_mapper = mapper;
 			_campServices = campServices;
+			_mediaService = mediaService;
 		}
 
 		[HttpGet]
@@ -77,10 +81,11 @@ namespace ISC.API.Controllers
 			var response = _userManager.GetUsersInRoleAsync(Role.TRAINEE).Result.Select(acc => new
 			{
 				acc.Id,
+				FullName=acc.FirstName+' '+acc.MiddleName+' '+acc.LastName,
 				acc.CodeForceHandle,
 				acc.Email,
 				acc.College,
-				CampName = _unitOfWork.Trainees.getCampofTrainee(acc.Id).Result.Name
+				CampName = _unitOfWork.Trainees.getCampofTrainee(acc.Id)?.Result?.Name
 			});
 			return Ok(response);
 		}
@@ -145,102 +150,37 @@ namespace ISC.API.Controllers
 			});
 		}
 
+
 		[HttpPost]
 		public async Task<IActionResult> AssignToStuffRoles([FromBody] StuffNewRolesDto model)
 		{
-			if (!ModelState.IsValid)
-			{
-				return BadRequest("some data is required");
-			}
-			var Account = await _userManager.FindByIdAsync(model.UserId);
-			if (Account == null)
-			{
-				return BadRequest("there is no Account with these properities!");
-			}
-			List<string> ErrorList = new List<string>();
-			foreach (var Role in model.UserRoles)
-			{
-				bool Result = await _unitOfWork.addToRoleAsync(Account, Role.Role, Role.CampId, Role.MentorId);
-				if (Result == false)
-					_ = ErrorList.Append(Role.Role + ',');
-			}
-			await _unitOfWork.completeAsync();
-			if (ErrorList.Count != 0) {
-				return BadRequest($"Can't save user to these roles{ErrorList}");
-			}
-			return Ok("Changes have been successfully");
+			var resp = await _leaderServices.AssignRoleToStuff(model);
 
+			return Ok(resp);
 		}
 
 		[HttpDelete]
 		public async Task<IActionResult> DeleteFromStuff(List<string> stuffusersId)
 		{
-			List<UserAccount> ErrorsList = new List<UserAccount>();
-			foreach (string UserId in stuffusersId)
-			{
-				var Account = await _userManager.FindByIdAsync(UserId);
-				var UserRoles = _userManager.GetRolesAsync(Account).Result.ToList();
-				bool result = true;
-				if (UserRoles.Contains(Role.MENTOR))
-				{
-					result = await _unitOfWork.Mentors.deleteAsync(UserId);
-				}
-				if (UserRoles.Contains(Role.HOC) && result == true)
-				{
-					result = await _unitOfWork.HeadofCamp.deleteEntityAsync(UserId);
-				}
-				if (result == true)
-				{
-					StuffArchive Archive = new StuffArchive()
-					{
-						FirstName = Account.FirstName,
-						MiddleName = Account.MiddleName,
-						LastName = Account.LastName,
-						NationalID = Account.NationalId,
-						BirthDate = Account.BirthDate,
-						Grade = Account.Grade,
-						College = Account.College,
-						Gender = Account.Gender,
-						CodeForceHandle = Account.CodeForceHandle,
-						FacebookLink = Account.FacebookLink,
-						VjudgeHandle = Account.VjudgeHandle,
-						Email = Account.Email,
-						PhoneNumber = Account.PhoneNumber
-					};
-					await _unitOfWork.StuffArchive.addAsync(Archive);
-					await _userManager.DeleteAsync(Account);
-				}
-				else
-					ErrorsList.Append(Account);
-			}
-			await _unitOfWork.completeAsync();
-			return Ok(ErrorsList);
+			return Ok(await _leaderServices.DeleteStuffAsync(stuffusersId));
 		}
 
 		[HttpDelete]
-		public async Task<IActionResult> DeleteFromTrainees([FromBody] List<string> traineesIds)
+		public async Task<IActionResult> DeleteFromTrainees([FromBody] List<DeleteTraineeDto> trainees)
 		{
-			var response = await _leaderServices.DeleteTraineesAsync(traineesIds);
-			if (!response.Success)
-			{
-				return Ok(new
-				{
-					response.Success,
-					response.Comment
-				});
-			}
-			return Ok(response);
+			 await _leaderServices.DeleteTraineesAsync(trainees);
+			return Ok();
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> AddCamp([FromBody] CampDto camp)
 		{
 			var response = await _leaderServices.AddCampAsync(camp);
-			if (!response.Success)
+			if (!response.IsSuccess)
 			{
 				return BadRequest(new
 				{
-					response.Success,
+					response.IsSuccess,
 					response.Comment
 				});
 			}
@@ -261,89 +201,64 @@ namespace ISC.API.Controllers
 			});
 			return Ok(accounts);
 		}
-
 		[HttpPost]
 		public async Task<IActionResult> AddToRole([FromBody] UserRoleDto users)
 		{
 			var response = await _leaderServices.AddToRoleAsync(users);
-			if (!response.Success)
-			{
-				return Ok(response);
-			}
-			return Ok(response.Success);
+
+			return Ok(response.IsSuccess);
 		}
 		[HttpPost]
 		public async Task<IActionResult> AddRole([FromBody] string role)
 		{
+			var response = new ServiceResponse<bool>();
+			
 			var result = await _roleManager.FindByNameAsync(role);
+
 			if (result != null)
 			{
-				return BadRequest($"Role {role} is already exist!");
-			}
-			result = new IdentityRole() { Name = role };
-			var response = await _roleManager.CreateAsync(result);
-			if (!response.Succeeded)
-			{
-				return BadRequest(response.Errors);
+				throw new BadRequestException($"Role {role} is already exist!");
 			}
 
-			return Ok("Add successful");
+			var roleResult = await _roleManager.CreateAsync(new IdentityRole(role));
+			if (!roleResult.Succeeded)
+			{
+				var errors=" ";
+				foreach(var error in roleResult.Errors)
+				{
+					errors += $"{error.Description}\n";
+				}
+
+				throw new BadRequestException(errors);
+			}
+
+			return Ok();
 		}
 		[HttpGet]
 		public async Task<IActionResult> DisplayTraineeArchive()
 		{
-			var response = await _unitOfWork.TraineesArchive.getAllAsync();
+			var response = new ServiceResponse<List<TraineeArchive>>() { IsSuccess = true };
+
+			response.Entity = await _unitOfWork.TraineesArchive.getAllAsync();
+
 			return Ok(response);
 		}
 		[HttpDelete]
 		public async Task<IActionResult> DeleteTraineeArchive([FromBody] List<string> members)
 		{
-			if (members == null || members.Count() == 0)
-			{
-				return BadRequest("Invalid request");
-			}
-			var trainees = await _unitOfWork.TraineesArchive.findManyWithChildAsync(ta => members.Contains(ta.NationalID));
-			if (trainees == null || trainees.Count == 0)
-			{
-				return BadRequest("No account to remove");
-			}
-			_unitOfWork.TraineesArchive.deleteGroup(trainees);
-			_ = await _unitOfWork.completeAsync();
-			return Ok("Deleted Successfully");
+			return Ok(await _leaderServices.DeleteTraineeArchivesAsync(members));
 		}
 		[HttpPut]
-		public async Task<IActionResult> UpdateTraineeArchive([FromBody] List<TraineeArchiveDto> archives)
+		public async Task<IActionResult> UpdateTraineeArchive([FromBody] HashSet<TraineeArchiveDto> archives)
 		{
-			var nationalIds = archives.Select(a => a.NationalId);
-			var members = await _unitOfWork.TraineesArchive.findManyWithChildAsync(ta => nationalIds.Contains(ta.NationalID));
-			foreach (var archive in archives)
-			{
-				var trainee = members.Single(m => m.NationalID == archive.NationalId);
-				var name = archive.FullName.Split(' ');
-				if (name.Length < 3)
-				{
-					return BadRequest("Full name is not valid");
-				}
-				trainee.FirstName = name[0];
-				trainee.MiddleName = name[1];
-				trainee.LastName = name[2];
-				trainee.College = archive.College;
-				trainee.CodeForceHandle = archive.CodeforceHandle;
-				trainee.FacebookLink = archive.FacebookLink;
-				trainee.Email = archive.Email;
-				trainee.VjudgeHandle = archive.VjudgeHandle;
-				trainee.BirthDate = archive.BirthDate;
-				trainee.Year = archive.Year;
-				trainee.IsCompleted = archive.IsCompleted;
-				trainee.PhoneNumber = archive.PhoneNumber;
-			}
-			_ = await _unitOfWork.completeAsync();
+			await _leaderServices.UpdateTraineeArchive(archives);
+
 			return Ok("Success");
 		}
 		[HttpGet]
 		public async Task<IActionResult> DisplayStuffArchive()
 		{
-			return Ok(_unitOfWork.StuffArchive.getAllAsync().Result);
+			return Ok(await _unitOfWork.StuffArchive.getAllAsync());
 		}
 		[HttpDelete]
 		public async Task<IActionResult> DeleteStuffArchive([FromBody] List<string> members)
@@ -358,39 +273,18 @@ namespace ISC.API.Controllers
 			return Ok("Deleted successfully");
 		}
 		[HttpPut]
-		public async Task<IActionResult> UpdateStuffArchive(List<StuffArchiveDto> archives)
+		public async Task<IActionResult> UpdateStuffArchive(HashSet<StuffArchiveDto> archives)
 		{
-			var nationalIds = archives.Select(a => a.NationalID).ToList();
-			var members = await _unitOfWork.StuffArchive.findManyWithChildAsync(sa => nationalIds.Contains(sa.NationalID));
-			foreach (var stuffMember in archives) {
-				var stuff = members.Single(m => m.NationalID == stuffMember.NationalID);
-				var name = stuffMember.FullName.Split(' ');
-				stuff.FirstName = name[0];
-				stuff.MiddleName = name[1];
-				stuff.LastName = name[2];
-				stuff.NationalID = stuffMember.NationalID;
-				stuff.BirthDate = stuffMember.BirthDate;
-				stuff.Grade = stuffMember.Grade;
-				stuff.College = stuffMember.College;
-				stuff.Gender = stuffMember.Gender;
-				stuff.CodeForceHandle = stuffMember.CodeForceHandle;
-				stuff.FacebookLink = stuffMember.FacebookLink;
-				stuff.VjudgeHandle = stuffMember.VjudgeHandle;
-				stuff.Email = stuffMember.Email;
-				stuff.PhoneNumber = stuffMember.PhoneNumber;
-				stuff.Year = stuffMember.Year;
-			}
-			await _unitOfWork.completeAsync();
+			await _leaderServices.UpdateStuffArchive(archives);
+
 			return Ok("Update Successfully");
 		}
 		[HttpGet("{campId}")]
 		public async Task<IActionResult> DisplayNewRegister(int campId)
 		{
-			var response = await _leaderServices.DisplayNewRegisterAsync(campId);
-			if (!response.Success)
-				return BadRequest("No entity");
-			return Ok(response);
+			return Ok(await _leaderServices.DisplayNewRegisterAsync(campId));
 		}
+		//TODO: start from here
 		[HttpPost]
 		public async Task<IActionResult> SubmitNewRegisters(SubmitNewRegisterDto newRegisters)
 		{
@@ -399,12 +293,12 @@ namespace ISC.API.Controllers
 			foreach (var contest in newRegisters.ContestsInfo)
 			{
 				var standingResponse = await _sheetServices.SheetStanding(contest.ContestId, contest.IsSohag);
-				if (!standingResponse.Success)
+				if (!standingResponse.IsSuccess)
 				{
 					return BadRequest(standingResponse.Comment);
 				}
 				var statusResponse = await _sheetServices.SheetStatus(contest.ContestId, contest.IsSohag);
-				if (!statusResponse.Success)
+				if (!statusResponse.IsSuccess)
 				{
 					return BadRequest(statusResponse.Comment);
 				}
@@ -447,7 +341,7 @@ namespace ISC.API.Controllers
 			foreach (var member in PassedMember)
 			{
 				var newTrainee = _mapper.Map<RegisterDto>(member);
-				newTrainee.Roles.Add(Role.TRAINEE);
+				newTrainee.Role=Role.TRAINEE;
 				newTrainee.CampId = newRegisters.CampId;
 
 				var response = await _leaderServices.AutoMemberAddAsync(
@@ -455,7 +349,7 @@ namespace ISC.API.Controllers
 					campName: camp
 					);
 
-				if (!response.Success)
+				if (!response.IsSuccess)
 				{
 					faillRegisteration.Add(member);
 				}
@@ -485,7 +379,7 @@ namespace ISC.API.Controllers
 				return BadRequest("Invalid request");
 			}
 			var response = await _leaderServices.DeleteFromNewRegister(Ids);
-			if (!response.Success)
+			if (!response.IsSuccess)
 			{
 				return BadRequest();
 			}

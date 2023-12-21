@@ -8,7 +8,7 @@ namespace ISC.EF
 	public class UserAccount:IdentityUser
 	{
 		// username,password,id,email,phonenumber
-		public string FirstName { get; set; } = "NOName";
+		public string FirstName { get; set; } = "NoName";
 		public string MiddleName { get; set; }
 		public string LastName { get; set; }
 		[RegularExpression("^[1-9][0-9]*$")]
@@ -26,7 +26,7 @@ namespace ISC.EF
 		public Mentor? Mentor { get; set; }
 		public Trainee? Trainee { get; set; }
 		public HeadOfTraining? Headofcamp { get; set; }
-		public string generateUserName()
+		public string GenerateUserName()
 		{
 			StringBuilder UserName=new StringBuilder("ICPC");
 			var rand=new Random();
@@ -48,7 +48,7 @@ namespace ISC.EF
 			}
 			return UserName.ToString();
 		}
-		public string generatePassword()
+		public string GeneratePassword()
 		{
 			StringBuilder NewPassword = new StringBuilder("ICPC"),
 						  HashingSohag=new StringBuilder("sohag"),

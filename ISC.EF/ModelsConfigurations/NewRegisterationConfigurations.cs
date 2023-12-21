@@ -15,7 +15,7 @@ namespace ISC.EF.ModelsConfigurations
 		{
 			builder.HasKey(reg => reg.NationalID);
 			builder.HasIndex(reg => reg.CodeForceHandle).IsUnique();
-			builder.Property(reg => reg.ProfilePictrue).IsRequired(false);
+			builder.Property(reg => reg.ImageUrl).IsRequired(false);
 			builder.Property(reg => reg.NationalID).HasMaxLength(14);
 		}
 	}

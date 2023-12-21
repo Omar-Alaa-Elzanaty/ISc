@@ -1,4 +1,5 @@
 using AutoMapper;
+using ISC.API;
 using ISC.EF;
 using ISC.Services.Helpers;
 using ISC.Services.ISerivces;
@@ -116,6 +117,7 @@ namespace ISC
 			}
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
+			app.UseGlobalExceptionHandler();
 
 			app.UseRouting();
 			app.UseCors(c => c.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

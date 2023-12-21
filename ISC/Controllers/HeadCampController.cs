@@ -110,7 +110,7 @@ namespace ISC.API.Controllers
 							.ToListAsync();
 
 			var result = await _sheetServices.TraineeSheetAccesWithout(traineesId, camp?.Id ?? 0);
-			if (result.Success == false)
+			if (result.IsSuccess == false)
 			{
 				return BadRequest(result.Comment);
 			}
@@ -334,7 +334,7 @@ namespace ISC.API.Controllers
 				return NotFound("Invalid session");
 			}
 			var validResponse = await _unitOfWork.Sessions.CheckUpdateAbility(session, model, id);
-			if (!validResponse.Success)
+			if (!validResponse.IsSuccess)
 			{
 				return BadRequest(validResponse.Comment);
 			}

@@ -25,6 +25,8 @@ namespace ISC.Services.Services
 			services.AddScoped<ICampServices, CampServices>();
 			services.AddScoped<IHeadSerivces, HeadServices>();
 			services.AddScoped<ITraineeService, TraineeService>();
+			services.AddScoped<IMediaServices, MediaServices>();
+			services.AddScoped<IPublicSerives, PublicSerivces>();
 		}
 	}
 }

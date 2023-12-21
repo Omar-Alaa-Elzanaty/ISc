@@ -35,11 +35,11 @@ namespace ISC.Services.Services.ModelSerivces
 			}
 			if (filteredOnSessions.Count == 0)
 			{
-				response.Success = false;
+				response.IsSuccess = false;
 				response.Comment="Empty filtered list";
 				return response;
 			}
-			response.Success = true;
+			response.IsSuccess = true;
 			response.Entity = filteredOnSessions;
 			return response;
 		}

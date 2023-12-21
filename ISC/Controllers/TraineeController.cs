@@ -67,7 +67,7 @@ namespace ISC.API.Controllers
 									.Get()
 									.AnyAsync(s => s.SessionId == lastSessionId && trainee.Trainee.Id == s.TraineeId);
 
-			response.Success = attend == true && hasComment == false;
+			response.IsSuccess = attend == true && hasComment == false;
 			response.Entity = lastSessionId;
 
 			return Ok(response);

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Security.Claims;
@@ -25,23 +26,26 @@ namespace ISC.Services.Services
 		private readonly DefaultMessages _defaultMessages;
 		private readonly IOnlineJudgeServices _Onlinejudge;
 		private readonly IMailServices _MailServices;
-        public AuthanticationServices(
+		private readonly IMediaServices _MediaServices;
+		public AuthanticationServices(
 			UserManager<UserAccount> usermanger,
-			IOptions<JWT>jwt,
+			IOptions<JWT> jwt,
 			IUnitOfWork unitofwork,
-			RoleManager<IdentityRole>rolemanager,
+			RoleManager<IdentityRole> rolemanager,
 			IOnlineJudgeServices onlineJudge,
 			IMailServices mailservices,
 			IOptions<DefaultMessages> messages
-			)
-        {
-            _UserManager = usermanger;
+,
+			IMediaServices mediaServices)
+		{
+			_UserManager = usermanger;
 			_jwt = jwt.Value;
 			_UnitOfWork = unitofwork;
 			_RoleManager = rolemanager;
 			_Onlinejudge = onlineJudge;
 			_MailServices = mailservices;
 			_defaultMessages = messages.Value;
+			_MediaServices = mediaServices;
 		}
 		public async Task<AuthModel> RegisterAsync(RegisterDto user,string? message=null,bool sendEmail=false)
 		{
@@ -50,18 +54,15 @@ namespace ISC.Services.Services
 			{
 				return  NotValidData;
 			}
-			foreach (var role in user.Roles)
+			if (!await _RoleManager.RoleExistsAsync(user.Role))
 			{
-				if (!await _RoleManager.RoleExistsAsync(role))
+				return new AuthModel()
 				{
-					return new AuthModel()
-					{
-						Message = $"Role {role} not exist in system",
-						IsAuthenticated = false
-					};
-				}
+					Message = $"Role {user.Role} not exist in system",
+					IsAuthenticated = false
+				};
 			}
-			if (user.Roles.Contains(Role.TRAINEE) == true && (user.CampId == null))
+			if (user.Role.Contains(Role.TRAINEE) == true && (user.CampId == null))
 			{
 				return new AuthModel()
 				{
@@ -84,12 +85,13 @@ namespace ISC.Services.Services
 				CodeForceHandle = user.CodeForceHandle,
 				FacebookLink = user.FacebookLink,
 				VjudgeHandle = user.VjudgeHandle,
-				PhotoUrl=await _UnitOfWork.getMediaAsync(user.ProfilePicture)??string.Empty,
+				PhotoUrl=user.ProfilePicture != null? await _MediaServices.AddAsync(user.ProfilePicture)??string.Empty: null,
 				JoinDate=DateTime.Now,
 				LastLoginDate=DateTime.Now
 			};
-			var password = newAccount.generatePassword();
-			newAccount.UserName = newAccount.generateUserName();
+			var password = newAccount.GeneratePassword();
+			newAccount.UserName = newAccount.GenerateUserName();
+			
 			var result = await _UserManager.CreateAsync(newAccount, password);
 			if (result.Succeeded == false)
 			{
@@ -102,19 +104,19 @@ namespace ISC.Services.Services
 				await _UserManager.DeleteAsync(newAccount);
 				return new AuthModel() { Message = errors};
 			}
-			foreach (var Role in user.Roles)
+
+			bool Result = await _UnitOfWork.addToRoleAsync(newAccount, user.Role, user.CampId, user.MentorId);
+			
+			if (Result == false)
 			{
-				bool Result = await _UnitOfWork.addToRoleAsync(newAccount, Role, user.CampId, user.MentorId);
-				if (Result == false) 
+				await _UserManager.DeleteAsync(newAccount);
+				return new AuthModel()
 				{
-					await _UserManager.DeleteAsync(newAccount);
-					return new AuthModel()
-					{
-						Message = $"May be some of roles must be add or modify on Role {Role}... please try again.",
-						IsAuthenticated = false
-					};
-				}
+					Message = $"May be some of roles must be add or modify on Role {user.Role}... please try again.",
+					IsAuthenticated = false
+				};
 			}
+			//TODO: remove comment
 			//if (!sendEmail)
 			//{
 			//	bool EmailResult = await _MailServices.sendEmailAsync(
@@ -138,7 +140,6 @@ namespace ISC.Services.Services
 			{
 				ExpireOn = JwtSecurityToken.ValidTo,
 				IsAuthenticated = true,
-				Roles = user.Roles,
 				Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken),
 				UserId = newAccount.Id,
 				UserName = newAccount.UserName,
@@ -149,18 +150,17 @@ namespace ISC.Services.Services
 		public async Task<AuthModel> loginAsync(LoginDto user)
 		{
 			var UserAccount = await _UserManager.FindByNameAsync(user.UserName);
-			if(UserAccount is null ||! await _UserManager.CheckPasswordAsync(UserAccount, user.Password))
+			if (UserAccount is null || !await _UserManager.CheckPasswordAsync(UserAccount, user.Password)) 
 			{
-				return new AuthModel() { Message = "Email or Passwrod is incorrect!" };
+				return new AuthModel() { Message = "Email or Passwrod is inCorrect!" };
 			}
-			UserAccount.LastLoginDate = DateTime.Now;
-			await _UnitOfWork.completeAsync();
-			JwtSecurityToken JwtSecurityToken;
-			if (user.RememberMe!=null)
-			JwtSecurityToken = await CreateJwtToken(UserAccount,(bool)user.RememberMe);
-			else
-				JwtSecurityToken = await CreateJwtToken(UserAccount);
+
 			var RolesList=await _UserManager.GetRolesAsync(UserAccount);
+			UserAccount.LastLoginDate = DateTime.Now;
+			await _UserManager.UpdateAsync(UserAccount);
+
+			JwtSecurityToken JwtSecurityToken = await CreateJwtToken(UserAccount, user.RememberMe ?? false);
+
 			return new AuthModel()
 			{
 				IsAuthenticated = true,
@@ -216,7 +216,7 @@ namespace ISC.Services.Services
 				return new AuthModel() { Message = "Codeforce Handle is already Exist!" };
 			if (_UserManager.Users.SingleOrDefault(i => i.NationalId == user.NationalId) != null)
 				return new AuthModel() { Message = "National Id is already exist!" };
-			if (user.Roles == null)
+			if (user.Role == null)
 				return new AuthModel() { Message = "User should assign to one or more Roles" };
 			return new AuthModel(){ IsAuthenticated = true};
 		}

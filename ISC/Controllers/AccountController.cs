@@ -1,4 +1,5 @@
 ﻿using ISC.Core.APIDtos;
+using ISC.Core.Dtos;
 using ISC.Services.ISerivces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,28 +10,21 @@ namespace ISC.API.Controllers
 	public class AccountController : ControllerBase
 	{
 		private readonly IAuthanticationServices _Auth;
-        public AccountController(IAuthanticationServices auth)
-        {
-            _Auth = auth;
-        }
-		[HttpPost("NewTrainee")]
-		public async Task<IActionResult> newTraineeRegisteration()
+		private readonly IPublicSerives _publicService;
+		public AccountController(IAuthanticationServices auth, IPublicSerives publicService)
 		{
-			throw new NotImplementedException();
+			_Auth = auth;
+			_publicService = publicService;
+		}
+		[HttpPost("NewTrainee")]
+		public async Task<IActionResult> NewTraineeRegisteration([FromForm]NewRegisterationDto model)
+		{
+			return Ok(await _publicService.AddNewRegister(model));
 		}
 		[HttpPost("Login")]
-		public async Task<IActionResult> loginAsync([FromForm] LoginDto user)
+		public async Task<IActionResult> Login([FromForm] LoginDto user)
 		{
-			if (!ModelState.IsValid)
-				return BadRequest(ModelState);
-			var result= await _Auth.loginAsync(user);
-			return Ok(new
-			{
-				result.ExpireOn,
-				result.Roles,
-				result.Token
-
-			});
+			return Ok(await _Auth.loginAsync(user));
 		}
 	}
 }

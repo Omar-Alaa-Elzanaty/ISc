@@ -58,7 +58,7 @@ namespace ISC.Services.Services.ModelSerivces
 					MentorName = m.Mentor != null ? m.FirstName + ' ' + m.MiddleName + " " + m.LastName : null
 				}).ToList();
 
-			response.Success = true;
+			response.IsSuccess = true;
 			response.Entity = traineeMentor;
 
 			if (traineeMentor.IsNullOrEmpty())
@@ -86,7 +86,7 @@ namespace ISC.Services.Services.ModelSerivces
 		}
 		public async Task<ServiceResponse<TraineeSheetAcessDto>> DisplayTraineeAccess(int campId)
 		{
-			var response=new ServiceResponse<TraineeSheetAcessDto>() { Success = true };
+			var response=new ServiceResponse<TraineeSheetAcessDto>() { IsSuccess = true };
 
 			var trainees = _userManager.Users
 						.Include(u => u.Trainee)

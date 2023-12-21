@@ -26,7 +26,7 @@ namespace ISC.Core.APIDtos
 		public string CodeForceHandle { get; set; }
 		public string? FacebookLink { get; set; }
 		public string? VjudgeHandle { get; set; }
-		public List<string> Roles { get; set; }
+		public string Role { get; set; }
 		public int? MentorId { get; set; }
 		public int? CampId { get; set; }
 	}

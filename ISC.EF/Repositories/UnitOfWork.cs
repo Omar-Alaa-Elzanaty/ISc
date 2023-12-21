@@ -3,6 +3,7 @@ using ISC.Core.Models;
 using ISC.Core.ModelsDtos;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -67,9 +68,14 @@ namespace ISC.EF.Repositories
 			if(account is UserAccount Acc)
 			{
 				if (Acc != null && _userManager.GetRolesAsync(Acc).Result.Contains(role) == true)
-					return true;
-				else if(Acc==null)
+				{
+					throw new BadHttpRequestException($"This account already has role {role}");
+				}
+				else if (Acc == null)
+				{
 					return false;
+				}
+
 				try
 				{
 					if (role == Role.TRAINEE)
@@ -80,10 +86,12 @@ namespace ISC.EF.Repositories
 						}
 						await _userManager.AddToRoleAsync(Acc, role);
 						Trainee Trainee;
+
 						if (mentorId != null)
 							Trainee = new Trainee() { UserId = Acc.Id, CampId = (int)campId, MentorId = mentorId };
 						else
 							Trainee = new Trainee() { UserId = Acc.Id, CampId = (int)campId };
+
 						await Trainees.addAsync(Trainee);
 					}
 					else if (role == Role.MENTOR)
@@ -127,79 +135,6 @@ namespace ISC.EF.Repositories
 			}
 			
 
-		}
-		protected async Task<string> addMediaAsync(IFormFile media)
-		{
-			string RootPath = _Host.WebRootPath;
-			string FileName = Guid.NewGuid().ToString();
-			string Extension = Path.GetExtension(media.FileName);
-			string MediaFolderPath = "";
-			bool isImage = false;
-			if (isImageExtension(Extension))
-			{
-				MediaFolderPath = Path.Combine(RootPath, "Images");
-				isImage = true;
-			}
-			using (FileStream fileStreams = new(Path.Combine(MediaFolderPath,
-											FileName + Extension), FileMode.Create))
-			{
-				media.CopyTo(fileStreams);
-			}
-			if (isImage)
-				return @$"{_HttpContext.HttpContext?.Request.Scheme}://{_HttpContext?.HttpContext?.Request.Host}/Images/" + FileName + Extension;
-			else
-				return @$"{_HttpContext.HttpContext?.Request.Scheme}://{_HttpContext?.HttpContext?.Request.Host}/Records/" + FileName + Extension;
-		}
-		protected async Task<bool> deleteMediaAsync(string url)
-		{
-			try
-			{
-				string RootPath = _Host.WebRootPath.Replace("\\\\", "\\");
-				var imageNameToDelete = Path.GetFileNameWithoutExtension(url);
-				var EXT = Path.GetExtension(url);
-				string? oldPath = "";
-				if (isImageExtension(EXT))
-					oldPath = $@"{RootPath}\Images\{imageNameToDelete}{EXT}";
-				else return false;
-				if (File.Exists(oldPath))
-				{
-					File.Delete(oldPath);
-					return true;
-				}
-				return false;
-			}
-			catch
-			{
-				return false;
-			}
-		}
-		public async Task<string?> getMediaAsync(IFormFile media)
-		{
-			if (media == null) return null;
-			string FileName = Guid.NewGuid().ToString();
-			string Extension = Path.GetExtension(media.FileName);
-			if (isImageExtension(Extension))
-			{
-				return @$"{_HttpContext.HttpContext?.Request.Scheme}://{_HttpContext?.HttpContext?.Request.Host}/Images/" + FileName + Extension;
-			}
-			else
-			{
-				return null;
-			}
-		}
-		protected async Task<string?> updateMedia(string oldUrl, IFormFile newMedia)
-		{
-			var Result = getMediaAsync(newMedia).Result;
-			if (Result == null) return Result;
-			if (oldUrl == Result) return oldUrl;
-			if (!await deleteMediaAsync(oldUrl)) return null;
-			var NewUrl = await addMediaAsync(newMedia);
-			if (NewUrl == null) return null;
-			return NewUrl;
-		}
-		private bool isImageExtension(string extension)
-		{
-			return extension == ".jpg" || extension == ".jpeg" || extension == ".jpe";
 		}
 		public async Task<int> completeAsync()
 		{

@@ -25,7 +25,7 @@ namespace ISC.EF.Repositories
 		}
 		public async Task AddGroup(List<T>group)
 		{
-			await _Context.AddRangeAsync(group);
+			await _Context.Set<T>().AddRangeAsync(group);
 		}
 		public IQueryable<T> Get()
 		{

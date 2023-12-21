@@ -233,7 +233,7 @@ namespace ISC.API.Controllers
 
 			return Ok("update Attendence");
 		}
-		//TODO: implement
+		//TODO: to implement
 		//[HttpGet]
 		//public async Task<IActionResult> DisplayTraineeTask(int traineeId)
 		//{

@@ -47,11 +47,11 @@ namespace ISC.Services.Services.ModelSerivces
 			}
 			if (filteredOnSheets.Count == 0)
 			{
-				response.Success = false;
+				response.IsSuccess = false;
 				response.Comment = "Filter sheet is empty";
 				return response;
 			}
-			response.Success = true;
+			response.IsSuccess = true;
 			response.Entity = filteredOnSheets;
 			return response;
 		}
@@ -76,11 +76,11 @@ namespace ISC.Services.Services.ModelSerivces
 				, new[] { "Sheet", "Trainee" }).Result.OrderBy(ts => ts.TraineeId).ToList();
 			if (traineeSheetAcess.Count == 0)
 			{
-				response.Success = false;
+				response.IsSuccess = false;
 				response.Comment = "Couldn't found any Access for trainees";
 				return response;
 			}
-			response.Success = true;
+			response.IsSuccess = true;
 			response.Entity = traineeSheetAcess;
 			return response;
 		}
@@ -99,11 +99,11 @@ namespace ISC.Services.Services.ModelSerivces
 				.ToDictionary(i => i.SheetId, i => i.Count);
 			if (ProblemSheetCount.Count > 0)
 			{
-				response.Success = true;
+				response.IsSuccess = true;
 				response.Entity = ProblemSheetCount;
 				return response;
 			}
-			response.Success = false;
+			response.IsSuccess = false;
 			response.Comment = "Coudn't find sheets or problems of sheets";
 			return response;
 		}
@@ -120,7 +120,7 @@ namespace ISC.Services.Services.ModelSerivces
 				response.Comment = $"Please Check from Contests Id's";
 				return response;
 			}
-			response.Success = true;
+			response.IsSuccess = true;
 			response.Entity = SheetStatus;
 			return response;
 		}
@@ -137,7 +137,7 @@ namespace ISC.Services.Services.ModelSerivces
 				return response;
 			}
 
-			response.Success = true;
+			response.IsSuccess = true;
 			response.Entity = standing;
 			return response;
 		}

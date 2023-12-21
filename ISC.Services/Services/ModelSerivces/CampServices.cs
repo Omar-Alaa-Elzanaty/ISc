@@ -35,7 +35,6 @@ namespace ISC.Services.Services.ModelSerivces
 			_userManager = userManager;
 			_mapper = mapper;
 		}
-
 		public async Task<ServiceResponse<List<DisplayCampsDto>>> DisplayCampsDetails()
 		{
 			ServiceResponse<List<DisplayCampsDto>> response = new ServiceResponse<List<DisplayCampsDto>>();
@@ -44,7 +43,7 @@ namespace ISC.Services.Services.ModelSerivces
 
 			if (campMentor == null)
 			{
-				response.Success = false;
+				response.IsSuccess = false;
 				response.Comment = "No camp found";
 				return response;
 			}
@@ -89,7 +88,7 @@ namespace ISC.Services.Services.ModelSerivces
 				}
 			}
 
-			response.Success= true;
+			response.IsSuccess= true;
 			response.Entity = campMentor;
 
 			return response;

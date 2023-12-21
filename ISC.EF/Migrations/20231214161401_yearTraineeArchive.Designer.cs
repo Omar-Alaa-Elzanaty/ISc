@@ -4,6 +4,7 @@ using ISC.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ISC.EF.Migrations
 {
     [DbContext(typeof(DataBase))]
-    partial class DataBaseModelSnapshot : ModelSnapshot
+    [Migration("20231214161401_yearTraineeArchive")]
+    partial class yearTraineeArchive
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -156,8 +159,9 @@ namespace ISC.EF.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CampId")
-                        .HasColumnType("int");
+                    b.Property<string>("CampName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CodeForceHandle")
                         .IsRequired()
@@ -191,9 +195,6 @@ namespace ISC.EF.Migrations
                     b.Property<bool>("HasLaptop")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -204,6 +205,9 @@ namespace ISC.EF.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("ProfilePictrue")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("VjudgeHandle")
                         .HasColumnType("nvarchar(max)");

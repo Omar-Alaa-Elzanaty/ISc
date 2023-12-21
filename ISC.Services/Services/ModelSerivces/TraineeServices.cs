@@ -33,7 +33,7 @@ namespace ISC.Services.Services.ModelSerivces
 
 			ServiceResponse<object> response = new ServiceResponse<object>
 			{
-				Success = true,
+				IsSuccess = true,
 				Entity = new
 				{
 					mentorAcc.Id,

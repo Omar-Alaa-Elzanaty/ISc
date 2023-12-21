@@ -1456,7 +1456,9 @@ bg=red</panel_attributes>
       <w>231</w>
       <h>66</h>
     </coordinates>
-    <panel_attributes>Display sheets</panel_attributes>
+    <panel_attributes>Display sheets
+with materials
+bg=red</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -1469,28 +1471,6 @@ bg=red</panel_attributes>
     </coordinates>
     <panel_attributes/>
     <additional_attributes>10.0;10.0;150.0;200.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>308</x>
-      <y>3498</y>
-      <w>231</w>
-      <h>55</h>
-    </coordinates>
-    <panel_attributes>display materials</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>143</x>
-      <y>3212</y>
-      <w>187</w>
-      <h>330</h>
-    </coordinates>
-    <panel_attributes/>
-    <additional_attributes>10.0;10.0;150.0;280.0</additional_attributes>
   </element>
   <element>
     <id>UMLGeneric</id>
@@ -1578,7 +1558,7 @@ bg=red</panel_attributes>
     <id>UMLUseCase</id>
     <coordinates>
       <x>297</x>
-      <y>3575</y>
+      <y>3487</y>
       <w>231</w>
       <h>55</h>
     </coordinates>
@@ -1591,16 +1571,16 @@ bg=red</panel_attributes>
       <x>143</x>
       <y>3212</y>
       <w>176</w>
-      <h>407</h>
+      <h>319</h>
     </coordinates>
     <panel_attributes/>
-    <additional_attributes>10.0;10.0;140.0;350.0</additional_attributes>
+    <additional_attributes>10.0;10.0;140.0;270.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>286</x>
-      <y>3652</y>
+      <x>297</x>
+      <y>3564</y>
       <w>231</w>
       <h>55</h>
     </coordinates>
@@ -1612,11 +1592,11 @@ bg=red</panel_attributes>
     <coordinates>
       <x>143</x>
       <y>3212</y>
-      <w>165</w>
-      <h>484</h>
+      <w>176</w>
+      <h>396</h>
     </coordinates>
     <panel_attributes/>
-    <additional_attributes>10.0;10.0;130.0;420.0</additional_attributes>
+    <additional_attributes>10.0;10.0;140.0;340.0</additional_attributes>
   </element>
   <element>
     <id>UMLUseCase</id>
@@ -1667,8 +1647,8 @@ bg=red</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>286</x>
-      <y>3718</y>
+      <x>297</x>
+      <y>3630</y>
       <w>231</w>
       <h>55</h>
     </coordinates>
@@ -1680,10 +1660,10 @@ bg=red</panel_attributes>
     <coordinates>
       <x>143</x>
       <y>3212</y>
-      <w>165</w>
-      <h>550</h>
+      <w>176</w>
+      <h>462</h>
     </coordinates>
     <panel_attributes/>
-    <additional_attributes>10.0;10.0;130.0;480.0</additional_attributes>
+    <additional_attributes>10.0;10.0;140.0;400.0</additional_attributes>
   </element>
 </diagram>
