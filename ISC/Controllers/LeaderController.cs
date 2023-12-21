@@ -13,6 +13,7 @@ using AutoMapper;
 using Microsoft.Identity.Client;
 using ISC.Services.Services.ModelSerivces;
 using ISC.Services.Services.ExceptionSerivces.Exceptions;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ISC.API.Controllers
 {
@@ -56,8 +57,19 @@ namespace ISC.API.Controllers
 		[HttpGet]
 		public async Task<IActionResult> DisplaySystemRoles()
 		{
-			var roles = await _roleManager.Roles.ToListAsync();
-			return Ok(roles.Select(role => role.Name));
+			ServiceResponse<List<string?>> response = new ServiceResponse<List<string?>>();
+
+			var roles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+			if (response.Entity.IsNullOrEmpty())
+			{
+				throw new BadRequestException("No role found");
+			}
+			else
+			{
+				response.Entity = roles;
+			}
+
+			return Ok(response);
 		}
 
 		[HttpGet]
