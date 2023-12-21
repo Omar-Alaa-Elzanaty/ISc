@@ -23,5 +23,6 @@ namespace ISC.Services.ISerivces.IModelServices
 		Task<ServiceResponse<string>> DeleteTraineeArchivesAsync(List<string> trainees);
 		Task<ServiceResponse<bool>> UpdateTraineeArchive(HashSet<TraineeArchiveDto> archives);
 		Task<ServiceResponse<bool>> UpdateStuffArchive(HashSet<StuffArchiveDto> archives);
+		Task<ServiceResponse<AuthModel>> SubmitNewRegister(SubmitNewRegisterDto newRegisters);
 	}
 }

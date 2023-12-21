@@ -97,7 +97,7 @@ namespace ISC.EF.Repositories
 					else if (role == Role.MENTOR)
 					{
 						await _userManager.AddToRoleAsync(Acc, role);
-						Mentor mentor = new Mentor() { UserId = Acc.Id };
+						Mentor mentor = new Mentor() { UserId = Acc.Id ,About="Talk about your self"};
 						await Mentors.addAsync(mentor);
 						await _dataBase.SaveChangesAsync();
 

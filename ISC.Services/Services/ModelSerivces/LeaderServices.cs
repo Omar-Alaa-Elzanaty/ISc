@@ -21,7 +21,6 @@ namespace ISC.Services.Services.ModelSerivces
 		private readonly IMediaServices _mediaServices;
 		private readonly DataBase _context;
 		private readonly ISheetServices _sheetServices;
-		private readonly ILeaderServices _leaderServices;
 
 		public LeaderServices(IUnitOfWork unitOfWork,
 			UserManager<UserAccount> userManager,
@@ -29,8 +28,7 @@ namespace ISC.Services.Services.ModelSerivces
 			IMapper mapper,
 			IMediaServices mediaServices,
 			DataBase context,
-			ISheetServices sheetServices,
-			ILeaderServices leaderServices)
+			ISheetServices sheetServices)
 		{
 			_unitOfWork = unitOfWork;
 			_userManager = userManager;
@@ -40,7 +38,6 @@ namespace ISC.Services.Services.ModelSerivces
 			_mediaServices = mediaServices;
 			_context = context;
 			_sheetServices = sheetServices;
-			_leaderServices = leaderServices;
 		}
 		public async Task<ServiceResponse<bool>> DeleteTraineesAsync(List<DeleteTraineeDto> trainees)
 		{
@@ -421,10 +418,7 @@ namespace ISC.Services.Services.ModelSerivces
 				newTrainee.Role = Role.TRAINEE;
 				newTrainee.CampId = newRegisters.CampId;
 
-				response = await _leaderServices.AutoMemberAddAsync(
-					registerDto: newTrainee,
-					campName: camp
-					);
+				response = await AutoMemberAddAsync(newTrainee,camp);
 
 				if (!response.IsSuccess)
 				{
