@@ -60,7 +60,7 @@ namespace ISC.API.Controllers
 			ServiceResponse<List<string?>> response = new ServiceResponse<List<string?>>();
 
 			var roles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
-			if (response.Entity.IsNullOrEmpty())
+			if (roles.IsNullOrEmpty())
 			{
 				throw new BadRequestException("No role found");
 			}
