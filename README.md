@@ -10,6 +10,6 @@
 
 ## Database Design
 
-## Ohter File Info
+## other File Info
 
 ## Contribution
