@@ -21,6 +21,7 @@ namespace ISC.Services.Services
 		{
 			try
 			{
+
 				var Response = await _apiRequest
 					.getRequestAsync<CodeforcesApiResponseDto<List<CodeforcesUserDto>>>($"user.info?handles={handle}");
 				if (Response == null) return false;
