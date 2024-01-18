@@ -10,6 +10,7 @@ using ISC.Services.ISerivces.IModelServices;
 using ISC.Services.Services.ExceptionSerivces.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 namespace ISC.Services.Services.ModelSerivces
 {
 	public class LeaderServices : ILeaderServices
@@ -168,14 +169,21 @@ namespace ISC.Services.Services.ModelSerivces
 		public async Task<ServiceResponse<bool>> DeleteFromNewRegister(List<string> Ids)
 		{
 			var response = new ServiceResponse<bool>();
-			var registers = await _unitOfWork.NewRegitseration.findManyWithChildAsync(r => Ids.Contains(r.NationalID));
-			if (registers != null || registers.Count == 0)
+
+			var registers = await _unitOfWork.NewRegitseration
+				.findManyWithChildAsync(r => Ids.Contains(r.NationalID));
+
+			if (registers.IsNullOrEmpty())
 			{
 				response.Comment = "No data found";
 				return response;
 			}
-			_unitOfWork.NewRegitseration.deleteGroup(registers);
+
 			response.IsSuccess = true;
+
+			_unitOfWork.NewRegitseration.deleteGroup(registers);
+			_ = await _unitOfWork.completeAsync();
+
 			return response;
 		}
 		public async Task<ServiceResponse<bool>> AssignRoleToStuff(StuffNewRolesDto model)
@@ -435,5 +443,25 @@ namespace ISC.Services.Services.ModelSerivces
 
 			return response;
 		}
+		public async Task<ServiceResponse<int>>UpdateCampStatusAsync(int campId)
+		{
+			var response = new ServiceResponse<int>();
+
+            var camp = await _unitOfWork.Camps.getByIdAsync(campId);
+
+            if (camp == null)
+            {
+                throw new BadRequestException("Invalid Id");
+            }
+
+            camp.OpenForRegister = !camp.OpenForRegister;
+
+            _ = await _unitOfWork.completeAsync();
+
+			response.IsSuccess = true;
+            response.Comment = $"Status changed to {camp.OpenForRegister}";
+
+			return response;
+        }
 	}
 }

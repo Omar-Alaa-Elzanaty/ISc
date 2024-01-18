@@ -14,6 +14,7 @@ using Microsoft.Identity.Client;
 using ISC.Services.Services.ModelSerivces;
 using ISC.Services.Services.ExceptionSerivces.Exceptions;
 using Microsoft.IdentityModel.Tokens;
+using System.Net.WebSockets;
 
 namespace ISC.API.Controllers
 {
@@ -84,6 +85,7 @@ namespace ISC.API.Controllers
 				acc.CodeForceHandle,
 				acc.Email
 			}).ToList();
+
 			return Ok(response);
 		}
 
@@ -99,6 +101,8 @@ namespace ISC.API.Controllers
 				acc.College,
 				CampName = _unitOfWork.Trainees.getCampofTrainee(acc.Id)?.Result?.Name
 			});
+
+			await Task.CompletedTask;
 			return Ok(response);
 		}
 
@@ -132,7 +136,8 @@ namespace ISC.API.Controllers
 		public async Task<IActionResult> DisplayAllExceptHeadOfTraining()
 		{
 			var HocUserId = _unitOfWork.HeadofCamp.getAllAsync().Result.Select(hoc => hoc.UserId).ToList();
-			var StuffWithoutHoc = _userManager.Users.Where(user => HocUserId.Contains(user.Id) == false).ToList();
+			var StuffWithoutHoc = await _userManager.Users.Where(user => HocUserId.Contains(user.Id) == false).ToListAsync();
+
 			return Ok(StuffWithoutHoc);
 		}
 
@@ -149,11 +154,14 @@ namespace ISC.API.Controllers
 			{
 				return BadRequest(ModelState);
 			}
+
 			var model = await _auth.RegisterAsync(user: newUser, sendEmail: true);
+
 			if (!model.IsAuthenticated)
 			{
 				return BadRequest(model.Message);
 			}
+
 			return Ok(new ServiceResponse<object>()
 			{
 				IsSuccess = true,
@@ -291,7 +299,7 @@ namespace ISC.API.Controllers
 		{
 			return Ok(await _leaderServices.DisplayNewRegisterAsync(campId));
 		}
-		//TODO: start from here
+
 		[HttpPost]
 		public async Task<IActionResult> SubmitNewRegisters(SubmitNewRegisterDto newRegisters)
 		{
@@ -300,67 +308,69 @@ namespace ISC.API.Controllers
 		[HttpDelete]
 		public async Task<IActionResult> DeleteNewRegister([FromBody] List<string> Ids)
 		{
-			if (Ids == null || Ids.Count == 0)
+			if (Ids.IsNullOrEmpty())
 			{
-				return BadRequest("Invalid request");
+				throw new BadRequestException("Invalid reques");
 			}
-			var response = await _leaderServices.DeleteFromNewRegister(Ids);
-			if (!response.IsSuccess)
-			{
-				return BadRequest();
-			}
-			return Ok();
+
+			return Ok(await _leaderServices.DeleteFromNewRegister(Ids));
+
 		}
 		[HttpGet]
 		public async Task<IActionResult> CampRegisterStatus()
 		{
-			return Ok(_unitOfWork.Camps.Get().Select(c => new
+			var response = new ServiceResponse<object>() { IsSuccess = true };
+
+			response.Entity = await _unitOfWork.Camps.Get().Select(c => new
 			{
 				c.Name,
 				state = c.OpenForRegister
-			}));
+			}).ToListAsync();
+
+			return Ok(response);
 		}
 		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateCampState(int id)
+		public async Task<IActionResult> UpdateCampStatus(int id)
 		{
-			var camp = await _unitOfWork.Camps.getByIdAsync(id);
-			if (camp != null)
-			{
-				camp.OpenForRegister = !camp.OpenForRegister;
-
-				_ = await _unitOfWork.completeAsync();
-				return Ok($"State change to {camp.OpenForRegister}");
-			}
-			else
-			{
-				return BadRequest("Invalid Id");
-			}
+			return Ok(await _leaderServices.UpdateCampStatusAsync(id));
 		}
 		[HttpGet]
 		public async Task<IActionResult> DisplayOpenedCamp()
 		{
-			return Ok(_unitOfWork.Camps.findManyWithChildAsync(c => c.OpenForRegister).Result.Select(c => new
+			var  response= new ServiceResponse<object>() { IsSuccess = true };
+			response.Entity = _unitOfWork.Camps.findManyWithChildAsync(c => c.OpenForRegister).Result.Select(c => new
 			{
 				c.Id,
 				c.Name
-			}));
+			});
+
+			await Task.CompletedTask;
+
+            return Ok(response);
 		}
 		[HttpPut]
-		public async Task<IActionResult> UpdateCampHead(int headId, int campId, bool toCamp)
+		public async Task<IActionResult> UpdateCampHead(int headId, int campId, bool isAdd)
 		{
-			HeadOfTraining hoc = await _unitOfWork.HeadofCamp.getByIdAsync(headId);
+			var response = new ServiceResponse<int>() { IsSuccess = true };
 
-			if (toCamp)
+			HeadOfTraining head = await _unitOfWork.HeadofCamp.getByIdAsync(headId);
+
+			if(head is null)
 			{
-				hoc.CampId = campId;
+				throw new KeyNotFoundException("Invalid Id");
+			}
+
+			if (isAdd)
+			{
+				head.CampId = campId;
 			}
 			else
 			{
-				await _unitOfWork.HeadofCamp.deleteAsync(hoc);
+				await _unitOfWork.HeadofCamp.deleteAsync(head);
 			}
 			await _unitOfWork.completeAsync();
 
-			return Ok();
+			return Ok(response);
 		}
 	}
 }
