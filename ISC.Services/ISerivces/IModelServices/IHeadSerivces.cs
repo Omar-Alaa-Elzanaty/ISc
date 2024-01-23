@@ -17,5 +17,8 @@ namespace ISC.Services.ISerivces.IModelServices
 		Task<List<TraineeStandingDto>> GeneralStandingsAsync(int? campId);
 		Task<PersonAttendenceDto> TraineeAttendence(int? campId);
 		Task<PersonAttendenceDto> MentorAttendence(int? campId);
-	}
+		Task<ServiceResponse<object>> DisplayTrainees(string userId);
+		Task<ServiceResponse<bool>> DeleteFromTrianee(List<string> traineesUsersId);
+
+    }
 }

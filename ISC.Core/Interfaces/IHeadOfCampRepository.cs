@@ -10,6 +10,6 @@ namespace ISC.Core.Interfaces
 	public interface IHeadOfCampRepository:IBaseRepository<HeadOfTraining>
 	{
 		Task<bool> deleteEntityAsync(string head);
-		Task<HeadOfTraining?> GetByUserId(string userId);
+		Task<HeadOfTraining?> GetByUserIdAsync(string userId);
 	}
 }

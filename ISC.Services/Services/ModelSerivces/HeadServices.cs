@@ -1,4 +1,5 @@
-﻿using ISC.Core.Dtos;
+﻿using AutoMapper;
+using ISC.Core.Dtos;
 using ISC.Core.Interfaces;
 using ISC.Core.Models;
 using ISC.Core.ModelsDtos;
@@ -6,6 +7,7 @@ using ISC.EF;
 using ISC.Services.Helpers;
 using ISC.Services.ISerivces;
 using ISC.Services.ISerivces.IModelServices;
+using ISC.Services.Services.ExceptionSerivces.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,18 +23,44 @@ namespace ISC.Services.Services.ModelSerivces
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IOnlineJudgeServices _onlineJudgeServices;
 		private readonly CodeForceConnection _codeForceConnection;
+		private readonly IMapper _mapper;
 
-		public HeadServices(UserManager<UserAccount> userManager,
-			IUnitOfWork unitofwork,
-			IOnlineJudgeServices onlineJudgeServices,
-			IOptions<CodeForceConnection> connection)
+        public HeadServices(UserManager<UserAccount> userManager,
+            IUnitOfWork unitofwork,
+            IOnlineJudgeServices onlineJudgeServices,
+            IOptions<CodeForceConnection> connection,
+            IMapper mapper)
+        {
+            _userManager = userManager;
+            _unitOfWork = unitofwork;
+            _onlineJudgeServices = onlineJudgeServices;
+            _codeForceConnection = connection.Value;
+            _mapper = mapper;
+        }
+        public async Task<ServiceResponse<object>> DisplayTrainees(string userId)
 		{
-			_userManager = userManager;
-			_unitOfWork = unitofwork;
-			_onlineJudgeServices = onlineJudgeServices;
-			_codeForceConnection = connection.Value;
-		}
+			var response = new ServiceResponse<object>() { IsSuccess = true };
 
+			var campId = _unitOfWork.HeadofCamp.GetByUserIdAsync(userId).Result?.CampId;
+
+			if(campId is null)
+			{
+				throw new BadRequestException("Head Camp info error");
+			}
+
+			response.Entity = await _userManager.Users.Include(u=>u.Trainee).Where(u=>u.Trainee!= null &&u.Trainee.CampId==campId)
+				.Select(tr => new
+				{
+					tr.Id,
+					FullName = tr.FirstName + ' ' + tr.MiddleName + ' ' + tr.LastName,
+					tr.Email,
+					tr.CodeForceHandle,
+					tr.Gender,
+					tr.Grade
+				}).ToListAsync();
+
+			return response;
+        }
 		public async Task<ServiceResponse<List<TraineeMentorDto>>> DisplayTraineeMentorAsync(string userId)
 		{
 			var response = new ServiceResponse<List<TraineeMentorDto>>();
@@ -295,5 +323,47 @@ namespace ISC.Services.Services.ModelSerivces
 
 			return response;
 		}
+		public async Task<ServiceResponse<bool>> DeleteFromTrianee(List<string> traineesUsersId)
+		{
+			var response= new ServiceResponse<bool>() { IsSuccess = true };
+
+            foreach (string traineeuserid in traineesUsersId)
+            {
+                var traineeAccount = await _userManager.Users
+					.Include(i => i.Trainee)
+					.Where(user => user.Id == traineeuserid)
+					.SingleOrDefaultAsync();
+
+                if (traineeAccount != null)
+                {
+                    var camp = await _unitOfWork.Trainees.getCampofTrainee(traineeAccount.Trainee.Id);
+					var archive = _mapper.Map<TraineeArchive>(traineeAccount);
+					archive.CampName = camp.Name;
+                    /*TraineeArchive Archive = new TraineeArchive()
+                    {
+                        FirstName = traineeAccount.FirstName,
+                        MiddleName = traineeAccount.MiddleName,
+                        LastName = traineeAccount.LastName,
+                        NationalID = traineeAccount.NationalId,
+                        BirthDate = traineeAccount.BirthDate,
+                        Grade = traineeAccount.Grade,
+                        Gender = traineeAccount.Gender,
+                        College = traineeAccount.College,
+                        CodeForceHandle = traineeAccount.CodeForceHandle,
+                        FacebookLink = traineeAccount.FacebookLink,
+                        VjudgeHandle = traineeAccount.VjudgeHandle,
+                        Email = traineeAccount.Email,
+                        PhoneNumber = traineeAccount.PhoneNumber,
+                        CampName = camp.Name,
+                        IsCompleted = false
+                    };*/
+                    await _unitOfWork.TraineesArchive.addAsync(archive);
+                    await _userManager.DeleteAsync(traineeAccount);
+                }
+            }
+            await _unitOfWork.completeAsync();
+
+			return response;
+        }
 	}
 }
