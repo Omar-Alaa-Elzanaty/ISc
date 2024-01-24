@@ -133,6 +133,18 @@ namespace ISC.API.Controllers
 		}
 
 		[HttpGet]
+		public async Task<IActionResult> CampInfo()
+		{
+			return Ok(await _leaderServices.CampInfo());
+		}
+
+		[HttpGet("{campId}")]
+		public async Task<IActionResult> MentorInfo(int campId)
+		{
+			return Ok(await _leaderServices.MentorInfo(campId));
+		}
+
+		[HttpGet]
 		public async Task<IActionResult> DisplayAllExceptHeadOfTraining()
 		{
 			var HocUserId = _unitOfWork.HeadofCamp.getAllAsync().Result.Select(hoc => hoc.UserId).ToList();

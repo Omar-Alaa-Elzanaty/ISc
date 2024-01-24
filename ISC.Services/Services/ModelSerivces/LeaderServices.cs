@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Collections.Immutable;
+using AutoMapper;
 using AutoMapper.Execution;
 using ISC.Core.APIDtos;
 using ISC.Core.Dtos;
@@ -463,5 +464,36 @@ namespace ISC.Services.Services.ModelSerivces
 
 			return response;
         }
+		public async Task<ServiceResponse<object>> CampInfo()
+		{
+			await Task.CompletedTask;
+			return new ServiceResponse<object>() {
+				IsSuccess = true,
+				Entity = await _unitOfWork.Camps.Get().Select(c => new
+				{
+					c.Id,
+					c.Name
+				}).ToListAsync()
+			};
+		}
+		public async Task<ServiceResponse<object>> MentorInfo(int campId)
+		{
+			await Task.CompletedTask;
+
+			return new ServiceResponse<object>()
+			{
+				IsSuccess = true,
+				Entity = await _userManager.Users
+				.Include(u => u.Mentor)
+				.Include(u => u.Mentor!.Camps)
+				.Where(u => u.Mentor != null && u.Mentor.Camps.Any(c => c.Id == campId))
+				.Select(u => new
+				{
+					u.Mentor!.Id,
+					FullName = u.FirstName + ' ' + u.MiddleName + ' ' + u.LastName
+				})
+				.ToListAsync()
+			};
+		}
 	}
 }

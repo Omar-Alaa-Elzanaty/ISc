@@ -25,6 +25,7 @@ namespace ISC.Services.ISerivces.IModelServices
 		Task<ServiceResponse<bool>> UpdateStuffArchive(HashSet<StuffArchiveDto> archives);
 		Task<ServiceResponse<AuthModel>> SubmitNewRegister(SubmitNewRegisterDto newRegisters);
 		Task<ServiceResponse<int>> UpdateCampStatusAsync(int campId);
-
+		Task<ServiceResponse<object>> CampInfo();
+		Task<ServiceResponse<object>> MentorInfo(int campId);
     }
 }

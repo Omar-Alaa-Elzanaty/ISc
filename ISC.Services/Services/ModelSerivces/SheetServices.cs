@@ -6,6 +6,7 @@ using ISC.Services.Helpers;
 using ISC.Services.ISerivces;
 using ISC.Services.ISerivces.IModelServices;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -58,30 +59,40 @@ namespace ISC.Services.Services.ModelSerivces
 
 		public async Task<ServiceResponse<List<TraineeSheetAccess>>> TraineeSheetAccesWithout(List<int>traineesId,int campId)
 		{
-			var response=new ServiceResponse<List<TraineeSheetAccess>>();
-			bool[]? IsFound;
+			var response = new ServiceResponse<List<TraineeSheetAccess>>();
+			bool[]? isFound;
 			if (traineesId.Count() > 0)
 			{
-				IsFound = new bool[traineesId.Max() + 1];
-				int size = traineesId.Count();
-				for (int i = 0; i < size; i++)
+				isFound = new bool[traineesId.Max() + 1];
+				int traineesCount = traineesId.Count();
+
+				for (int i = 0; i < traineesCount; i++)
 				{
-					IsFound[traineesId[i]] = true;
+					isFound[traineesId[i]] = true;
 				}
 			}
-			else IsFound = null;
+			else
+			{
+				throw new KeyNotFoundException("No trainees data");
+			}
 
 			var traineeSheetAcess = _unitOfWork.TraineesSheetsAccess
-				.findManyWithChildAsync(ts => ts.Sheet.CampId == campId && (IsFound != null ? !IsFound[ts.TraineeId] : true)
-				, new[] { "Sheet", "Trainee" }).Result.OrderBy(ts => ts.TraineeId).ToList();
-			if (traineeSheetAcess.Count == 0)
+				.findManyWithChildAsync(ts => ts.Sheet.CampId == campId && !isFound[ts.TraineeId], new[] { "Sheet", "Trainee" })
+				.Result.OrderBy(ts => ts.TraineeId)
+				.ToList();
+
+			if (traineeSheetAcess.IsNullOrEmpty())
 			{
 				response.IsSuccess = false;
 				response.Comment = "Couldn't found any Access for trainees";
 				return response;
 			}
+
 			response.IsSuccess = true;
 			response.Entity = traineeSheetAcess;
+
+			await Task.CompletedTask;
+
 			return response;
 		}
 		public async Task<ServiceResponse<Dictionary<int, int>>> TraineeSheetProblemsCount(List<TraineeSheetAccess> traineesAcces)

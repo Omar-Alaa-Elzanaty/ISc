@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+﻿using System.Diagnostics;
+using System.Security.Claims;
+using System.Text;
+using AutoMapper;
+using ISC.Core.APIDtos;
 using ISC.Core.Dtos;
 using ISC.Core.Interfaces;
 using ISC.Core.Models;
@@ -23,19 +27,28 @@ namespace ISC.Services.Services.ModelSerivces
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IOnlineJudgeServices _onlineJudgeServices;
 		private readonly CodeForceConnection _codeForceConnection;
+		private readonly ISheetServices _sheetServices;
+		private readonly ISessionsServices _sessionsServices;
+		private readonly IMailServices _mailServices;
 		private readonly IMapper _mapper;
 
         public HeadServices(UserManager<UserAccount> userManager,
             IUnitOfWork unitofwork,
             IOnlineJudgeServices onlineJudgeServices,
             IOptions<CodeForceConnection> connection,
-            IMapper mapper)
+            IMapper mapper,
+            ISheetServices sheetServices,
+            ISessionsServices sessionsServices,
+            IMailServices mailServices)
         {
             _userManager = userManager;
             _unitOfWork = unitofwork;
             _onlineJudgeServices = onlineJudgeServices;
             _codeForceConnection = connection.Value;
             _mapper = mapper;
+            _sheetServices = sheetServices;
+            _sessionsServices = sessionsServices;
+            _mailServices = mailServices;
         }
         public async Task<ServiceResponse<object>> DisplayTrainees(string userId)
 		{
@@ -96,8 +109,10 @@ namespace ISC.Services.Services.ModelSerivces
 
 			return response;
 		}
-		public async Task SubmitTraineeMentorAsync(List<AssignTraineeMentorDto> data)
+		public async Task<ServiceResponse<bool>> SubmitTraineeMentorAsync(List<AssignTraineeMentorDto> data)
 		{
+			var response = new ServiceResponse<bool>() { IsSuccess = true };
+
 			foreach(var item in data)
 			{
 				var trainee = await _unitOfWork.Trainees.getByIdAsync(item.TraineeId);
@@ -111,6 +126,8 @@ namespace ISC.Services.Services.ModelSerivces
 				await _unitOfWork.Trainees.UpdateAsync(trainee);
 			}
 			await _unitOfWork.completeAsync();
+
+			return response;
 		}
 		public async Task<ServiceResponse<TraineeSheetAcessDto>> DisplayTraineeAccess(int campId)
 		{
@@ -365,5 +382,241 @@ namespace ISC.Services.Services.ModelSerivces
 
 			return response;
         }
-	}
+		public async Task<ServiceResponse<List<KeyValuePair<FilteredUserDto, string>>>> WeeklyFilterAsync
+			(List<string>selectedTrainees,
+			string headId)
+		{
+			var response = new ServiceResponse<List<KeyValuePair<FilteredUserDto, string>>>();
+
+            var camp = _unitOfWork.HeadofCamp.findWithChildAsync(t => t.UserId == headId,
+                                                                new[] { "Camp", })?.Result?.Camp ?? null;
+            var traineesId = await _unitOfWork.Trainees
+                            .Get()
+                            .Where(t => selectedTrainees.Contains(t.UserId)).Select(t => t.Id)
+                            .ToListAsync();
+			if(camp is null || traineesId.IsNullOrEmpty())
+			{
+				throw new KeyNotFoundException("Maybe not found camp or trainees for selected camp");
+			}
+
+            var result = await _sheetServices.TraineeSheetAccesWithout(traineesId, camp?.Id ?? 0);
+
+            if (!result.IsSuccess)
+            {
+				throw new KeyNotFoundException("No trainees found");
+            }
+
+			List<TraineeSheetAccess> traineesAccess = result.Entity!;
+
+			var problemsSheetCount = _sheetServices.TraineeSheetProblemsCount(traineesAccess).Result.Entity!;
+            var filteredOnSheets = _sheetServices.TraineesFilter(traineesAccess, problemsSheetCount).Result.Entity;
+
+            var traineesIds = traineesAccess.Select(i => i.TraineeId).ToList();
+            var filteredOnSessions = _sessionsServices.SessionFilter(traineesIds).Result.Entity;
+
+            List<KeyValuePair<FilteredUserDto, string>> filtered = new List<KeyValuePair<FilteredUserDto, string>>();
+
+            for (int trainee = 0; trainee < traineesAccess.Count(); trainee++)
+            {
+                bool foundInSheetFilter = filteredOnSheets?.Contains(traineesAccess[trainee].TraineeId) ?? false;
+                bool foundInSessionFilter = filteredOnSessions?.Contains(traineesAccess[trainee].TraineeId) ?? false;
+
+                if (foundInSheetFilter || foundInSessionFilter)
+                {
+                    var TraineeAccount = await _userManager.FindByIdAsync(traineesAccess[trainee].Trainee.UserId);
+                    if (TraineeAccount != null)
+                    {
+                        var FilteredUser = new FilteredUserDto()
+                        {
+                            UserId = TraineeAccount.Id,
+                            FirstName = TraineeAccount.FirstName,
+                            MiddleName = TraineeAccount.MiddleName,
+                            LastName = TraineeAccount.LastName,
+                            Email = TraineeAccount.Email!,
+                            PhoneNumber = TraineeAccount.PhoneNumber!,
+                            CodeforceHandle = TraineeAccount.CodeForceHandle,
+                            College = TraineeAccount.College,
+                            Gender = TraineeAccount.Gender,
+                            Grade = TraineeAccount.Grade
+                        };
+
+                        StringBuilder Reason = new StringBuilder();
+
+                        if (foundInSheetFilter)
+                        {
+                            Reason.Append("Sheets");
+                        }
+
+                        if (foundInSessionFilter)
+                        {
+                            Reason.Append(Reason.Length != 0 ? "/Sessions" : "Sessions");
+                        }
+
+						filtered.Add(new(FilteredUser, Reason.ToString()));
+                    }
+                }
+            }
+
+			response.IsSuccess = true;
+			response.Entity=filtered;
+
+			return response;
+        }
+		public async Task<ServiceResponse<object>> SubmitWeeklyFilterAsync(List<string>traineesUsersId,string headUserId)
+		{
+			var response = new ServiceResponse<object>();
+
+            var camp = _unitOfWork.HeadofCamp.findWithChildAsync(t => t.UserId == headUserId, new[] { "Camp", }).Result?.Camp;
+
+			if(camp is null)
+			{
+				throw new KeyNotFoundException("Couldn't found Camp");
+			}
+
+            List<UserAccount> Fail = new List<UserAccount>();
+
+            foreach (var id in traineesUsersId)
+            {
+                var traineeAccount = await _userManager.FindByIdAsync(id);
+
+                if (traineeAccount != null)
+                {
+                    TraineeArchive ToArchive = new TraineeArchive()
+                    {
+                        FirstName = traineeAccount.FirstName,
+                        MiddleName = traineeAccount.MiddleName,
+                        LastName = traineeAccount.LastName,
+                        NationalID = traineeAccount.NationalId,
+                        BirthDate = traineeAccount.BirthDate,
+                        Grade = traineeAccount.Grade,
+                        College = traineeAccount.College,
+                        Gender = traineeAccount.Gender,
+                        CodeForceHandle = traineeAccount.CodeForceHandle,
+                        FacebookLink = traineeAccount.FacebookLink,
+                        VjudgeHandle = traineeAccount.VjudgeHandle,
+                        Email = traineeAccount.Email!,
+                        PhoneNumber = traineeAccount.PhoneNumber,
+                        Year = camp.Year,
+                        CampName = camp.Name,
+                        IsCompleted = false
+                    };
+
+                    var Result = await _mailServices.sendEmailAsync(traineeAccount.Email!, "ICPC Sohag Filteration announcement"
+                        , $"Hello {traineeAccount.FirstName} + ' ' + {traineeAccount.MiddleName},{@"<\br>"} We regret to inform you that we had to remove you from the {camp.Name} training program." +
+                        $" If you're interested in exploring other training programs, please let us know, and we'll provide you with more information." +
+                        $" Thank you for your efforts, and we hope you'll take this as a learning experience to continue your growth and development." +
+                        $"{@"<\br>"}{@"<\br>"}Best regards,{@"<\br>"}{@"<\br>"} ISc System{@"<\br>"}{@"<\br>"} Omar Alaa");
+
+                    if (Result)
+                    {
+                        await _unitOfWork.TraineesArchive.addAsync(ToArchive);
+                        await _userManager.DeleteAsync(traineeAccount);
+                    }
+                    else
+                    {
+                        Fail.Add(traineeAccount);
+                    }
+                }
+            }
+            await _unitOfWork.completeAsync();
+
+			response.IsSuccess = true;
+			response.Entity = new { Fail, Comment = Fail.IsNullOrEmpty() ? "" : "Send email failure" };
+
+
+            return response;
+        }
+		public async Task<ServiceResponse<List<object>>> DisplayMentorsAsync(string userId)
+		{
+			var response= new ServiceResponse<List<object>>() { IsSuccess = true };
+
+            var camp = _unitOfWork.HeadofCamp
+                .Get()
+                .Include(h => h.Camp)
+                .FirstOrDefaultAsync(h => h.UserId == userId).Result?.Camp;
+
+            List<object> mentors = new List<object>();
+
+            var mentorsOfCamp = await _unitOfWork.Camps.findWithChildAsync(c => c.Id == camp!.Id, new[] { "Mentors" });
+
+            foreach (var member in mentorsOfCamp!.Mentors)
+            {
+                var userInfo = await _userManager.FindByIdAsync(member.UserId);
+                mentors.Add(new
+                {
+                    member.Id,
+                    member.UserId,
+                    FullName = userInfo!.FirstName + ' ' + userInfo.MiddleName + " " + userInfo.LastName,
+                });
+            }
+
+			response.Entity = mentors;
+
+			return response;
+        }
+		public async Task<ServiceResponse<List<Session>>>DisplaySessionsAsync(string userId)
+		{
+			var response=new ServiceResponse<List<Session>>() { IsSuccess = true };
+
+            var headOfCamp = await _unitOfWork.HeadofCamp.GetByUserIdAsync(userId);
+
+            if (headOfCamp is null)
+            {
+                throw new BadRequestException("Error in account");
+            }
+
+            response.Entity= await _unitOfWork.Sessions.findManyWithChildAsync(s => s.CampId == headOfCamp.CampId);
+
+			return response;
+        }
+		public async Task<ServiceResponse<int>>AddSessionAsync(SessionDto model,string userId)
+		{
+			var response = new ServiceResponse<int> { IsSuccess = true };
+
+            var campId = _unitOfWork.HeadofCamp.GetByUserIdAsync(userId).Result?.CampId;
+
+            if (campId is null)
+            {
+                throw new BadRequestException("no camp found");
+            }
+
+            model.Topic = model.Topic.ToLower();
+            model.InstructorName = model.InstructorName.ToLower();
+
+			var isFound = await _unitOfWork.Sessions
+				.Get()
+				.AnyAsync(s => !((s.Topic == model.Topic && s.CampId == campId) ||
+									(s.Date.Day == model.Date.Day && s.Date.Month == model.Date.Month && campId == model.CampId)));
+
+            if (!isFound)
+            {
+                throw new BadRequestException("this session may record before or Conflict with other session");
+            }
+
+            Session session = _mapper.Map<Session>(model);
+            session.CampId = (int)campId;
+
+            await _unitOfWork.Sessions.addAsync(session);
+            _ = await _unitOfWork.completeAsync();
+
+			response.Entity = session.Id;
+
+			return response;
+        }
+		public async Task<ServiceResponse<int>>DeleteSessionAsync(int id)
+		{
+			var response = new ServiceResponse<int>() { IsSuccess = true };
+            var session = await _unitOfWork.Sessions.getByIdAsync(id);
+
+            if (session is null)
+            {
+                throw new BadRequestException("no session found");
+            }
+
+            _ = await _unitOfWork.Sessions.deleteAsync(session);
+            _ = await _unitOfWork.completeAsync();
+
+            return response;
+        }
+    }
 }
