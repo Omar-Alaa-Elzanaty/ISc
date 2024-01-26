@@ -76,13 +76,15 @@ namespace ISC.API.Controllers
 		[HttpGet]
 		public async Task<IActionResult> DisplayStuff()
 		{
-			var Accounts = _userManager.Users.ToList();
-			var TraineeAccounts = await _userManager.GetUsersInRoleAsync(Role.TRAINEE);
-			var response = Accounts.Except(TraineeAccounts).Select(acc => new
+			var accounts = await _userManager.Users.ToListAsync();
+			var traineeAccounts = await _userManager.GetUsersInRoleAsync(Role.TRAINEE);
+
+			var response = accounts.Except(traineeAccounts).Select(acc => new
 			{
 				acc.Id,
 				FullName = acc.FirstName + ' ' + acc.MiddleName + ' ' + acc.LastName,
 				acc.CodeForceHandle,
+				acc.College,
 				acc.Email
 			}).ToList();
 
@@ -95,11 +97,11 @@ namespace ISC.API.Controllers
 			var response = _userManager.GetUsersInRoleAsync(Role.TRAINEE).Result.Select(acc => new
 			{
 				acc.Id,
-				FullName=acc.FirstName+' '+acc.MiddleName+' '+acc.LastName,
+				FullName = acc.FirstName + ' ' + acc.MiddleName + ' ' + acc.LastName,
 				acc.CodeForceHandle,
 				acc.Email,
 				acc.College,
-				CampName = _unitOfWork.Trainees.getCampofTrainee(acc.Id)?.Result?.Name
+				CampName = _unitOfWork.Trainees.GetCampOfTrainee(acc.Id)?.Result?.Name
 			});
 
 			await Task.CompletedTask;

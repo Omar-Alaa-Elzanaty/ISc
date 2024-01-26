@@ -9,8 +9,8 @@ namespace ISC.Core.Interfaces
 {
 	public interface ITraineeRepository:IBaseRepository<Trainee>
 	{
-		 Task<Trainee> getByUserIdAsync(string userId);
-		Task<Camp> getCampofTrainee(int id);
-		Task<Camp?> getCampofTrainee(string userId);
+		 Task<Trainee?> GetByUserIdAsync(string userId);
+		Task<Camp?> GetCampOfTrainee(int id);
+		Task<Camp?> GetCampOfTrainee(string userId);
 	}
 }

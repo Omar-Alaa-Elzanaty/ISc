@@ -59,7 +59,7 @@ namespace ISC.Services.Services.ModelSerivces
 		}
 		public async Task<List<object>> AccessSheetsWithMaterialsAsync(string userId)
 		{
-			var traineeId = _unitOfWork.Trainees.getByUserIdAsync(userId).Result.Id;
+			var traineeId = _unitOfWork.Trainees.GetByUserIdAsync(userId).Result.Id;
 
 			var accessSheets = await _unitOfWork.TraineesSheetsAccess.findManyWithChildAsync(tsa => tsa.TraineeId == traineeId);
 

@@ -19,13 +19,13 @@ namespace ISC.EF.Repositories
 			_Context = context;
 			_UserManager = usermanager;
 		}
-		public async Task<Trainee>getByUserIdAsync(string userid)
+		public async Task<Trainee?>GetByUserIdAsync(string userid)
 		{
 			return await _Context.Trainees
 								 .Where(trainee => trainee.UserId == userid)
 								 .SingleOrDefaultAsync();
 		}
-		public async Task<Camp>getCampofTrainee(int id)
+		public async Task<Camp?>GetCampOfTrainee(int id)
 		{
 			return await _Context.Trainees
 								 .Include(tr => tr.Camp)
@@ -34,11 +34,13 @@ namespace ISC.EF.Repositories
 								 .SingleOrDefaultAsync();
 		}
 
-		public async Task<Camp?> getCampofTrainee(string userId)
+		public async Task<Camp?> GetCampOfTrainee(string userId)
 		{
-			return   _Context.Trainees.Include(tr => tr.Camp)
-								.SingleOrDefaultAsync(tr => tr.UserId == userId)?
-								.Result.Camp?? null;
+			var traineeInfo = await _Context.Trainees
+							.Include(tr => tr.Camp)
+							.SingleOrDefaultAsync(tr => tr.UserId == userId);
+
+			return traineeInfo?.Camp?? null;
 		}
 	}
 }

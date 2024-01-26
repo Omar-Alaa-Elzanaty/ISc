@@ -353,7 +353,7 @@ namespace ISC.Services.Services.ModelSerivces
 
                 if (traineeAccount != null)
                 {
-                    var camp = await _unitOfWork.Trainees.getCampofTrainee(traineeAccount.Trainee.Id);
+                    var camp = await _unitOfWork.Trainees.GetCampOfTrainee(traineeAccount.Trainee.Id);
 					var archive = _mapper.Map<TraineeArchive>(traineeAccount);
 					archive.CampName = camp.Name;
                     /*TraineeArchive Archive = new TraineeArchive()
