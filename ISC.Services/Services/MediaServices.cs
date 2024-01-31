@@ -44,8 +44,12 @@ namespace ISC.Services.Services
 			else
 				return @$"{_HttpContext.HttpContext?.Request.Scheme}://{_HttpContext?.HttpContext?.Request.Host}/Records/" + FileName + Extension;
 		}
-		public async Task<bool> DeleteAsync(string url)
+		public async Task<bool> DeleteAsync(string? url)
 		{
+			if(url == null)
+			{
+				return true;
+			}
 			try
 			{
 				string RootPath = _Host.WebRootPath.Replace("\\\\", "\\");

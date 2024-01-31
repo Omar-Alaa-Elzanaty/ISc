@@ -117,33 +117,11 @@ namespace ISC.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSessionInfo([FromBody] SessionDto model, int id)
         {
-            var session = await _unitOfWork.Sessions.getByIdAsync(id);
-
-            if (session is null)
-            {
-                return NotFound("Invalid session");
-            }
-            var validResponse = await _unitOfWork.Sessions.CheckUpdateAbility(session, model, id);
-            if (!validResponse.IsSuccess)
-            {
-                return BadRequest(validResponse.Comment);
-            }
-
-            session.Topic = model.Topic;
-            session.InstructorName = model.InstructorName;
-            session.LocationLink = model.LocationLink;
-            session.LocationName = model.LocationName;
-            session.Date = model.Date;
-
-            await _unitOfWork.Sessions.UpdateAsync(session);
-            _ = await _unitOfWork.completeAsync();
-
-            return Ok();
+            return Ok(await _headServices.UpdateSessionInfoAsync(model, id));
         }
         [HttpGet]
-        public async Task<IActionResult> DisplaySheet()
+        public async Task<IActionResult> DisplaySheet(string userId)
         {
-            var userId = "5f00d005-aafb-4bd9-8341-68a4cf2f8a22";// User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var campId = _unitOfWork.HeadofCamp.GetByUserIdAsync(userId).Result?.CampId;
             if (campId is null)
             {

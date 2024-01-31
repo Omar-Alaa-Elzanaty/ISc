@@ -12,6 +12,7 @@ using ISC.Services.Services.ExceptionSerivces.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Tls;
 namespace ISC.Services.Services.ModelSerivces
 {
 	public class LeaderServices : ILeaderServices
@@ -43,11 +44,11 @@ namespace ISC.Services.Services.ModelSerivces
 		}
 		public async Task<ServiceResponse<bool>> DeleteTraineesAsync(List<DeleteTraineeDto> trainees)
 		{
-			ServiceResponse<bool> resp = new ServiceResponse<bool>() { IsSuccess = true };
+			ServiceResponse<bool> response = new ServiceResponse<bool>() { IsSuccess = true };
 
 			var users = await _userManager.Users
 									.Include(a => a.Trainee)
-									.Include(a => a.Trainee.Camp)
+									.Include(a => a.Trainee!.Camp)
 									.Where(a => a.Trainee != null && trainees.Select(t => t.TraineeId).ToList().Contains(a.Id))
 									.ToListAsync();
 
@@ -56,19 +57,19 @@ namespace ISC.Services.Services.ModelSerivces
 			foreach (var user in users)
 			{
 				var trainee = _mapper.Map<TraineeArchive>(user);
-				trainee.CampName = user.Trainee.Camp.Name;
-				trainee.IsCompleted = trainees.First(t => t.IsComplete).IsComplete;
+				trainee.CampName = user.Trainee!.Camp.Name;
+				trainee.IsCompleted = trainees.First(t => t.TraineeId == user.Id).IsComplete;
 
 				archive.Add(trainee);
 
-				if (user.PhotoUrl is not null) await _mediaServices.DeleteAsync(user.PhotoUrl);
+				await _mediaServices.DeleteAsync(user.PhotoUrl);
 				await _userManager.DeleteAsync(user);
 			}
 
 			await _unitOfWork.TraineesArchive.AddGroup(archive);
 			await _unitOfWork.completeAsync();
 
-			return resp;
+			return response;
 		}
 
 		public async Task<ServiceResponse<Camp>> AddCampAsync(CampDto camp)
@@ -233,60 +234,60 @@ namespace ISC.Services.Services.ModelSerivces
 			response.IsSuccess = true;
 			return response;
 		}
-		public async Task<ServiceResponse<List<UserAccount>>> DeleteStuffAsync(List<string> StuffsIds)
+		public async Task<ServiceResponse<List<string>>> DeleteStuffAsync(List<string> StuffsIds)
 		{
-			var response = new ServiceResponse<List<UserAccount>>() { Entity = new List<UserAccount>() };
+			var response = new ServiceResponse<List<string>>() { Entity = new List<string>(),IsSuccess=true };
 
-			using (var trans=  await _context.Database.BeginTransactionAsync())
+            foreach (string UserId in StuffsIds)
+            {
+                var account = await _userManager.FindByIdAsync(UserId);
+
+                if (account == null)
+                {
+                    throw new BadRequestException("Some accounts not exist");
+                }
+
+                var userRoles = _userManager.GetRolesAsync(account).Result.ToList();
+                bool result = true;
+                try
+                {
+                    if (userRoles.Contains(Role.MENTOR))
+                    {
+                        result = await _unitOfWork.Mentors.deleteAsync(UserId);
+                    }
+                    if (userRoles.Contains(Role.HOC) && result == true)
+                    {
+                        result = await _unitOfWork.HeadofCamp.deleteEntityAsync(UserId);
+                    }
+                    if (result == true)
+                    {
+                        StuffArchive archive = _mapper.Map<StuffArchive>(account);
+
+                        await _unitOfWork.StuffArchive.addAsync(archive);
+
+                        await _userManager.DeleteAsync(account);
+                        await _mediaServices.DeleteAsync(account.PhotoUrl);
+
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                    await _unitOfWork.completeAsync();
+                }
+                catch
+                {
+					response.Entity.Add(account.FirstName + ' ' + account.MiddleName);
+				}
+            }
+
+			if(response.Entity.Count()>0)
 			{
-				try
-				{
-					foreach (string UserId in StuffsIds)
-					{
-						var account = await _userManager.FindByIdAsync(UserId);
+                response.IsSuccess = false;
+                response.Comment = "Some members couldn't delete,if you try to delete mentor please check that this mentor doesn't assign to any trainee";
+            }
 
-						if(account == null)
-						{
-							throw new BadRequestException("Some accounts not exist");
-						}
-
-						var userRoles = _userManager.GetRolesAsync(account).Result.ToList();
-						bool result = true;
-						if (userRoles.Contains(Role.MENTOR))
-						{
-							result = await _unitOfWork.Mentors.deleteAsync(UserId);
-						}
-						if (userRoles.Contains(Role.HOC) && result == true)
-						{
-							result = await _unitOfWork.HeadofCamp.deleteEntityAsync(UserId);
-						}
-						if (result == true)
-						{
-							await _mediaServices.DeleteAsync(account.PhotoUrl);
-							await _userManager.DeleteAsync(account);
-
-							StuffArchive archive = _mapper.Map<StuffArchive>(account);
-							
-							await _unitOfWork.StuffArchive.addAsync(archive);
-						}
-						else
-						{
-							throw new ServerErrorExeption("Some Account Couldn't delete...try again");
-						}
-					}
-
-					await trans.CommitAsync();
-					await _unitOfWork.completeAsync();
-				}
-				catch
-				{
-					await trans.RollbackAsync();
-					throw;
-				}
-			}
-
-			response.IsSuccess = true;
-			return response;
+            return response;
 		}
 		public async Task<ServiceResponse<string>> DeleteTraineeArchivesAsync(List<string> trainees)
 		{

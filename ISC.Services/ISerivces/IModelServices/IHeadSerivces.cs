@@ -26,5 +26,6 @@ namespace ISC.Services.ISerivces.IModelServices
 		Task<ServiceResponse<List<Session>>> DisplaySessionsAsync(string userId);
 		Task<ServiceResponse<int>> AddSessionAsync(SessionDto model, string userId);
 		Task<ServiceResponse<int>> DeleteSessionAsync(int id);
+		Task<ServiceResponse<int>> UpdateSessionInfoAsync(SessionDto session, int id);
     }
 }

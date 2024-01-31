@@ -618,5 +618,31 @@ namespace ISC.Services.Services.ModelSerivces
 
             return response;
         }
+		public async Task<ServiceResponse<int>>UpdateSessionInfoAsync(SessionDto session,int id)
+		{
+			var response = new ServiceResponse<int>() { IsSuccess = true };
+
+            var entity = await _unitOfWork.Sessions.getByIdAsync(id);
+
+            if (entity is null)
+            {
+                throw new KeyNotFoundException("Invalid session");
+            }
+
+            var validResponse = await _unitOfWork.Sessions.CheckUpdateAbility(entity, session, id);
+
+            if (!validResponse.IsSuccess)
+            {
+                throw new BadRequestException(validResponse.Comment);
+            }
+
+			entity = _mapper.Map<Session>(entity);
+
+            await _unitOfWork.Sessions.UpdateAsync(entity);
+            _ = await _unitOfWork.completeAsync();
+
+			response.Entity = entity.Id;
+			return response;
+        }
     }
 }

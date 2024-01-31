@@ -10,7 +10,7 @@ namespace ISC.Services.ISerivces
 	public interface IMediaServices
 	{
 		Task<string> AddAsync(IFormFile media);
-		Task<bool> DeleteAsync(string url);
-		Task<string?> Update(string oldUrl, IFormFile newMedia);
+		Task<bool> DeleteAsync(string? url);
+		Task<string?> Update(string? oldUrl, IFormFile newMedia);
 	}
 }
