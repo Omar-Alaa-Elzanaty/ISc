@@ -46,9 +46,17 @@ namespace ISC.EF.Repositories
 		}
         public async Task<bool> deleteAsync(string userid)
         {
-            var Mentor = await _Context.Mentors.Where(mentor => mentor.UserId == userid).FirstOrDefaultAsync();
-            if(Mentor == null) return false;
-            bool Result =await base.deleteAsync(Mentor);
+
+            var mentor = await _Context.Mentors.Where(x => x.UserId == userid).FirstOrDefaultAsync();
+
+            if(mentor is null || await _Context.Trainees.AnyAsync(x => x.MentorId == mentor.Id))
+            {
+                return false;
+            }
+
+            
+            bool Result =await base.deleteAsync(mentor);
+
             return Result;
 		}
 	}

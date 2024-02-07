@@ -20,7 +20,7 @@ namespace ISC.EF.Repositories
 		}
 		public async Task<bool> deleteEntityAsync(string userid)
 		{
-			var head=await _Context.HeadsOfTraining.Where(head=>head.UserId == userid).FirstOrDefaultAsync();
+			var head = await _Context.HeadsOfTraining.Where(head => head.UserId == userid).FirstOrDefaultAsync();
 			if (head == null) return false;
 
 			return await deleteAsync(head);

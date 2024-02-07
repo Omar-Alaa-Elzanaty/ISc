@@ -208,13 +208,13 @@ namespace ISC.Services.Services.ModelSerivces
             response.IsSuccess = true;
             return response;
         }
-        public async Task<ServiceResponse<List<string>>> DeleteStuffAsync(List<string> StuffsIds)
+        public async Task<ServiceResponse<List<string>>> DeleteStuffAsync(List<string> stuffsIds)
         {
             var response = new ServiceResponse<List<string>>() { Entity = new List<string>(), IsSuccess = true };
 
-            foreach (string UserId in StuffsIds)
+            foreach (string userId in stuffsIds)
             {
-                var account = await _userManager.FindByIdAsync(UserId);
+                var account = await _userManager.FindByIdAsync(userId);
 
                 if (account == null)
                 {
@@ -223,36 +223,30 @@ namespace ISC.Services.Services.ModelSerivces
 
                 var userRoles = _userManager.GetRolesAsync(account).Result.ToList();
                 bool result = true;
-                try
+
+                if (userRoles.Contains(Role.MENTOR))
                 {
-                    if (userRoles.Contains(Role.MENTOR))
-                    {
-                        result = await _unitOfWork.Mentors.deleteAsync(UserId);
-                    }
-                    if (userRoles.Contains(Role.HOC) && result == true)
-                    {
-                        result = await _unitOfWork.HeadofCamp.deleteEntityAsync(UserId);
-                    }
-                    if (result == true)
-                    {
-                        StuffArchive archive = _mapper.Map<StuffArchive>(account);
-
-                        await _unitOfWork.StuffArchive.addAsync(archive);
-
-                        await _userManager.DeleteAsync(account);
-                        await _mediaServices.DeleteAsync(account.PhotoUrl);
-
-                    }
-                    else
-                    {
-                        throw new Exception();
-                    }
-                    await _unitOfWork.completeAsync();
+                    result = await _unitOfWork.Mentors.deleteAsync(userId);
                 }
-                catch
+                if (userRoles.Contains(Role.HOC) && result == true)
+                {
+                    result = await _unitOfWork.HeadofCamp.deleteEntityAsync(userId);
+                }
+                if (result == true)
+                {
+                    StuffArchive archive = _mapper.Map<StuffArchive>(account);
+
+                    await _unitOfWork.StuffArchive.addAsync(archive);
+                    await _userManager.DeleteAsync(account);
+
+                    await _mediaServices.DeleteAsync(account.PhotoUrl);
+                }
+                else
                 {
                     response.Entity.Add(account.FirstName + ' ' + account.MiddleName);
                 }
+
+                await _unitOfWork.completeAsync();
             }
 
             if (response.Entity.Count() > 0)
