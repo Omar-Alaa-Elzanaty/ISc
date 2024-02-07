@@ -28,8 +28,8 @@ namespace ISC.Services.Services
 			Console.WriteLine("enter");
 			int EffectedRows = 0;
 			var TraineeSheets = await _UnitOfWork.TraineesSheetsAccess.getAllAsync();
-			var SheetsIds = TraineeSheets.DistinctBy(STA => STA.SheetId).Select(STA=>STA.SheetId);
-			var TraineesIds = TraineeSheets.DistinctBy(STA => STA.TraineeId).Select(STA=>STA.TraineeId);
+			var SheetsIds = TraineeSheets.DistinctBy(STA => STA.SheetId).Select(sta => sta.SheetId);
+			var TraineesIds = TraineeSheets.DistinctBy(STA => STA.TraineeId).Select(sta => sta.TraineeId);
 
 			Dictionary<int, CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>> SheetsSubmissions =
 				new Dictionary<int, CodeforcesApiResponseDto<List<CodeforceSubmisionDto>>>();
