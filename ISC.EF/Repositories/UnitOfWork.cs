@@ -97,18 +97,18 @@ namespace ISC.EF.Repositories
 					else if (role == Role.MENTOR)
 					{
 						await _userManager.AddToRoleAsync(Acc, role);
-						Mentor mentor = new Mentor() { UserId = Acc.Id};
+						Mentor mentor = new Mentor() { UserId = Acc.Id };
 						await Mentors.addAsync(mentor);
 						await _dataBase.SaveChangesAsync();
 
-						if(campId is not null)
+						if (campId is not null)
 						{
 							var camp = await _dataBase.Camps.SingleAsync(c => c.Id == campId);
 							mentor.Camps = new List<Camp>() { camp };
 							_dataBase.Update(mentor);
 						}
 					}
-					else if (role == Role.HOC && campId!=null)
+					else if (role == Role.HOC)
 					{
 						await _userManager.AddToRoleAsync(Acc, role);
 						HeadOfTraining HeadOfTraining = new HeadOfTraining() { UserId = Acc.Id, CampId = campId };

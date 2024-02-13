@@ -10,7 +10,9 @@ namespace ISC.Core.Dtos
 	public class TraineeArchiveDto
 	{
 		public string NationalId { get; set; }
-		public string FullName { get; set; }
+		public string FirstName { get; set; }
+		public string MiddleName { get; set; }
+		public string LastName { get; set; }
 		public string CampName { get; set; }
 		public string College { get; set; }
 		public string CodeforceHandle { get; set; }

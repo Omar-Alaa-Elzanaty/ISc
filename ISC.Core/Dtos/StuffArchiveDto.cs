@@ -9,7 +9,9 @@ namespace ISC.Core.Dtos
 {
 	public class StuffArchiveDto
 	{
-		public string FullName { get; set; }
+		public string FirstName { get; set; }
+		public string MiddleName { get; set; }
+		public string LastName { get; set; }
 		[RegularExpression("^[1-9][0-9]*$")]
 		public string NationalID { get; set; }
 		public DateTime BirthDate { get; set; }

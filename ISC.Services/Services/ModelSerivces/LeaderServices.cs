@@ -142,12 +142,12 @@ namespace ISC.Services.Services.ModelSerivces
 
             return response;
         }
-        public async Task<ServiceResponse<bool>> DeleteFromNewRegister(List<string> Ids)
+        public async Task<ServiceResponse<bool>> DeleteFromNewRegister(List<string> ids)
         {
             var response = new ServiceResponse<bool>();
 
             var registers = await _unitOfWork.NewRegitseration
-                .findManyWithChildAsync(r => Ids.Contains(r.NationalID));
+                .findManyWithChildAsync(r => ids.Contains(r.NationalID));
 
             if (registers.IsNullOrEmpty())
             {
@@ -294,15 +294,7 @@ namespace ISC.Services.Services.ModelSerivces
             foreach (var archive in archives)
             {
                 var trainee = memebers.Single(m => m.NationalID == archive.NationalId);
-                var name = archive.FullName.Split(' ');
-                if (name.Length < 3)
-                {
-                    throw new BadRequestException("Full name is not valid");
-                }
                 trainee = _mapper.Map<TraineeArchive>(archive);
-                trainee.FirstName = name[0];
-                trainee.MiddleName = name[1];
-                trainee.LastName = name[2];
             }
             _ = await _unitOfWork.completeAsync();
 
@@ -320,11 +312,7 @@ namespace ISC.Services.Services.ModelSerivces
             foreach (var stuffMember in archives)
             {
                 var stuff = members.Single(m => m.NationalID == stuffMember.NationalID);
-                var name = stuffMember.FullName.Split(' ');
                 stuff = _mapper.Map<StuffArchive>(stuff);
-                stuff.FirstName = name[0];
-                stuff.MiddleName = name[1];
-                stuff.LastName = name[2];
             }
 
             await _unitOfWork.completeAsync();
