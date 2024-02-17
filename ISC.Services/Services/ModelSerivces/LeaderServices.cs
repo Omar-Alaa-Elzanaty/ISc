@@ -190,7 +190,7 @@ namespace ISC.Services.Services.ModelSerivces
 
                         if (Result == false)
                         {
-                            throw new ServerErrorExeption("Can't save user to these role {userRole.Role}");
+                            throw new ServerErrorExeption($"Can't save user to these role {userRole.Role}");
                         }
                     }
 

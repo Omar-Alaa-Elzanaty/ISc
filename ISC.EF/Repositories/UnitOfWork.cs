@@ -87,7 +87,7 @@ namespace ISC.EF.Repositories
 						await _userManager.AddToRoleAsync(Acc, role);
 						Trainee Trainee;
 
-						if (mentorId != null)
+						if (mentorId is not null)
 							Trainee = new Trainee() { UserId = Acc.Id, CampId = (int)campId, MentorId = mentorId };
 						else
 							Trainee = new Trainee() { UserId = Acc.Id, CampId = (int)campId };
@@ -113,6 +113,7 @@ namespace ISC.EF.Repositories
 						await _userManager.AddToRoleAsync(Acc, role);
 						HeadOfTraining HeadOfTraining = new HeadOfTraining() { UserId = Acc.Id, CampId = campId };
 						await HeadofCamp.addAsync(HeadOfTraining);
+
 					}
 					else if (role == Role.LEADER || role == Role.INSTRUCTOR)
 					{
