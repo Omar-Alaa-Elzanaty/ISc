@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using AutoMapper;
 using ISC.Core.APIDtos;
 using ISC.Core.Dtos;
 using ISC.Core.Interfaces;
@@ -16,6 +18,7 @@ namespace ISC.Services.Services.ModelSerivces
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<UserAccount> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
         private readonly IAuthanticationServices _authServices;
         private readonly IMediaServices _mediaServices;
@@ -28,7 +31,8 @@ namespace ISC.Services.Services.ModelSerivces
             IMapper mapper,
             IMediaServices mediaServices,
             DataBase context,
-            ISheetServices sheetServices)
+            ISheetServices sheetServices,
+            RoleManager<IdentityRole> roleManager)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
@@ -38,6 +42,7 @@ namespace ISC.Services.Services.ModelSerivces
             _mediaServices = mediaServices;
             _context = context;
             _sheetServices = sheetServices;
+            _roleManager = roleManager;
         }
         public async Task<ServiceResponse<bool>> DeleteTraineesAsync(List<DeleteTraineeDto> trainees)
         {
@@ -166,21 +171,35 @@ namespace ISC.Services.Services.ModelSerivces
         {
             var response = new ServiceResponse<bool>() { IsSuccess = true };
 
-
-
             var userRole = model.UserRole;
+            var accounts = await _userManager.Users.Where(i => model.UsersIds.Contains(i.Id)).ToListAsync();
 
-            var accounts = new List<UserAccount>();
-            foreach (var userid in model.UsersIds)
+            if (userRole.Role == Role.MENTOR)
             {
-                var Account = await _userManager.FindByIdAsync(userid);
-                if (Account == null)
-                {
-                    throw new KeyNotFoundException("One of accounts not exist!");
-                }
-                accounts.Add(Account);
+                return await AssignToMentorAsync(accounts, userRole.CampId);
             }
-            using (var trans = await _context.Database.BeginTransactionAsync())
+            else if (userRole.Role == Role.HOC && userRole.CampId is not null)
+            {
+                return await AssignToHeadOfCampAsync(accounts, (int)userRole.CampId);
+            }
+            else if (await _roleManager.RoleExistsAsync(userRole.Role))
+            {
+                foreach (var user in accounts)
+                {
+                    if (!await _userManager.IsInRoleAsync(user, userRole.Role))
+                    {
+                        response.Comment += user.FirstName + ' ' + user.MiddleName + ' ' + user.LastName + ',';
+                    }
+                }
+            }
+            else
+            {
+                response.IsSuccess = false;
+                response.Comment = "Role not found.";
+                return response;
+            }
+
+            /*using (var trans = await _context.Database.BeginTransactionAsync())
             {
                 try
                 {
@@ -203,9 +222,9 @@ namespace ISC.Services.Services.ModelSerivces
 
                     throw;
                 }
-            }
+            }*/
 
-            response.IsSuccess = true;
+            response.IsSuccess = response.Comment.IsNullOrEmpty();
             return response;
         }
         public async Task<ServiceResponse<List<string>>> DeleteStuffAsync(List<string> stuffsIds)
@@ -473,6 +492,61 @@ namespace ISC.Services.Services.ModelSerivces
 
             response.Entity = result;
 
+            return response;
+        }
+        private async Task<ServiceResponse<bool>>AssignToMentorAsync(IEnumerable<UserAccount>users,int? campId)
+        {
+            var response=new ServiceResponse<bool>();
+
+            foreach (var user in users)
+            {
+                if (!await _userManager.IsInRoleAsync(user, Role.MENTOR))
+                {
+                    if(!await _unitOfWork.addToRoleAsync(user,Role.MENTOR ,campId, null))
+                    {
+                        response.Comment += user.FirstName + ' ' + user.MiddleName + ' ' + user.LastName + ',';
+                    }
+                }
+                else if(campId is not null)
+                {
+                    var mentor = await _unitOfWork.Mentors.Get().Include(x => x.Camps).FirstAsync(x => x.UserId == user.Id);
+
+                    if (!mentor.Camps.Any(i => i.Id == campId))
+                    {
+                        var camp = await _unitOfWork.Camps.getByIdAsync((int)campId);
+                        mentor.Camps.Add(camp);
+                    }
+                }
+            }
+            await _unitOfWork.completeAsync();
+
+            response.IsSuccess = response.Comment.IsNullOrEmpty();
+
+            return response;
+        }
+        private async Task<ServiceResponse<bool>> AssignToHeadOfCampAsync(IEnumerable<UserAccount> users,int campId)
+        {
+            var response = new ServiceResponse<bool>();
+
+            foreach (var user in users)
+            {
+                if (!await _userManager.IsInRoleAsync(user,Role.HOC))
+                {
+                    if(!await _unitOfWork.addToRoleAsync(user, Role.HOC,campId, null))
+                    {
+                        response.Comment += user.FirstName + ' ' + user.MiddleName + ' ' + user.LastName + ',';
+                    }
+                }
+                else
+                {
+                    var head = await _unitOfWork.HeadofCamp.findByAsync(x => x.UserId == user.Id);
+                    head.CampId = campId;
+                }
+            }
+
+            await _unitOfWork.completeAsync();
+
+            response.IsSuccess = response.Comment.IsNullOrEmpty();
             return response;
         }
     }

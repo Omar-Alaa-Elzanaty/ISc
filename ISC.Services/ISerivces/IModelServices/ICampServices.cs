@@ -11,5 +11,8 @@ namespace ISC.Services.ISerivces.IModelServices
 	public interface ICampServices
 	{
 		Task<ServiceResponse<List<DisplayCampsDto>>> DisplayCampsDetails();
-	}
+		Task<ServiceResponse<bool>> UpdateHeadAsync(int id, int? campId);
+		Task<ServiceResponse<bool>> UpdateMentorAsync(int id, int campId, bool isAdd);
+
+    }
 }

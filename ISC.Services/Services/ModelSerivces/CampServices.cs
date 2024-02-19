@@ -1,97 +1,114 @@
 ﻿using AutoMapper;
-using Azure;
 using ISC.Core.Dtos;
 using ISC.Core.Interfaces;
 using ISC.Core.Models;
 using ISC.EF;
-using ISC.Services.Helpers;
-using ISC.Services.ISerivces;
 using ISC.Services.ISerivces.IModelServices;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ISC.Services.Services.ModelSerivces
 {
-	public class CampServices:ICampServices
-	{
-		private readonly IUnitOfWork _unitOfWork;
-		private readonly UserManager<UserAccount> _userManager;
-		private readonly IMapper _mapper;
-		public CampServices(IUnitOfWork unitOfWork,
-			UserManager<UserAccount> userManager,
-			IMapper mapper)
-		{
-			_unitOfWork = unitOfWork;
-			_userManager = userManager;
-			_mapper = mapper;
-		}
-		public async Task<ServiceResponse<List<DisplayCampsDto>>> DisplayCampsDetails()
-		{
-			ServiceResponse<List<DisplayCampsDto>> response = new ServiceResponse<List<DisplayCampsDto>>();
+    public class CampServices : ICampServices
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<UserAccount> _userManager;
+        private readonly IMapper _mapper;
+        public CampServices(IUnitOfWork unitOfWork,
+            UserManager<UserAccount> userManager,
+            IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _userManager = userManager;
+            _mapper = mapper;
+        }
+        public async Task<ServiceResponse<List<DisplayCampsDto>>> DisplayCampsDetails()
+        {
+            await Task.CompletedTask;
 
-			var campMentor = _mapper.Map<List<DisplayCampsDto>>(_unitOfWork.Camps.getAllAsync().Result.ToList());
+            ServiceResponse<List<DisplayCampsDto>> response = new ServiceResponse<List<DisplayCampsDto>>()
+            {
+                Entity = new()
+            };
 
-			if (campMentor == null)
-			{
-				response.IsSuccess = false;
-				response.Comment = "No camp found";
-				return response;
-			}
+            var camps = _unitOfWork.Camps.Get().Include(x => x.Heads).Include(x => x.Mentors).ToHashSet();
 
-			foreach(var camp in campMentor)
-			{
-				var mentors = _unitOfWork.Mentors.Get()
-					.Include(u => u.Camps)
-					.Where(u => u.Camps.Any(m => m.Id == camp.Id))
-					.Select(u=>u.Id)
-					.ToListAsync();
+            if (camps == null)
+            {
+                response.IsSuccess = false;
+                response.Comment = "No camp found";
+                return response;
+            }
 
-				if (mentors != null && mentors.Result.Count() > 0) 
-				{
-					camp.Mentors.AddRange(await _userManager.Users
-										.Include(u => u.Mentor)
-										.Where(u => u.Mentor != null && mentors.Result.Any(j => j == u.Mentor.Id))
-										.Select(u => u.FirstName + ' ' + u.MiddleName + ' ' + u.LastName).ToListAsync());
-				}
+            var mentors = _userManager.Users.Include(x => x.Mentor).Where(x => x.Mentor != null)
+                .Select(x => new
+                {
+                    x.Id,
+                    FullName = x.FirstName + ' ' + x.MiddleName + ' ' + x.LastName,
+                    MentorId = x.Mentor!.Id,
+                }).ToHashSet();
 
-				var heads = await _unitOfWork.HeadofCamp
-									.findManyWithChildAsync(hoc => hoc.CampId == camp.Id || hoc.CampId == null);
+            var heads = _userManager.Users.Include(x => x.Headofcamp).Where(x => x.Headofcamp != null).
+                Select(x => new
+                {
+                    x.Id,
+                    FullName = x.FirstName + ' ' + x.MiddleName + ' ' + x.LastName,
+                    HeadId = x.Headofcamp!.Id
+                }).ToHashSet();
 
-				if(heads.IsNullOrEmpty())
-				{
-					heads = new List<HeadOfTraining>();
-				}
 
-				foreach(var head in heads)
-				{
-					var acc = await _userManager.FindByIdAsync(head.UserId);
+            foreach (var camp in camps)
+            {
+                var campResponse = _mapper.Map<DisplayCampsDto>(camp);
 
-					if(acc is null) { continue; }
-					
-					var headName = acc.FirstName + ' ' + acc.MiddleName + ' ' + acc.LastName;
-					camp.HeadsInfo.Add(new HeadInfo()
-					{
-						Name = headName,
-						Id = head.Id,
-						State = head.CampId != null
-					});
-				}
-			}
+                campResponse.HeadsInfo.AddRange(heads.Select(x => new Member()
+                {
+                    Id = x.HeadId,
+                    Name = x.FullName,
+                    State = camp.Heads.Any(y => y.Id == x.HeadId)
+                }));
+                campResponse.CampMentors.AddRange(mentors.Select(x => new Member()
+                {
+                    Id = x.MentorId,
+                    Name = x.FullName,
+                    State = camp.Mentors.Any(y => y.Id == x.MentorId)
+                }));
 
-			response.IsSuccess= true;
-			response.Entity = campMentor;
+                response.Entity.Add(campResponse);
+            }
 
-			return response;
-		}
-	}
+            response.IsSuccess = true;
+
+            return response;
+        }
+        public async Task<ServiceResponse<bool>> UpdateHeadAsync(int id, int? campId)
+        {
+            var head = await _unitOfWork.HeadofCamp.getByIdAsync(id);
+            head.CampId = campId;
+
+            await _unitOfWork.HeadofCamp.UpdateAsync(head);
+            _ = await _unitOfWork.completeAsync();
+
+            return new ServiceResponse<bool>() { IsSuccess = true };
+        }
+        public async Task<ServiceResponse<bool>> UpdateMentorAsync(int id, int campId, bool isAdd)
+        {
+            var mentor = await _unitOfWork.Mentors.Get().Include(x=>x.Camps).FirstAsync(x => x.Id == id);
+            var camp = await _unitOfWork.Camps.getByIdAsync(campId);
+
+            if (isAdd && !mentor.Camps.Contains(camp)) 
+            {
+                mentor.Camps.Add(camp);
+            }
+            else if (!isAdd && mentor.Camps.Contains(camp))
+            {
+                mentor.Camps.Remove(camp);
+            }
+
+            await _unitOfWork.Mentors.UpdateAsync(mentor);
+            _ = await _unitOfWork.completeAsync();
+
+            return new ServiceResponse<bool>() { IsSuccess = true };
+        }
+    }
 }

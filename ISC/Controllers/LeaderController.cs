@@ -25,7 +25,6 @@ namespace ISC.API.Controllers
         private readonly IAuthanticationServices _auth;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILeaderServices _leaderServices;
-        private readonly ISheetServices _sheetServices;
         private readonly ICampServices _campServices;
         public LeaderController(
             RoleManager<IdentityRole> roleManager,
@@ -33,17 +32,14 @@ namespace ISC.API.Controllers
             IAuthanticationServices auth,
             IUnitOfWork unitofwork,
             ILeaderServices leaderServices,
-            ISheetServices sheetServices,
             IMapper mapper,
-            ICampServices campServices,
-            IMediaServices mediaService)
+            ICampServices campServices)
         {
             _roleManager = roleManager;
             _userManager = userManager;
             _unitOfWork = unitofwork;
             _auth = auth;
             _leaderServices = leaderServices;
-            _sheetServices = sheetServices;
             _campServices = campServices;
         }
 
@@ -355,28 +351,14 @@ namespace ISC.API.Controllers
             return Ok(response);
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateCampHead(int headId, int campId, bool isAdd)
+        public async Task<IActionResult> UpdateCampHead(int headId, int? campId)
         {
-            var response = new ServiceResponse<int>() { IsSuccess = true };
-
-            HeadOfTraining head = await _unitOfWork.HeadofCamp.getByIdAsync(headId);
-
-            if (head is null)
-            {
-                throw new KeyNotFoundException("Invalid Id");
-            }
-
-            if (isAdd)
-            {
-                head.CampId = campId;
-            }
-            else
-            {
-                await _unitOfWork.HeadofCamp.deleteAsync(head);
-            }
-            await _unitOfWork.completeAsync();
-
-            return Ok(response);
+            return Ok(await _campServices.UpdateHeadAsync(headId,campId));
+        }
+        [HttpPut]
+        public async Task<IActionResult> UpdateMentor(int mentorId,int campId,bool isAdd)
+        {
+            return Ok(await _campServices.UpdateMentorAsync(mentorId, campId,isAdd));
         }
     }
 }

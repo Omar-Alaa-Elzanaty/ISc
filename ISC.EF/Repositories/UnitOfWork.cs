@@ -65,16 +65,17 @@ namespace ISC.EF.Repositories
 		}
 		public async Task<bool> addToRoleAsync<T>(T account, string role,int?campId,int?mentorId)
 		{
-			if(account is UserAccount Acc)
+			if (account is UserAccount Acc )
 			{
 				if (Acc != null && _userManager.GetRolesAsync(Acc).Result.Contains(role) == true)
 				{
 					throw new BadHttpRequestException($"This account already has role {role}");
 				}
-				else if (Acc == null)
+				else if (Acc == null || (campId is not null && !await Camps.Get().AnyAsync(x => x.Id == campId)))
 				{
 					return false;
 				}
+
 
 				try
 				{

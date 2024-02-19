@@ -10,18 +10,18 @@ namespace ISC.Core.Dtos
 	{
 		public DisplayCampsDto()
 		{
-			Mentors = new List<string>();
-			HeadsInfo = new List<HeadInfo>();
+            CampMentors = new List<Member>();
+			HeadsInfo = new List<Member>();
 		}
         public int Id { get; set; }
 		public string Name { get; set; }
 		public int Term { get; set; }
 		public int Year { get; set; }
 		public int DurationInWeeks { get; set; }
-		public List<HeadInfo> HeadsInfo { get; set; }
-		public List<string> Mentors { get; set; }
+		public List<Member> HeadsInfo { get; set; }
+		public List<Member> CampMentors { get; set; }
 	}
-	public class HeadInfo
+	public class Member
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
