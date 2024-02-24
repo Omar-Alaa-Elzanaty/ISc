@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using AutoMapper;
+﻿using AutoMapper;
 using ISC.Core.APIDtos;
 using ISC.Core.Dtos;
 using ISC.Core.Interfaces;
@@ -300,43 +298,30 @@ namespace ISC.Services.Services.ModelSerivces
 
             return response;
         }
-        public async Task<ServiceResponse<bool>> UpdateTraineeArchive(HashSet<TraineeArchiveDto> archives)
+        public async Task<ServiceResponse<bool>> UpdateTraineeArchive(TraineeArchiveDto archive)
         {
             var response = new ServiceResponse<bool>() { IsSuccess = true };
 
-            var nationalIds = archives.Select(a => a.NationalId).ToHashSet();
 
-            var memebers = await _unitOfWork.TraineesArchive.Get()
-                        .Where(i => nationalIds.Contains(i.NationalID))
-                        .ToListAsync();
+            var trainee = await _unitOfWork.TraineesArchive.findByAsync(x => x.NationalID == archive.NationalId);
 
-            foreach (var archive in archives)
-            {
-                var trainee = memebers.Single(m => m.NationalID == archive.NationalId);
-                trainee = _mapper.Map<TraineeArchive>(archive);
-            }
+            _mapper.Map(archive, trainee);
+
+            await _unitOfWork.TraineesArchive.UpdateAsync(trainee);
             _ = await _unitOfWork.completeAsync();
 
             return response;
         }
-        public async Task<ServiceResponse<bool>> UpdateStuffArchive(HashSet<StuffArchiveDto> archives)
+        public async Task<ServiceResponse<bool>> UpdateStuffArchive(StuffArchiveDto archive)
         {
             var response = new ServiceResponse<bool>() { IsSuccess = true };
 
-            var nationalIds = archives.Select(a => a.NationalID).ToHashSet();
+            var member = await _unitOfWork.StuffArchive.findByAsync(x => x.NationalID == archive.NationalID);
+            _mapper.Map(archive, member);
 
-            var members = _unitOfWork.StuffArchive.Get()
-                        .Where(s => nationalIds.Contains(s.NationalID)).ToHashSet();
-
-            foreach (var stuffMember in archives)
-            {
-                var stuff = members.Single(m => m.NationalID == stuffMember.NationalID);
-                stuff = _mapper.Map<StuffArchive>(stuff);
-            }
-
+            await _unitOfWork.StuffArchive.UpdateAsync(member);
             await _unitOfWork.completeAsync();
 
-            response.IsSuccess = true;
             response.Comment = "Update successfully";
 
             return response;
@@ -494,20 +479,20 @@ namespace ISC.Services.Services.ModelSerivces
 
             return response;
         }
-        private async Task<ServiceResponse<bool>>AssignToMentorAsync(IEnumerable<UserAccount>users,int? campId)
+        private async Task<ServiceResponse<bool>> AssignToMentorAsync(IEnumerable<UserAccount> users, int? campId)
         {
-            var response=new ServiceResponse<bool>();
+            var response = new ServiceResponse<bool>();
 
             foreach (var user in users)
             {
                 if (!await _userManager.IsInRoleAsync(user, Role.MENTOR))
                 {
-                    if(!await _unitOfWork.addToRoleAsync(user,Role.MENTOR ,campId, null))
+                    if (!await _unitOfWork.addToRoleAsync(user, Role.MENTOR, campId, null))
                     {
                         response.Comment += user.FirstName + ' ' + user.MiddleName + ' ' + user.LastName + ',';
                     }
                 }
-                else if(campId is not null)
+                else if (campId is not null)
                 {
                     var mentor = await _unitOfWork.Mentors.Get().Include(x => x.Camps).FirstAsync(x => x.UserId == user.Id);
 
@@ -524,15 +509,15 @@ namespace ISC.Services.Services.ModelSerivces
 
             return response;
         }
-        private async Task<ServiceResponse<bool>> AssignToHeadOfCampAsync(IEnumerable<UserAccount> users,int campId)
+        private async Task<ServiceResponse<bool>> AssignToHeadOfCampAsync(IEnumerable<UserAccount> users, int campId)
         {
             var response = new ServiceResponse<bool>();
 
             foreach (var user in users)
             {
-                if (!await _userManager.IsInRoleAsync(user,Role.HOC))
+                if (!await _userManager.IsInRoleAsync(user, Role.HOC))
                 {
-                    if(!await _unitOfWork.addToRoleAsync(user, Role.HOC,campId, null))
+                    if (!await _unitOfWork.addToRoleAsync(user, Role.HOC, campId, null))
                     {
                         response.Comment += user.FirstName + ' ' + user.MiddleName + ' ' + user.LastName + ',';
                     }

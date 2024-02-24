@@ -265,9 +265,9 @@ namespace ISC.API.Controllers
             return Ok(await _leaderServices.DeleteTraineeArchivesAsync(members));
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateTraineeArchive([FromBody] HashSet<TraineeArchiveDto> archives)
+        public async Task<IActionResult> UpdateTraineeArchive([FromBody] TraineeArchiveDto archive)
         {
-            return Ok(await _leaderServices.UpdateTraineeArchive(archives));
+            return Ok(await _leaderServices.UpdateTraineeArchive(archive));
         }
         [HttpGet]
         public async Task<IActionResult> DisplayStuffArchive()
@@ -292,9 +292,9 @@ namespace ISC.API.Controllers
             return Ok(response);
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateStuffArchive(HashSet<StuffArchiveDto> archives)
+        public async Task<IActionResult> UpdateStuffArchive(StuffArchiveDto archive)
         {
-            return Ok(await _leaderServices.UpdateStuffArchive(archives));
+            return Ok(await _leaderServices.UpdateStuffArchive(archive));
         }
         [HttpGet("{campId}")]
         public async Task<IActionResult> DisplayNewRegister(int campId)

@@ -20,8 +20,8 @@ namespace ISC.Services.ISerivces.IModelServices
 		Task<ServiceResponse<bool>> AssignRoleToStuff(StuffNewRolesDto model);
 		Task<ServiceResponse<List<string>>> DeleteStuffAsync(List<string> StuffsIds);
 		Task<ServiceResponse<string>> DeleteTraineeArchivesAsync(List<string> trainees);
-		Task<ServiceResponse<bool>> UpdateTraineeArchive(HashSet<TraineeArchiveDto> archives);
-		Task<ServiceResponse<bool>> UpdateStuffArchive(HashSet<StuffArchiveDto> archives);
+		Task<ServiceResponse<bool>> UpdateTraineeArchive(TraineeArchiveDto archives);
+		Task<ServiceResponse<bool>> UpdateStuffArchive(StuffArchiveDto archives);
 		Task<ServiceResponse<AuthModel>> SubmitNewRegister(SubmitNewRegisterDto newRegisters);
 		Task<ServiceResponse<int>> UpdateCampStatusAsync(int campId);
 		Task<ServiceResponse<object>> CampInfo();

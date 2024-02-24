@@ -3,8 +3,8 @@ using System.Text.Json;
 
 namespace ISC.Services.Services
 {
-	public class ApiRequestServices
-	{
+    public class ApiRequestServices
+    {
         private readonly HttpClient _HttpClient;
         public ApiRequestServices(string baselink)
         {
@@ -12,19 +12,19 @@ namespace ISC.Services.Services
             {
                 BaseAddress = new Uri(baselink)
             };
-			_HttpClient.DefaultRequestHeaders
-					.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _HttpClient.DefaultRequestHeaders
+                    .Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
         public async Task<object> getRequestAsync<T>(string Parameter)
         {
-            HttpResponseMessage Response=await _HttpClient.GetAsync(Parameter);
-            if(Response.IsSuccessStatusCode!=true)
+            HttpResponseMessage Response = await _HttpClient.GetAsync(Parameter);
+            if (Response.IsSuccessStatusCode != true)
             {
-                return null; 
+                return null;
             }
-			var ResponseContent = await Response.Content.ReadAsStringAsync();
-			var deserializedResponse = JsonSerializer.Deserialize<T>(ResponseContent);
-			return deserializedResponse;
-		}
+            var ResponseContent = await Response.Content.ReadAsStringAsync();
+            var deserializedResponse = JsonSerializer.Deserialize<T>(ResponseContent);
+            return deserializedResponse;
+        }
     }
 }

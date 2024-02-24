@@ -23,6 +23,6 @@ namespace ISC.Core.Dtos
 		public string? FacebookLink { get; set; }
 		public string? PhoneNumber { get; set; }
 		public string Email { get; set; }
-		public int Year = DateTime.Now.Year;
+		public int Year { get; set; } = DateTime.Now.Year;
 	}
 }
