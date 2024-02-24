@@ -58,7 +58,7 @@ namespace ISC.API.Controllers
 		public async Task<IActionResult> DisplayTraineesProgress(int campId)
 		{
 			var mentorAccId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			var mentor = await _unitOfWork.Mentors.findByAsync(m => m.UserId == mentorAccId);
+			var mentor = await _unitOfWork.Mentors.FindByAsync(m => m.UserId == mentorAccId);
 
 			var trainees = await _userManager.Users
 				.Include(u => u.Trainee)
@@ -74,7 +74,7 @@ namespace ISC.API.Controllers
 			}
 
 			var access = _unitOfWork.TraineesSheetsAccess
-				.findManyWithChildAsync(s => trainees.Any(t => t.Id == s.TraineeId), new[] { "Sheet" })
+				.FindManyWithChildAsync(s => trainees.Any(t => t.Id == s.TraineeId), new[] { "Sheet" })
 				.Result.ToList();
 
 			var sheets = access.DistinctBy(a => a.SheetId).Select(s => new
@@ -117,8 +117,8 @@ namespace ISC.API.Controllers
 		public async Task<IActionResult> DisplayAttendence(int camp)
 		{
 			var mentorUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			var mentorId = _unitOfWork.Mentors.findByAsync(m => m.UserId == mentorUserId).Result.Id;
-			var attendences = await _unitOfWork.TraineesAttendence.getAllAsync();
+			var mentorId = _unitOfWork.Mentors.FindByAsync(m => m.UserId == mentorUserId).Result.Id;
+			var attendences = await _unitOfWork.TraineesAttendence.GetAllAsync();
 			var traineesIds = attendences.DistinctBy(a => a.TraineeId).Select(a => a.TraineeId).ToList();
 			var sessionIds = attendences.DistinctBy(a => a.SessionId).Select(a => a.SessionId).ToList();
 			var trainees = await _userManager.Users
@@ -131,7 +131,7 @@ namespace ISC.API.Controllers
 								})
 								.ToListAsync();
 
-			var sessions = _unitOfWork.Sessions.findManyWithChildAsync(s => sessionIds.Contains(s.Id))
+			var sessions = _unitOfWork.Sessions.FindManyWithChildAsync(s => sessionIds.Contains(s.Id))
 						.Result.OrderBy(s => s.Date).Select(s => new
 						{
 							s.Id,
@@ -154,14 +154,14 @@ namespace ISC.API.Controllers
 		public async Task<IActionResult> TakeAttendence()
 		{
 			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			var mentor = await _unitOfWork.Mentors.findByAsync(m => m.UserId == userId);
+			var mentor = await _unitOfWork.Mentors.FindByAsync(m => m.UserId == userId);
 
 			if (mentor is null || mentor.AccessSessionId is null)
 			{
 				return BadRequest("Access denied");
 			}
 
-			var session = await _unitOfWork.Sessions.getByIdAsync((int)mentor.AccessSessionId);
+			var session = await _unitOfWork.Sessions.GetByIdAsync((int)mentor.AccessSessionId);
 
 			var trainees = await _unitOfWork.Trainees
 											.Get()
@@ -178,7 +178,7 @@ namespace ISC.API.Controllers
 											})
 											.ToListAsync();
 
-			var traineeAttendence = await _unitOfWork.TraineesAttendence.findManyWithChildAsync(a => a.SessionId == session.Id);
+			var traineeAttendence = await _unitOfWork.TraineesAttendence.FindManyWithChildAsync(a => a.SessionId == session.Id);
 
 			List<AttendenceDto> attendence = new List<AttendenceDto>();
 			foreach (var trainee in trainees)
@@ -197,7 +197,7 @@ namespace ISC.API.Controllers
 		[HttpPut("{sessionId}")]
 		public async Task<IActionResult> SubmitAttendence(int sessionId,List<SubmitAttendenceDto> attendence)
 		{
-			var session = await _unitOfWork.Sessions.getByIdAsync(sessionId);
+			var session = await _unitOfWork.Sessions.GetByIdAsync(sessionId);
 			if(session is null)
 			{
 				return BadRequest("Invalid request");
@@ -206,8 +206,8 @@ namespace ISC.API.Controllers
 			var absence = new List<TraineeAttendence>();
 			foreach(var record in attendence)
 			{
-				var attend = await _unitOfWork.TraineesAttendence.findByAsync(a => a.SessionId == sessionId && a.TraineeId == record.TraineeId);
-				var trainee = await _unitOfWork.Trainees.getByIdAsync(record.TraineeId);
+				var attend = await _unitOfWork.TraineesAttendence.FindByAsync(a => a.SessionId == sessionId && a.TraineeId == record.TraineeId);
+				var trainee = await _unitOfWork.Trainees.GetByIdAsync(record.TraineeId);
 
 				if (trainee is null)
 					continue;
@@ -227,7 +227,7 @@ namespace ISC.API.Controllers
 					newAttendnce.Add(attend);
 				}
 			}
-			_unitOfWork.TraineesAttendence.deleteGroup(absence);
+			_unitOfWork.TraineesAttendence.RemoveGroup(absence);
 			await _unitOfWork.TraineesAttendence.AddGroup(newAttendnce);
 			_= await _unitOfWork.completeAsync();
 

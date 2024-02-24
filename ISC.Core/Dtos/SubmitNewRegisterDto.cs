@@ -12,9 +12,9 @@ namespace ISC.Core.Dtos
 		[Required]
 		public int ContestId { get; set; }
 		[Required]
-		public float PassingPrecent { get; set; }
+		public int PassingPrecent { get; set; }
 		[Required]
-		public bool IsSohag { get; set; }
+		public bool IsSohagSheet { get; set; }
 	}
 	public class SubmitNewRegisterDto
 	{

@@ -78,7 +78,7 @@ namespace ISC.Services.Services.ModelSerivces
 		{
 			var response = new ServiceResponse<List<TraineeMentorDto>>();
 
-			var campId = _unitOfWork.HeadofCamp.findWithChildAsync(h => h.UserId == userId, new[] { "Camp" }).Result?.CampId;
+			var campId = _unitOfWork.HeadofCamp.FindWithChildAsync(h => h.UserId == userId, new[] { "Camp" }).Result?.CampId;
 
 			var trainees =await _userManager.Users
 				.Include(u => u.Trainee)
@@ -115,12 +115,12 @@ namespace ISC.Services.Services.ModelSerivces
 
 			foreach(var item in data)
 			{
-				var trainee = await _unitOfWork.Trainees.getByIdAsync(item.TraineeId);
+				var trainee = await _unitOfWork.Trainees.GetByIdAsync(item.TraineeId);
 				if(trainee is null)
 				{
 					continue;
 				}
-				var mentor = await _unitOfWork.Mentors.getByIdAsync(item.MentorId);
+				var mentor = await _unitOfWork.Mentors.GetByIdAsync(item.MentorId);
 				trainee.Mentor= mentor;
 				trainee.MentorId = item.MentorId;
 				await _unitOfWork.Trainees.UpdateAsync(trainee);
@@ -274,7 +274,7 @@ namespace ISC.Services.Services.ModelSerivces
 							AttendenceHistory=u.Trainee.TraineesAttendences.ToList(),
 
 						}).ToListAsync();
-			var sessions = _unitOfWork.Sessions.findManyWithChildAsync(s => s.CampId == campId).Result.Select(s => new
+			var sessions = _unitOfWork.Sessions.FindManyWithChildAsync(s => s.CampId == campId).Result.Select(s => new
 			{
 				s.Id,
 				s.Topic
@@ -305,7 +305,7 @@ namespace ISC.Services.Services.ModelSerivces
 			{
 				throw new ArgumentNullException("camp id can not be null");
 			}
-			var mentorsId = _unitOfWork.Mentors.findManyWithChildAsync(i => i.Camps.Any(c => c.Id == campId), new[] { "Camps" })
+			var mentorsId = _unitOfWork.Mentors.FindManyWithChildAsync(i => i.Camps.Any(c => c.Id == campId), new[] { "Camps" })
 							.Result.Select(m=>m.Id).ToList();
 
 			if (mentorsId.IsNullOrEmpty())
@@ -322,10 +322,10 @@ namespace ISC.Services.Services.ModelSerivces
 						})
 						.ToListAsync();
 
-			var sessions = await _unitOfWork.Sessions.findManyWithChildAsync(s => s.Date <= DateTime.UtcNow);
+			var sessions = await _unitOfWork.Sessions.FindManyWithChildAsync(s => s.Date <= DateTime.UtcNow);
 			response.Sessions = sessions.Select(i => i.Topic).ToList();
 
-			var attendence = await _unitOfWork.MentorAttendence.findManyWithChildAsync(a => mentorsId.Contains(a.MentorId)
+			var attendence = await _unitOfWork.MentorAttendence.FindManyWithChildAsync(a => mentorsId.Contains(a.MentorId)
 							&& sessions.Select(s => s.Id).Contains(a.SessionId));
 
 			foreach(var mentor in mentors)
@@ -374,7 +374,7 @@ namespace ISC.Services.Services.ModelSerivces
                         CampName = camp.Name,
                         IsCompleted = false
                     };*/
-                    await _unitOfWork.TraineesArchive.addAsync(archive);
+                    await _unitOfWork.TraineesArchive.AddAsync(archive);
                     await _userManager.DeleteAsync(traineeAccount);
                 }
             }
@@ -388,7 +388,7 @@ namespace ISC.Services.Services.ModelSerivces
 		{
 			var response = new ServiceResponse<List<KeyValuePair<FilteredUserDto, string>>>();
 
-            var camp = _unitOfWork.HeadofCamp.findWithChildAsync(t => t.UserId == headId,
+            var camp = _unitOfWork.HeadofCamp.FindWithChildAsync(t => t.UserId == headId,
                                                                 new[] { "Camp", })?.Result?.Camp ?? null;
             var traineesId = await _unitOfWork.Trainees
                             .Get()
@@ -466,7 +466,7 @@ namespace ISC.Services.Services.ModelSerivces
 		{
 			var response = new ServiceResponse<object>();
 
-            var camp = _unitOfWork.HeadofCamp.findWithChildAsync(t => t.UserId == headUserId, new[] { "Camp", }).Result?.Camp;
+            var camp = _unitOfWork.HeadofCamp.FindWithChildAsync(t => t.UserId == headUserId, new[] { "Camp", }).Result?.Camp;
 
 			if(camp is null)
 			{
@@ -509,7 +509,7 @@ namespace ISC.Services.Services.ModelSerivces
 
                     if (Result)
                     {
-                        await _unitOfWork.TraineesArchive.addAsync(ToArchive);
+                        await _unitOfWork.TraineesArchive.AddAsync(ToArchive);
                         await _userManager.DeleteAsync(traineeAccount);
                     }
                     else
@@ -537,7 +537,7 @@ namespace ISC.Services.Services.ModelSerivces
 
             List<object> mentors = new List<object>();
 
-            var mentorsOfCamp = await _unitOfWork.Camps.findWithChildAsync(c => c.Id == camp!.Id, new[] { "Mentors" });
+            var mentorsOfCamp = await _unitOfWork.Camps.FindWithChildAsync(c => c.Id == camp!.Id, new[] { "Mentors" });
 
             foreach (var member in mentorsOfCamp!.Mentors)
             {
@@ -565,7 +565,7 @@ namespace ISC.Services.Services.ModelSerivces
                 throw new BadRequestException("Error in account");
             }
 
-            response.Entity= await _unitOfWork.Sessions.findManyWithChildAsync(s => s.CampId == headOfCamp.CampId);
+            response.Entity= await _unitOfWork.Sessions.FindManyWithChildAsync(s => s.CampId == headOfCamp.CampId);
 
 			return response;
         }
@@ -596,7 +596,7 @@ namespace ISC.Services.Services.ModelSerivces
             Session session = _mapper.Map<Session>(model);
             session.CampId = (int)campId;
 
-            await _unitOfWork.Sessions.addAsync(session);
+            await _unitOfWork.Sessions.AddAsync(session);
             _ = await _unitOfWork.completeAsync();
 
 			response.Entity = session.Id;
@@ -606,14 +606,14 @@ namespace ISC.Services.Services.ModelSerivces
 		public async Task<ServiceResponse<int>>DeleteSessionAsync(int id)
 		{
 			var response = new ServiceResponse<int>() { IsSuccess = true };
-            var session = await _unitOfWork.Sessions.getByIdAsync(id);
+            var session = await _unitOfWork.Sessions.GetByIdAsync(id);
 
             if (session is null)
             {
                 throw new BadRequestException("no session found");
             }
 
-            _ = await _unitOfWork.Sessions.deleteAsync(session);
+            _ = await _unitOfWork.Sessions.DeleteAsync(session);
             _ = await _unitOfWork.completeAsync();
 
             return response;
@@ -622,7 +622,7 @@ namespace ISC.Services.Services.ModelSerivces
 		{
 			var response = new ServiceResponse<int>() { IsSuccess = true };
 
-            var entity = await _unitOfWork.Sessions.getByIdAsync(id);
+            var entity = await _unitOfWork.Sessions.GetByIdAsync(id);
 
             if (entity is null)
             {

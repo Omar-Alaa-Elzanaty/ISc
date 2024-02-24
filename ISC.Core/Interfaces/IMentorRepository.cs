@@ -11,6 +11,6 @@ namespace ISC.Core.Interfaces
 	{
 		Task<object> showMentorsAccountsAsync();
 		Task<bool> deleteAsync(string userid);
-		Task<bool> deleteAsync(Mentor mentor);
+		Task<bool> DeleteAsync(Mentor mentor);
 	}
 }

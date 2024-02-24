@@ -83,7 +83,7 @@ namespace ISC.Services.Services.ModelSerivces
         }
         public async Task<ServiceResponse<bool>> UpdateHeadAsync(int id, int? campId)
         {
-            var head = await _unitOfWork.HeadofCamp.getByIdAsync(id);
+            var head = await _unitOfWork.HeadofCamp.GetByIdAsync(id);
             head.CampId = campId;
 
             await _unitOfWork.HeadofCamp.UpdateAsync(head);
@@ -94,7 +94,7 @@ namespace ISC.Services.Services.ModelSerivces
         public async Task<ServiceResponse<bool>> UpdateMentorAsync(int id, int campId, bool isAdd)
         {
             var mentor = await _unitOfWork.Mentors.Get().Include(x=>x.Camps).FirstAsync(x => x.Id == id);
-            var camp = await _unitOfWork.Camps.getByIdAsync(campId);
+            var camp = await _unitOfWork.Camps.GetByIdAsync(campId);
 
             if (isAdd && !mentor.Camps.Contains(camp)) 
             {

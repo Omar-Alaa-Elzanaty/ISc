@@ -30,7 +30,7 @@ namespace ISC.API.Controllers
 			{
 				return BadRequest("NO feedbacks found!");
 			}
-			var Trainees = await _UnitOfWork.Trainees.getAllAsync(tr=>Feedbacks.Any(i => i.TraineeId == tr.Id));
+			var Trainees = await _UnitOfWork.Trainees.GetAllAsync(tr=>Feedbacks.Any(i => i.TraineeId == tr.Id));
 			var Result = (from Trainee in Trainees
 						 join user in _UserManager.Users
 						 on Trainee.UserId equals user.Id

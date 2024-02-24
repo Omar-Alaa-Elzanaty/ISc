@@ -77,7 +77,7 @@ namespace ISC.Services.Services.ModelSerivces
 			}
 
 			var traineeSheetAcess = _unitOfWork.TraineesSheetsAccess
-				.findManyWithChildAsync(ts => ts.Sheet.CampId == campId && !isFound[ts.TraineeId], new[] { "Sheet", "Trainee" })
+				.FindManyWithChildAsync(ts => ts.Sheet.CampId == campId && !isFound[ts.TraineeId], new[] { "Sheet", "Trainee" })
 				.Result.OrderBy(ts => ts.TraineeId)
 				.ToList();
 

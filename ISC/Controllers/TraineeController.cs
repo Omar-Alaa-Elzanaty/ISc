@@ -77,7 +77,7 @@ namespace ISC.API.Controllers
 		{
 			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-			int traineeId = _UnitOfWork.Trainees.findByAsync(t => t.UserId == userId).Result.Id;
+			int traineeId = _UnitOfWork.Trainees.FindByAsync(t => t.UserId == userId).Result.Id;
 
 			if (userId is null)
 			{
@@ -89,7 +89,7 @@ namespace ISC.API.Controllers
 				TraineeId = traineeId
 			};
 
-			await _UnitOfWork.SessionsFeedbacks.addAsync(feedback);
+			await _UnitOfWork.SessionsFeedbacks.AddAsync(feedback);
 
 			return Ok("Success");
 		}

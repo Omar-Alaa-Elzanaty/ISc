@@ -61,7 +61,7 @@ namespace ISC.Services.Services.ModelSerivces
 		{
 			var traineeId = _unitOfWork.Trainees.GetByUserIdAsync(userId).Result.Id;
 
-			var accessSheets = await _unitOfWork.TraineesSheetsAccess.findManyWithChildAsync(tsa => tsa.TraineeId == traineeId);
+			var accessSheets = await _unitOfWork.TraineesSheetsAccess.FindManyWithChildAsync(tsa => tsa.TraineeId == traineeId);
 
 			var sheetsIds = accessSheets.DistinctBy(a => a.SheetId).Select(i => i.SheetId).ToList();
 			var Sheets = _unitOfWork.Sheets.Get()
@@ -105,7 +105,7 @@ namespace ISC.Services.Services.ModelSerivces
 		}
 		public async Task UpdateTaskState(int taskId)
 		{
-			var task = await _unitOfWork.Tasks.findByAsync(t => t.Id == taskId);
+			var task = await _unitOfWork.Tasks.FindByAsync(t => t.Id == taskId);
 			task.IsComplete = !task.IsComplete;
 			
 			await _unitOfWork.Tasks.UpdateAsync(task);

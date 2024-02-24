@@ -93,13 +93,13 @@ namespace ISC.EF.Repositories
 						else
 							Trainee = new Trainee() { UserId = Acc.Id, CampId = (int)campId };
 
-						await Trainees.addAsync(Trainee);
+						await Trainees.AddAsync(Trainee);
 					}
 					else if (role == Role.MENTOR)
 					{
 						await _userManager.AddToRoleAsync(Acc, role);
 						Mentor mentor = new Mentor() { UserId = Acc.Id };
-						await Mentors.addAsync(mentor);
+						await Mentors.AddAsync(mentor);
 						await _dataBase.SaveChangesAsync();
 
 						if (campId is not null)
@@ -113,7 +113,7 @@ namespace ISC.EF.Repositories
 					{
 						await _userManager.AddToRoleAsync(Acc, role);
 						HeadOfTraining HeadOfTraining = new HeadOfTraining() { UserId = Acc.Id, CampId = campId };
-						await HeadofCamp.addAsync(HeadOfTraining);
+						await HeadofCamp.AddAsync(HeadOfTraining);
 
 					}
 					else if (role == Role.LEADER || role == Role.INSTRUCTOR)

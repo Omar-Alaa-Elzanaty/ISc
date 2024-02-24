@@ -137,7 +137,7 @@ namespace ISC.API.Controllers
         [HttpGet]
         public async Task<IActionResult> DisplayAllExceptHeadOfTraining()
         {
-            var HocUserId = _unitOfWork.HeadofCamp.getAllAsync().Result.Select(hoc => hoc.UserId).ToList();
+            var HocUserId = _unitOfWork.HeadofCamp.GetAllAsync().Result.Select(hoc => hoc.UserId).ToList();
             var StuffWithoutHoc = await _userManager.Users.Where(user => HocUserId.Contains(user.Id) == false).ToListAsync();
 
             return Ok(StuffWithoutHoc);
@@ -175,7 +175,6 @@ namespace ISC.API.Controllers
                 }
             });
         }
-
 
         [HttpPost]
         public async Task<IActionResult> AssignToStuffRoles([FromBody] StuffNewRolesDto model)
@@ -255,7 +254,7 @@ namespace ISC.API.Controllers
         {
             var response = new ServiceResponse<List<TraineeArchive>>() { IsSuccess = true };
 
-            response.Entity = await _unitOfWork.TraineesArchive.getAllAsync();
+            response.Entity = await _unitOfWork.TraineesArchive.GetAllAsync();
 
             return Ok(response);
         }
@@ -272,18 +271,18 @@ namespace ISC.API.Controllers
         [HttpGet]
         public async Task<IActionResult> DisplayStuffArchive()
         {
-            return Ok(await _unitOfWork.StuffArchive.getAllAsync());
+            return Ok(await _unitOfWork.StuffArchive.GetAllAsync());
         }
         [HttpDelete]
         public async Task<IActionResult> DeleteStuffArchive([FromBody] List<string> members)
         {
             var response = new ServiceResponse<string>();
-            var archives = await _unitOfWork.StuffArchive.getAllAsync(sa => members.Contains(sa.NationalID));
+            var archives = await _unitOfWork.StuffArchive.GetAllAsync(sa => members.Contains(sa.NationalID));
             if (archives.Count == 0)
             {
                 throw new BadRequestException("No Archive to delete");
             }
-            _unitOfWork.StuffArchive.deleteGroup(archives);
+            _unitOfWork.StuffArchive.RemoveGroup(archives);
             _ = await _unitOfWork.completeAsync();
 
             response.IsSuccess = true;
@@ -340,7 +339,7 @@ namespace ISC.API.Controllers
         public async Task<IActionResult> DisplayOpenedCamp()
         {
             var response = new ServiceResponse<object>() { IsSuccess = true };
-            response.Entity = _unitOfWork.Camps.findManyWithChildAsync(c => c.OpenForRegister).Result.Select(c => new
+            response.Entity = _unitOfWork.Camps.FindManyWithChildAsync(c => c.OpenForRegister).Result.Select(c => new
             {
                 c.Id,
                 c.Name
@@ -353,12 +352,12 @@ namespace ISC.API.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateCampHead(int headId, int? campId)
         {
-            return Ok(await _campServices.UpdateHeadAsync(headId,campId));
+            return Ok(await _campServices.UpdateHeadAsync(headId, campId));
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateMentor(int mentorId,int campId,bool isAdd)
+        public async Task<IActionResult> UpdateMentor(int mentorId, int campId, bool isAdd)
         {
-            return Ok(await _campServices.UpdateMentorAsync(mentorId, campId,isAdd));
+            return Ok(await _campServices.UpdateMentorAsync(mentorId, campId, isAdd));
         }
     }
 }

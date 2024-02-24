@@ -27,7 +27,7 @@ namespace ISC.Services.Services
 		{
 			Console.WriteLine("enter");
 			int EffectedRows = 0;
-			var TraineeSheets = await _UnitOfWork.TraineesSheetsAccess.getAllAsync();
+			var TraineeSheets = await _UnitOfWork.TraineesSheetsAccess.GetAllAsync();
 			var SheetsIds = TraineeSheets.DistinctBy(STA => STA.SheetId).Select(sta => sta.SheetId);
 			var TraineesIds = TraineeSheets.DistinctBy(STA => STA.TraineeId).Select(sta => sta.TraineeId);
 
@@ -38,7 +38,7 @@ namespace ISC.Services.Services
 
 			foreach(var sid in SheetsIds)
 			{
-				var SheetInfo = await _UnitOfWork.Sheets.getByIdAsync(sid);
+				var SheetInfo = await _UnitOfWork.Sheets.GetByIdAsync(sid);
 				if (!SheetsSubmissions.ContainsKey(sid))
 				{
 					SheetsSubmissions[sid] =await _OnlineJudge.GetContestStatusAsync(SheetInfo.SheetCfId,
@@ -49,7 +49,7 @@ namespace ISC.Services.Services
 			
 			foreach(var tid in TraineesIds)
 			{
-				var TraineeInfo=await _UnitOfWork.Trainees.getByIdAsync(tid);
+				var TraineeInfo=await _UnitOfWork.Trainees.GetByIdAsync(tid);
 				if (!AccountsHandles.ContainsKey(tid))
 				{
 					var CodeForceHandle = _UserManager.Users.Where(u => u.Id == TraineeInfo.UserId)

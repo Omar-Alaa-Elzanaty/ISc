@@ -11,20 +11,20 @@ namespace ISC.Core.Interfaces
 {
 	public interface IBaseRepository<T>where T : class
 	{
-		Task addAsync(T entity);
+		Task AddAsync(T entity);
 		Task AddGroup(List<T> group);
-		Task<T> getByIdAsync(int id);
+		Task<T> GetByIdAsync(int id);
 		IQueryable<T> Get();
 		Task UpdateAsync(T entity);
-        Task<List<T>> getAllAsync();
-		Task<List<T>>getAllAsync(Func<T, bool> match);
-		void deleteGroup(List<T> entities);
-		Task<bool> deleteAsync(T entity);
+        Task<List<T>> GetAllAsync();
+		Task<List<T>>GetAllAsync(Func<T, bool> match);
+		void RemoveGroup(List<T> entities);
+		Task<bool> DeleteAsync(T entity);
 		int DeleteAll();
-		Task<List<T>> getAllwithNavigationsAsync(string[] includes = null);
-		Task<List<T>> findManyWithChildAsync(Func<T, bool> match, string[] includes = null);
-		Task<T?> findWithChildAsync(Func<T, bool> match, string[] includes = null);
-		Task<T> findByAsync(Func<T, bool> match);
+		Task<List<T>> GetAllwithNavigationsAsync(string[] includes = null);
+		Task<List<T>> FindManyWithChildAsync(Func<T, bool> match, string[] includes = null);
+		Task<T?> FindWithChildAsync(Func<T, bool> match, string[] includes = null);
+		Task<T> FindByAsync(Func<T, bool> match);
 		Task<List<T>> FindWithMany(string[] includes = null);
 	}
 }

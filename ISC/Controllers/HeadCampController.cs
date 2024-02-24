@@ -161,7 +161,7 @@ namespace ISC.API.Controllers
             var sheet = _mapper.Map<Sheet>(model);
             sheet.CampId = (int)campId;
 
-            await _unitOfWork.Sheets.addAsync(sheet);
+            await _unitOfWork.Sheets.AddAsync(sheet);
             _ = await _unitOfWork.completeAsync();
 
             return Ok("Success");
@@ -169,14 +169,14 @@ namespace ISC.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemoveSheet(int id)
         {
-            var Sheet = await _unitOfWork.Sheets.getByIdAsync(id);
+            var Sheet = await _unitOfWork.Sheets.GetByIdAsync(id);
 
             if (Sheet is null)
             {
                 return NotFound("Couldn't delete");
             }
 
-            if (!await _unitOfWork.Sheets.deleteAsync(Sheet))
+            if (!await _unitOfWork.Sheets.DeleteAsync(Sheet))
             {
                 return BadRequest("Couldn't delete");
             }
@@ -191,7 +191,7 @@ namespace ISC.API.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var campId = _unitOfWork.HeadofCamp.GetByUserIdAsync(userId).Result?.CampId;
 
-            var sheet = await _unitOfWork.Sheets.getByIdAsync(id);
+            var sheet = await _unitOfWork.Sheets.GetByIdAsync(id);
 
             if (sheet is null || !await _unitOfWork.Sheets.isValidToUpdateAsync(model, campId, id))
             {
@@ -212,7 +212,7 @@ namespace ISC.API.Controllers
         [HttpGet("{sheetId}")]
         public async Task<IActionResult> DisplayMaterials(int sheetId)
         {
-            var materials = await _unitOfWork.Materials.findManyWithChildAsync(m => m.SheetId.Equals(sheetId));
+            var materials = await _unitOfWork.Materials.FindManyWithChildAsync(m => m.SheetId.Equals(sheetId));
 
             return Ok(materials.OrderBy(m => m.CreationDate).Select(m => new
             {
@@ -224,7 +224,7 @@ namespace ISC.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddMaterial(int sheetId, MaterialDto model)
         {
-            if (await _unitOfWork.Sheets.getByIdAsync(sheetId) == null)
+            if (await _unitOfWork.Sheets.GetByIdAsync(sheetId) == null)
             {
                 return BadRequest("Invalid request");
             }
@@ -237,7 +237,7 @@ namespace ISC.API.Controllers
             Material material = _mapper.Map<Material>(model);
             material.SheetId = sheetId;
 
-            await _unitOfWork.Materials.addAsync(material);
+            await _unitOfWork.Materials.AddAsync(material);
             _ = await _unitOfWork.completeAsync();
 
             return Ok("Success");
@@ -245,14 +245,14 @@ namespace ISC.API.Controllers
         [HttpDelete("{materialId}")]
         public async Task<IActionResult> RemoveMaterial(int materialId)
         {
-            var material = await _unitOfWork.Materials.getByIdAsync(materialId);
+            var material = await _unitOfWork.Materials.GetByIdAsync(materialId);
 
             if (material == null)
             {
                 return NotFound("Invalid Request");
             }
 
-            await _unitOfWork.Materials.deleteAsync(material);
+            await _unitOfWork.Materials.DeleteAsync(material);
             _ = await _unitOfWork.completeAsync();
 
             return Ok();
@@ -260,7 +260,7 @@ namespace ISC.API.Controllers
         [HttpPut("{materialId}")]
         public async Task<IActionResult> UpdateMaterial(int materialId, MaterialDto model)
         {
-            var material = await _unitOfWork.Materials.getByIdAsync(materialId);
+            var material = await _unitOfWork.Materials.GetByIdAsync(materialId);
 
             var isValidToUpdate = !await _unitOfWork.Materials.Get()
                                         .AnyAsync(m => (m.Name == model.Name || m.Link == model.Link) && m.SheetId != material.SheetId);
@@ -289,7 +289,7 @@ namespace ISC.API.Controllers
                     i.Name
                 }).ToList();
 
-            var sheetAccess = _unitOfWork.TraineesSheetsAccess.findManyWithChildAsync(ac => sheets.Any(s => s.Id == ac.SheetId))
+            var sheetAccess = _unitOfWork.TraineesSheetsAccess.FindManyWithChildAsync(ac => sheets.Any(s => s.Id == ac.SheetId))
                                 .Result.Select(s => s.SheetId).ToList();
 
             var access = new List<SheetAccessStatusDto>();
@@ -338,7 +338,7 @@ namespace ISC.API.Controllers
         [HttpPut("{sheetId}/{traineeId}")]
         public async Task<IActionResult> UpdateTraineeAccess(int sheetId, int traineeId)
         {
-            await _unitOfWork.TraineesSheetsAccess.addAsync(new TraineeSheetAccess() { TraineeId = traineeId, SheetId = sheetId });
+            await _unitOfWork.TraineesSheetsAccess.AddAsync(new TraineeSheetAccess() { TraineeId = traineeId, SheetId = sheetId });
             _ = await _unitOfWork.completeAsync();
             return Ok();
         }
@@ -373,8 +373,8 @@ namespace ISC.API.Controllers
         [HttpPut]
         public async Task<IActionResult> GiveAttendenceAccess(int mentorId, int sessionId)
         {
-            var mentor = await _unitOfWork.Mentors.getByIdAsync(mentorId);
-            var session = await _unitOfWork.Sessions.getByIdAsync(sessionId);
+            var mentor = await _unitOfWork.Mentors.GetByIdAsync(mentorId);
+            var session = await _unitOfWork.Sessions.GetByIdAsync(sessionId);
 
             if (mentor is null || session is null)
             {

@@ -96,7 +96,7 @@ namespace ISC.Services.Services
 			var newRegister = _mapper.Map<NewRegistration>(model);
 			if(model.ImageFile is not null)newRegister.ImageUrl = await _mediaServices.AddAsync(model.ImageFile);
 
-			await _unitOfWork.NewRegitseration.addAsync(newRegister);
+			await _unitOfWork.NewRegitseration.AddAsync(newRegister);
 			_ = await _unitOfWork.completeAsync();
 
 			response.IsSuccess = true;

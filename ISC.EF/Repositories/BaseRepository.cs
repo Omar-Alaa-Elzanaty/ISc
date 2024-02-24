@@ -20,7 +20,7 @@ namespace ISC.EF.Repositories
 		{
 			_Context = context;
 		}
-		public async Task<T> getByIdAsync(int id)
+		public async Task<T> GetByIdAsync(int id)
 		{
 			return await _Context.Set<T>().FindAsync(id);
 		}
@@ -32,7 +32,7 @@ namespace ISC.EF.Repositories
 		{
 			return  _Context.Set<T>();
 		}
-		public async Task<T> findByAsync(Func<T, bool> match)
+		public async Task<T> FindByAsync(Func<T, bool> match)
 		{
 			return  _Context.Set<T>().SingleOrDefault(match);
 		}
@@ -40,7 +40,7 @@ namespace ISC.EF.Repositories
 		{
 			_Context.Set<T>().Update(entity);
 		}
-		public async Task<List<T>> findManyWithChildAsync(Func<T, bool> match, string[] includes = null)
+		public async Task<List<T>> FindManyWithChildAsync(Func<T, bool> match, string[] includes = null)
 		{
 			IQueryable<T> query = _Context.Set<T>();
 			if (includes != null)
@@ -52,7 +52,7 @@ namespace ISC.EF.Repositories
 			}
 			return  query.Where(match).ToList();
 		}
-		public async Task<T?> findWithChildAsync(Func<T, bool> match, string[] includes = null)
+		public async Task<T?> FindWithChildAsync(Func<T, bool> match, string[] includes = null)
 		{
 			IQueryable<T> query = _Context.Set<T>();
 			if (includes != null)
@@ -76,7 +76,7 @@ namespace ISC.EF.Repositories
 			}
 			return query.ToList();
 		}
-		public async Task addAsync(T entity)
+		public async Task AddAsync(T entity)
 		{ 
 			await _Context.Set<T>().AddAsync(entity);
 		}
@@ -92,7 +92,7 @@ namespace ISC.EF.Repositories
 				return false;
 			}
 		}
-		public void deleteGroup(List<T> entities)
+		public void RemoveGroup(List<T> entities)
 		{
 			_Context.Set<T>().RemoveRange(entities);
 		}
@@ -100,11 +100,11 @@ namespace ISC.EF.Repositories
 		{
 			return _Context.Set<T>().ExecuteDelete();
 		}
-		public async Task<List<T>> getAllAsync()
+		public async Task<List<T>> GetAllAsync()
 		{
 			return await _Context.Set<T>().ToListAsync();
 		}
-		public async Task<List<T>> getAllwithNavigationsAsync(string[] includes = null)
+		public async Task<List<T>> GetAllwithNavigationsAsync(string[] includes = null)
 		{
 			IQueryable<T> Query = _Context.Set<T>();
 			foreach(var include in includes)
@@ -113,12 +113,12 @@ namespace ISC.EF.Repositories
 			}
 			return await Query.ToListAsync();
 		}
-		public virtual Task<bool> deleteAsync(T entity)
+		public virtual Task<bool> DeleteAsync(T entity)
 		{
 			return deleteEntityAsync(entity);
 		}
 
-		public async Task<List<T>> getAllAsync(Func<T, bool> match)
+		public async Task<List<T>> GetAllAsync(Func<T, bool> match)
 		{
 			return  _Context.Set<T>().Where(match).ToList();
 		}

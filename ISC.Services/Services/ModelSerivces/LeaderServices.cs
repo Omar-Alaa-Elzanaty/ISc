@@ -75,7 +75,7 @@ namespace ISC.Services.Services.ModelSerivces
         {
             ServiceResponse<Camp> response = new ServiceResponse<Camp>() { IsSuccess = true };
 
-            var campItem = await _unitOfWork.Camps.findByAsync(c => c.Name == camp.Name);
+            var campItem = await _unitOfWork.Camps.FindByAsync(c => c.Name == camp.Name);
 
             if (campItem is not null)
             {
@@ -84,7 +84,7 @@ namespace ISC.Services.Services.ModelSerivces
 
             Camp newCamp = _mapper.Map<Camp>(camp);
 
-            await _unitOfWork.Camps.addAsync(newCamp);
+            await _unitOfWork.Camps.AddAsync(newCamp);
             int result = await _unitOfWork.completeAsync();
 
             if (result == 0)
@@ -138,7 +138,7 @@ namespace ISC.Services.Services.ModelSerivces
                                     app.NationalID,
                                     app.PhoneNumber,
                                     app.HasLaptop,
-                                    app.Comment,
+                                    app.Comment
                                 }).ToListAsync();
 
             response.Entity = applications;
@@ -150,7 +150,7 @@ namespace ISC.Services.Services.ModelSerivces
             var response = new ServiceResponse<bool>();
 
             var registers = await _unitOfWork.NewRegitseration
-                .findManyWithChildAsync(r => ids.Contains(r.NationalID));
+                .FindManyWithChildAsync(r => ids.Contains(r.NationalID));
 
             if (registers.IsNullOrEmpty())
             {
@@ -160,7 +160,7 @@ namespace ISC.Services.Services.ModelSerivces
 
             response.IsSuccess = true;
 
-            _unitOfWork.NewRegitseration.deleteGroup(registers);
+            _unitOfWork.NewRegitseration.RemoveGroup(registers);
             _ = await _unitOfWork.completeAsync();
 
             return response;
@@ -253,7 +253,7 @@ namespace ISC.Services.Services.ModelSerivces
                 {
                     StuffArchive archive = _mapper.Map<StuffArchive>(account);
 
-                    await _unitOfWork.StuffArchive.addAsync(archive);
+                    await _unitOfWork.StuffArchive.AddAsync(archive);
                     await _userManager.DeleteAsync(account);
 
                     await _mediaServices.DeleteAsync(account.PhotoUrl);
@@ -283,14 +283,14 @@ namespace ISC.Services.Services.ModelSerivces
                 throw new BadRequestException("Invalid request");
             }
 
-            var archives = await _unitOfWork.TraineesArchive.findManyWithChildAsync(ta => trainees.Contains(ta.NationalID));
+            var archives = await _unitOfWork.TraineesArchive.FindManyWithChildAsync(ta => trainees.Contains(ta.NationalID));
 
             if (trainees == null || trainees.Count == 0)
             {
                 throw new BadRequestException("No account to remove");
             }
 
-            _unitOfWork.TraineesArchive.deleteGroup(archives);
+            _unitOfWork.TraineesArchive.RemoveGroup(archives);
             _ = await _unitOfWork.completeAsync();
 
             response.IsSuccess = true;
@@ -303,7 +303,7 @@ namespace ISC.Services.Services.ModelSerivces
             var response = new ServiceResponse<bool>() { IsSuccess = true };
 
 
-            var trainee = await _unitOfWork.TraineesArchive.findByAsync(x => x.NationalID == archive.NationalId);
+            var trainee = await _unitOfWork.TraineesArchive.FindByAsync(x => x.NationalID == archive.NationalId);
 
             _mapper.Map(archive, trainee);
 
@@ -316,7 +316,7 @@ namespace ISC.Services.Services.ModelSerivces
         {
             var response = new ServiceResponse<bool>() { IsSuccess = true };
 
-            var member = await _unitOfWork.StuffArchive.findByAsync(x => x.NationalID == archive.NationalID);
+            var member = await _unitOfWork.StuffArchive.FindByAsync(x => x.NationalID == archive.NationalID);
             _mapper.Map(archive, member);
 
             await _unitOfWork.StuffArchive.UpdateAsync(member);
@@ -326,21 +326,21 @@ namespace ISC.Services.Services.ModelSerivces
 
             return response;
         }
-        public async Task<ServiceResponse<AuthModel>> SubmitNewRegister(SubmitNewRegisterDto newRegisters)
+        public async Task<ServiceResponse<bool>> SubmitNewRegister(SubmitNewRegisterDto newRegisters)
         {
-            var response = new ServiceResponse<AuthModel>();
+            var response = new ServiceResponse<bool>();
 
             HashSet<string> refused = new HashSet<string>();
 
             foreach (var contest in newRegisters.ContestsInfo)
             {
-                var standingResponse = await _sheetServices.SheetStanding(contest.ContestId, contest.IsSohag);
+                var standingResponse = await _sheetServices.SheetStanding(contest.ContestId, contest.IsSohagSheet);
                 if (!standingResponse.IsSuccess)
                 {
                     throw new BadRequestException(standingResponse.Comment);
                 }
 
-                var statusResponse = await _sheetServices.SheetStatus(contest.ContestId, contest.IsSohag);
+                var statusResponse = await _sheetServices.SheetStatus(contest.ContestId, contest.IsSohagSheet);
                 if (!statusResponse.IsSuccess)
                 {
                     throw new BadRequestException(statusResponse.Comment);
@@ -362,25 +362,25 @@ namespace ISC.Services.Services.ModelSerivces
                     Count = problemSolved.Count()
                 }).ToList();
 
-                float totalproblems = standingResponse.Entity.problems.Count();
+                float totalproblems = standingResponse.Entity!.problems.Count();
 
-                foreach (var member in memberPerProblem)
+                foreach (var member in memberPerProblem!)
                 {
                     if (Math.Ceiling(member.Count / totalproblems) * 100.0 < contest.PassingPrecent)
                     {
-                        refused.Add(member.handle);
+                        refused.Add(member.handle!);
                     }
                 }
             }
 
             var PassedMember = await _unitOfWork.NewRegitseration
-                .findManyWithChildAsync(nr => !refused.Contains(nr.CodeForceHandle)
+                .FindManyWithChildAsync(nr => !refused.Contains(nr.CodeForceHandle)
                                         && newRegisters.CandidatesNationalId.Contains(nr.NationalID) == true);
 
-            var camp = _unitOfWork.Camps.getByIdAsync(newRegisters.CampId).Result.Name;
+            var camp = _unitOfWork.Camps.GetByIdAsync(newRegisters.CampId).Result.Name;
 
-            List<NewRegistration> faillRegisteration = new List<NewRegistration>();
-            List<NewRegistration> confirmedAcceptacne = new List<NewRegistration>();
+            List<NewRegistration> faillRegisteration = new();
+            List<NewRegistration> confirmedAcceptacne = new();
 
             foreach (var member in PassedMember)
             {
@@ -388,28 +388,24 @@ namespace ISC.Services.Services.ModelSerivces
                 newTrainee.Role = Role.TRAINEE;
                 newTrainee.CampId = newRegisters.CampId;
 
-                response = await AutoMemberAddAsync(newTrainee, camp);
+                var added = await AutoMemberAddAsync(newTrainee, camp);
 
-                if (!response.IsSuccess)
-                {
-                    faillRegisteration.Add(member);
-                }
-                else
+                if (added)
                 {
                     PassedMember.Add(member);
                 }
             }
 
-            _unitOfWork.NewRegitseration.deleteGroup(PassedMember);
+            _unitOfWork.NewRegitseration.RemoveGroup(PassedMember);
 
-
+            response.IsSuccess = PassedMember.IsNullOrEmpty();
             return response;
         }
         public async Task<ServiceResponse<int>> UpdateCampStatusAsync(int campId)
         {
             var response = new ServiceResponse<int>();
 
-            var camp = await _unitOfWork.Camps.getByIdAsync(campId);
+            var camp = await _unitOfWork.Camps.GetByIdAsync(campId);
 
             if (camp == null)
             {
@@ -457,27 +453,16 @@ namespace ISC.Services.Services.ModelSerivces
                 .ToListAsync()
             };
         }
-        private async Task<ServiceResponse<AuthModel>> AutoMemberAddAsync(RegisterDto registerInfo, string? message = null, string? campName = null)
+        private async Task<bool> AutoMemberAddAsync(RegisterDto registerInfo, string? message = null, string? campName = null)
         {
-            ServiceResponse<AuthModel> response = new ServiceResponse<AuthModel>();
+            ServiceResponse<NewRegisterationResponseDto> response = new() { Entity = new() };
             AuthModel result = await _authServices.RegisterAsync(
                 user: registerInfo,
                 message: message,
                 sendEmail: true
                 );
-            if (!result.IsAuthenticated)
-            {
-                response.IsSuccess = false;
-                response.Comment = "Couldn't create account";
 
-                return response;
-            }
-
-            response.IsSuccess = true;
-
-            response.Entity = result;
-
-            return response;
+            return result.IsAuthenticated;
         }
         private async Task<ServiceResponse<bool>> AssignToMentorAsync(IEnumerable<UserAccount> users, int? campId)
         {
@@ -498,7 +483,7 @@ namespace ISC.Services.Services.ModelSerivces
 
                     if (!mentor.Camps.Any(i => i.Id == campId))
                     {
-                        var camp = await _unitOfWork.Camps.getByIdAsync((int)campId);
+                        var camp = await _unitOfWork.Camps.GetByIdAsync((int)campId);
                         mentor.Camps.Add(camp);
                     }
                 }
@@ -524,7 +509,7 @@ namespace ISC.Services.Services.ModelSerivces
                 }
                 else
                 {
-                    var head = await _unitOfWork.HeadofCamp.findByAsync(x => x.UserId == user.Id);
+                    var head = await _unitOfWork.HeadofCamp.FindByAsync(x => x.UserId == user.Id);
                     head.CampId = campId;
                 }
             }

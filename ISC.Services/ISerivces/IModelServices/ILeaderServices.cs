@@ -22,7 +22,7 @@ namespace ISC.Services.ISerivces.IModelServices
 		Task<ServiceResponse<string>> DeleteTraineeArchivesAsync(List<string> trainees);
 		Task<ServiceResponse<bool>> UpdateTraineeArchive(TraineeArchiveDto archives);
 		Task<ServiceResponse<bool>> UpdateStuffArchive(StuffArchiveDto archives);
-		Task<ServiceResponse<AuthModel>> SubmitNewRegister(SubmitNewRegisterDto newRegisters);
+		Task<ServiceResponse<bool>> SubmitNewRegister(SubmitNewRegisterDto newRegisters);
 		Task<ServiceResponse<int>> UpdateCampStatusAsync(int campId);
 		Task<ServiceResponse<object>> CampInfo();
 		Task<ServiceResponse<object>> MentorInfo(int campId);

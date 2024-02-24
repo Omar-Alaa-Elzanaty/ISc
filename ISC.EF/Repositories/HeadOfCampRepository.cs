@@ -23,7 +23,7 @@ namespace ISC.EF.Repositories
 			var head = await _Context.HeadsOfTraining.Where(head => head.UserId == userid).FirstOrDefaultAsync();
 			if (head == null) return false;
 
-			return await deleteAsync(head);
+			return await DeleteAsync(head);
 		}
 		public async Task<HeadOfTraining?> GetByUserIdAsync(string userId)
 		{

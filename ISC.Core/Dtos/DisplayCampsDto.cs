@@ -18,7 +18,8 @@ namespace ISC.Core.Dtos
 		public int Term { get; set; }
 		public int Year { get; set; }
 		public int DurationInWeeks { get; set; }
-		public List<Member> HeadsInfo { get; set; }
+        public bool OpenForRegister { get; set; }
+        public List<Member> HeadsInfo { get; set; }
 		public List<Member> CampMentors { get; set; }
 	}
 	public class Member
