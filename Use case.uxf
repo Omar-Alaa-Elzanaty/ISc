@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="15.1">
   <help_text>// Uncomment the following line to change the fontsize and font:
-fontsize= 20
+fontsize=15
 // fontfamily=SansSerif //possible: SansSerif,Serif,Monospaced
 
 
@@ -598,7 +598,7 @@ filterate on
     <coordinates>
       <x>1199</x>
       <y>671</y>
-      <w>143</w>
+      <w>154</w>
       <h>110</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
@@ -610,7 +610,7 @@ filterate on
     <coordinates>
       <x>1034</x>
       <y>748</y>
-      <w>110</w>
+      <w>121</w>
       <h>99</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
@@ -1372,9 +1372,9 @@ halign=center</panel_attributes>
   <element>
     <id>UMLActor</id>
     <coordinates>
-      <x>88</x>
+      <x>77</x>
       <y>3190</y>
-      <w>66</w>
+      <w>88</w>
       <h>121</h>
     </coordinates>
     <panel_attributes>Trainee</panel_attributes>

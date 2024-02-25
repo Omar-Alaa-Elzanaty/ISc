@@ -414,6 +414,7 @@ namespace ISC.Services.Services.ModelSerivces
 
             camp.OpenForRegister = !camp.OpenForRegister;
 
+            await _unitOfWork.Camps.UpdateAsync(camp);
             _ = await _unitOfWork.completeAsync();
 
             response.IsSuccess = true;
