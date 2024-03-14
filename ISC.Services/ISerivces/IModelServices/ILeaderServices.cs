@@ -12,7 +12,7 @@ namespace ISC.Services.ISerivces.IModelServices
 {
 	public  interface ILeaderServices
 	{
-		Task<ServiceResponse<Camp>> AddCampAsync(CampDto camp);
+		Task<ServiceResponse<CampDto>> AddCampAsync(CampDto camp);
 		Task<ServiceResponse<List<string>>> AddToRoleAsync(UserRoleDto model);
 		Task<ServiceResponse<object>> DisplayNewRegisterAsync(int campId);
 		Task<ServiceResponse<bool>> DeleteFromNewRegister(List<string> Ids);

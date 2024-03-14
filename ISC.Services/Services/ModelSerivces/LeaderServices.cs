@@ -71,9 +71,9 @@ namespace ISC.Services.Services.ModelSerivces
 
             return response;
         }
-        public async Task<ServiceResponse<Camp>> AddCampAsync(CampDto camp)
+        public async Task<ServiceResponse<CampDto>> AddCampAsync(CampDto camp)
         {
-            ServiceResponse<Camp> response = new ServiceResponse<Camp>() { IsSuccess = true };
+            ServiceResponse<CampDto> response = new ServiceResponse<CampDto>() { IsSuccess = true };
 
             var campItem = await _unitOfWork.Camps.FindByAsync(c => c.Name == camp.Name);
 
@@ -93,7 +93,12 @@ namespace ISC.Services.Services.ModelSerivces
             }
 
             response.IsSuccess = true;
-            response.Entity = newCamp;
+            response.Entity = new CampDto() { 
+                Term=camp.Term,
+                DurationInWeeks=camp.DurationInWeeks,
+                Name=camp.Name,
+                Year = camp.Year
+            };
             return response;
         }
         public async Task<ServiceResponse<List<string>>> AddToRoleAsync(UserRoleDto model)
@@ -337,13 +342,15 @@ namespace ISC.Services.Services.ModelSerivces
                 var standingResponse = await _sheetServices.SheetStanding(contest.ContestId, contest.IsSohagSheet);
                 if (!standingResponse.IsSuccess)
                 {
-                    throw new BadRequestException(standingResponse.Comment);
+                    response.Comment = standingResponse.Comment;
+                    return response;
                 }
 
                 var statusResponse = await _sheetServices.SheetStatus(contest.ContestId, contest.IsSohagSheet);
                 if (!statusResponse.IsSuccess)
                 {
-                    throw new BadRequestException(statusResponse.Comment);
+                    response.Comment = statusResponse.Comment;
+                    return response;
                 }
 
 
