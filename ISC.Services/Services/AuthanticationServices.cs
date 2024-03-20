@@ -89,8 +89,8 @@ namespace ISC.Services.Services
 				JoinDate=DateTime.Now,
 				LastLoginDate=DateTime.Now
 			};
-			var password = newAccount.GeneratePassword();
-			newAccount.UserName = newAccount.GenerateUserName();
+			var password = "123@Abc"; //newAccount.GeneratePassword();
+			newAccount.UserName = "ICPC" + newAccount.FirstName + newAccount.MiddleName; //newAccount.GenerateUserName();
 			
 			var result = await _UserManager.CreateAsync(newAccount, password);
 			if (result.Succeeded == false)
@@ -152,7 +152,7 @@ namespace ISC.Services.Services
 			var UserAccount = await _UserManager.FindByNameAsync(user.UserName);
 			if (UserAccount is null || !await _UserManager.CheckPasswordAsync(UserAccount, user.Password)) 
 			{
-				return new AuthModel() { Message = "Email or Passwrod is inCorrect!" };
+				return new AuthModel() { Message = "UserName or Passwrod is inCorrect!" };
 			}
 
 			var RolesList=await _UserManager.GetRolesAsync(UserAccount);

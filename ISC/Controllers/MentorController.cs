@@ -4,6 +4,7 @@ using ISC.Core.Models;
 using ISC.Core.ModelsDtos;
 using ISC.EF;
 using ISC.Services.ISerivces;
+using ISC.Services.ISerivces.IModelServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -25,14 +26,21 @@ namespace ISC.API.Controllers
 		private readonly UserManager<UserAccount> _userManager;
 		private readonly IAuthanticationServices _auth;
 		private readonly IUnitOfWork _unitOfWork;
-		public MentorController(RoleManager<IdentityRole> roleManager, UserManager<UserAccount> userManager, IAuthanticationServices auth, IUnitOfWork unitofwork)
-		{
-			_roleManager = roleManager;
-			_userManager = userManager;
-			_auth = auth;
-			_unitOfWork = unitofwork;
-		}
-		[HttpGet]
+		private readonly IMentorServices _mentorServices;
+        public MentorController(
+            RoleManager<IdentityRole> roleManager,
+            UserManager<UserAccount> userManager,
+            IAuthanticationServices auth,
+            IUnitOfWork unitofwork,
+            IMentorServices mentorServices)
+        {
+            _roleManager = roleManager;
+            _userManager = userManager;
+            _auth = auth;
+            _unitOfWork = unitofwork;
+            _mentorServices = mentorServices;
+        }
+        [HttpGet]
 		public async Task<IActionResult> DisplayOwnTrainees()
 		{
 			var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -233,6 +241,13 @@ namespace ISC.API.Controllers
 
 			return Ok("update Attendence");
 		}
+		[HttpGet]
+		public async Task<IActionResult> CampInfo()
+		{
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return Ok(_mentorServices.GetCampsNames(userId!));
+		}
+
 		//TODO: to implement
 		//[HttpGet]
 		//public async Task<IActionResult> DisplayTraineeTask(int traineeId)
