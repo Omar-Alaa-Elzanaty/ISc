@@ -34,7 +34,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("MentorsId");
 
-                    b.ToTable("CampMentor");
+                    b.ToTable("CampMentor", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Camp", b =>
@@ -63,7 +63,7 @@ namespace ISC.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Camps");
+                    b.ToTable("Camps", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.HeadOfTraining", b =>
@@ -88,7 +88,7 @@ namespace ISC.EF.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("HeadsOfTraining");
+                    b.ToTable("HeadsOfTraining", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Material", b =>
@@ -117,7 +117,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SheetId");
 
-                    b.ToTable("Materials");
+                    b.ToTable("Materials", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Mentor", b =>
@@ -143,7 +143,7 @@ namespace ISC.EF.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Mentors");
+                    b.ToTable("Mentors", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.NewRegistration", b =>
@@ -212,7 +212,7 @@ namespace ISC.EF.Migrations
                     b.HasIndex("CodeForceHandle")
                         .IsUnique();
 
-                    b.ToTable("NewRegistration");
+                    b.ToTable("NewRegistration", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Session", b =>
@@ -247,7 +247,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("CampId");
 
-                    b.ToTable("Sessions");
+                    b.ToTable("Sessions", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Sheet", b =>
@@ -289,7 +289,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("CampId");
 
-                    b.ToTable("Sheets");
+                    b.ToTable("Sheets", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.StuffArchive", b =>
@@ -345,7 +345,7 @@ namespace ISC.EF.Migrations
 
                     b.HasKey("NationalID");
 
-                    b.ToTable("StuffArchives");
+                    b.ToTable("StuffArchives", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.TaskList", b =>
@@ -370,7 +370,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("traineeId");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("Tasks", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.Trainee", b =>
@@ -403,7 +403,7 @@ namespace ISC.EF.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Trainees");
+                    b.ToTable("Trainees", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.Models.TraineeArchive", b =>
@@ -465,7 +465,7 @@ namespace ISC.EF.Migrations
 
                     b.HasKey("NationalID", "CampName");
 
-                    b.ToTable("TraineesArchives");
+                    b.ToTable("TraineesArchives", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.MentorAttendence", b =>
@@ -480,7 +480,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("MentorsAttendences");
+                    b.ToTable("MentorsAttendences", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.SessionFeedback", b =>
@@ -507,7 +507,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("SessionsFeedbacks");
+                    b.ToTable("SessionsFeedbacks", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.TraineeAttendence", b =>
@@ -522,7 +522,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SessionId");
 
-                    b.ToTable("TraineesAttednces");
+                    b.ToTable("TraineesAttednces", (string)null);
                 });
 
             modelBuilder.Entity("ISC.Core.ModelsDtos.TraineeSheetAccess", b =>
@@ -542,7 +542,7 @@ namespace ISC.EF.Migrations
 
                     b.HasIndex("SheetId");
 
-                    b.ToTable("TraineesSheetsAccess");
+                    b.ToTable("TraineesSheetsAccess", (string)null);
                 });
 
             modelBuilder.Entity("ISC.EF.UserAccount", b =>

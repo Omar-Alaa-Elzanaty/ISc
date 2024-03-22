@@ -89,6 +89,7 @@ namespace ISC.Services.Services
 				JoinDate=DateTime.Now,
 				LastLoginDate=DateTime.Now
 			};
+			//TODO: remove comment
 			var password = "123@Abc"; //newAccount.GeneratePassword();
 			newAccount.UserName = "ICPC" + newAccount.FirstName + newAccount.MiddleName; //newAccount.GenerateUserName();
 			

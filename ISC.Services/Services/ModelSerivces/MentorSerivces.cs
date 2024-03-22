@@ -25,15 +25,15 @@ namespace ISC.Services.Services.ModelSerivces
         {
             var response = new ServiceResponse<List<DisplayCampsForMentorDto>>();
 
-            var mentor = await _unitOfWork.Mentors.Get().Include(x => x.Camps).FirstOrDefaultAsync(x => x.UserId == userId);
+            var camps =  _unitOfWork.Mentors.Get().Include(x=>x.Camps).SingleOrDefaultAsync(x=>x.UserId==userId).Result?.Camps;
 
-            if(mentor is null)
+            if(camps is null)
             {
-                response.Comment = "mentor not found";
+                response.Comment = "mentor not found or doesn't partipate in any camp";
                 return response;
             }
 
-            response.Entity = mentor.Camps.Select(x => new DisplayCampsForMentorDto()
+            response.Entity = camps.Select(x => new DisplayCampsForMentorDto()
             {
                 Id = x.Id,
                 Name = x.Name

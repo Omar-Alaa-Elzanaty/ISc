@@ -245,7 +245,7 @@ namespace ISC.API.Controllers
 		public async Task<IActionResult> CampInfo()
 		{
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return Ok(_mentorServices.GetCampsNames(userId!));
+            return Ok(await _mentorServices.GetCampsNames(userId!));
 		}
 
 		//TODO: to implement
