@@ -2,6 +2,7 @@
 using ISC.Core.APIDtos;
 using ISC.Core.Dtos;
 using ISC.Core.Models;
+using ISC.Core.ModelsDtos;
 using ISC.EF;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace ISC.Services.Helpers
             CreateMap<TraineeArchiveDto, TraineeArchive>();
             CreateMap<StuffArchiveDto, StuffArchive>();
             CreateMap<NewRegisterationDto, NewRegistration>();
+            CreateMap<SessionFeedbackDto, SessionFeedback>();
         }
     }
 }

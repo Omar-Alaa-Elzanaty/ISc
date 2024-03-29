@@ -1,4 +1,6 @@
-﻿using ISC.Core.Models;
+﻿using ISC.Core.Dtos;
+using ISC.Core.Models;
+using ISC.Core.ModelsDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +16,7 @@ namespace ISC.Services.ISerivces.IModelServices
 		Task<List<object>> AccessSheetsWithMaterialsAsync(string userId);
 		Task<object> GetTasks(string traineeId);
 		Task UpdateTaskState(int taskId);
-	}
+        Task<ServiceResponse<bool>> AddFeedback(SessionFeedbackDto model, string userId);
+
+    }
 }

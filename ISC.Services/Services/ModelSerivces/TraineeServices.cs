@@ -1,7 +1,13 @@
-﻿using ISC.Core.Interfaces;
+﻿using System.Security.Claims;
+using AutoMapper;
+using ISC.Core.Dtos;
+using ISC.Core.Interfaces;
 using ISC.Core.Models;
+using ISC.Core.ModelsDtos;
 using ISC.EF;
+using ISC.EF.Repositories;
 using ISC.Services.ISerivces.IModelServices;
+using MailKit.Net.Imap;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,14 +17,17 @@ namespace ISC.Services.Services.ModelSerivces
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly UserManager<UserAccount> _userManager;
-		public TraineeService
-			(IUnitOfWork unitOfWork,
-			UserManager<UserAccount> userManaget)
-		{
-			_unitOfWork = unitOfWork;
-			_userManager = userManaget;
-		}
-		public async Task<ServiceResponse<object>> MentorInfoAsync(string traineeId)
+		private readonly IMapper _mapper;
+        public TraineeService
+            (IUnitOfWork unitOfWork,
+            UserManager<UserAccount> userManaget,
+            IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _userManager = userManaget;
+            _mapper = mapper;
+        }
+        public async Task<ServiceResponse<object>> MentorInfoAsync(string traineeId)
 		{
 			var mentor = _unitOfWork.Trainees.Get()
 											.Include(t => t.Mentor)
@@ -110,5 +119,17 @@ namespace ISC.Services.Services.ModelSerivces
 			
 			await _unitOfWork.Tasks.UpdateAsync(task);
 		}
+		public async Task<ServiceResponse<bool>> AddFeedback(SessionFeedbackDto model,string userId)
+		{
+			var response = new ServiceResponse<bool>() { IsSuccess = true};
+            int traineeId = _unitOfWork.Trainees.FindByAsync(t => t.UserId == userId).Result.Id;
+
+			var feedback = _mapper.Map<SessionFeedback>(model);
+			feedback.TraineeId = traineeId;
+
+            await _unitOfWork.SessionsFeedbacks.AddAsync(feedback);
+
+			return response;
+        }
 	}
 }
