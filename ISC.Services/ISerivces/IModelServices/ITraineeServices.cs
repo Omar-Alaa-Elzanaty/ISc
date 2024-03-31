@@ -11,7 +11,8 @@ namespace ISC.Services.ISerivces.IModelServices
 {
 	public interface  ITraineeService
 	{
-		Task<ServiceResponse<object>> MentorInfoAsync(string traineeId);
+		Task<ServiceResponse<TraineeInfoDto>> DisplayTraineeInfoAsync(string userId);
+        Task<ServiceResponse<object>> MentorInfoAsync(string traineeId);
 		Task<string?> CampNameOfAsync(string traineeId);
 		Task<List<object>> AccessSheetsWithMaterialsAsync(string userId);
 		Task<object> GetTasks(string traineeId);

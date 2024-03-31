@@ -114,5 +114,18 @@ namespace ISC.API.Controllers
 
             return Ok();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> DisplayTraineeInfo()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            
+            if(userId is null)
+            {
+                return BadRequest("User not found");
+            }
+
+            return Ok(await _traineeSerivce.DisplayTraineeInfoAsync(userId));
+        }
     }
 }

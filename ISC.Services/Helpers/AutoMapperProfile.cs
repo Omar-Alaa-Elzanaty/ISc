@@ -28,6 +28,7 @@ namespace ISC.Services.Helpers
             CreateMap<StuffArchiveDto, StuffArchive>();
             CreateMap<NewRegisterationDto, NewRegistration>();
             CreateMap<SessionFeedbackDto, SessionFeedback>();
+            CreateMap<UserAccount, TraineeInfoDto>();
         }
     }
 }
