@@ -66,8 +66,8 @@ namespace ISC.API.Controllers
 
             return Ok(response);
         }
-        [HttpGet]
-        public async Task<IActionResult> AddComment(SessionFeedbackDto model)
+        [HttpPost]
+        public async Task<IActionResult> AddComment([FromBody]SessionFeedbackDto model)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
