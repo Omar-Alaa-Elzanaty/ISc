@@ -3,7 +3,7 @@ ISc is a website aim to manage and facilitate icpc community operations like Man
 This project was trail version for ICPC Sohag official website where you can see it here ~~Link~~.Each actor has spacific roles than others to prevent delegation tasks between community stuff member.
 
 ## Used Technologies
-. Dot Net 6.0
+- Dot Net 6.0
 - Http Client
 - Quertz (Recurring tasks)
 - auto Mapper (ORM)
