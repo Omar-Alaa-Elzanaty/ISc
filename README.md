@@ -4,6 +4,9 @@ This project was trail version for ICPC Sohag official website where you can see
 
 ## Used Technologies
 - Dot Net 6.0
+- Restful Apis
+- Entity Framework
+- Json web token
 - Http Client
 - Quertz (Recurring tasks)
 - auto Mapper (ORM)
